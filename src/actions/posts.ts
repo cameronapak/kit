@@ -47,20 +47,18 @@ export const posts = {
     input: z.object({
       id: z.number(),
       title: z.string().min(1, "Title is required"),
-      createdAt: z.string().transform((str) => new Date(str)),
       slug: z.string().min(1, "Slug is required"),
       content: z.string(),
       userId: z.string()
     }),
     // Handler function
-    handler: async ({ id, title, createdAt, slug, content, userId }) => {
+    handler: async ({ id, title, slug, content, userId }) => {
       try {
         // Update the post in the database
         const updatedPost = await db
           .update(Posts)
           .set({
             title,
-            createdAt,
             slug,
             content,
             userId

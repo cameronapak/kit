@@ -1,9 +1,10 @@
 ---
 import "trix/dist/trix.css";
 import { Icon } from "astro-iconify";
-import Layout from "../../../layouts/Layout.astro";
-import Header from "../../../components/Header.astro";
 import { actions } from "astro:actions";
+import { db, Posts, eq } from "astro:db";
+import Layout from "../../../../layouts/Layout.astro";
+import Header from "../../../../components/Header.astro";
 
 if (!Astro.locals.auth().userId) {
   return Astro.redirect("/");
@@ -11,8 +12,27 @@ if (!Astro.locals.auth().userId) {
 
 const user = await Astro.locals.currentUser();
 
+const postId = Astro.params.id;
+if (!postId) {
+  return Astro.redirect("/dashboard/posts");
+}
+
 // Handle form submission result
-const result = Astro.getActionResult(actions.posts.createPost);
+const result = Astro.getActionResult(actions.posts.updatePost);
+
+let post;
+
+if (result?.data?.success) {
+  post = result.data.post;
+}
+
+// Get post from database
+const posts = await db
+  .select()
+  .from(Posts)
+  .where(eq(Posts.id, Number(postId)))
+  .limit(1);
+post = posts[0];
 ---
 
 <Layout title="Dashboard">
@@ -52,14 +72,15 @@ const result = Astro.getActionResult(actions.posts.createPost);
             result?.data?.success && (
               <div role="alert" class="alert alert-info bg-cyan-100 border-cyan-200 text-cyan-900">
                 <Icon pack="lucide" name="check-circle" height={20} width={20} class="shrink-0" />
-                <span>Post created successfully!</span>
+                <span>Post updated successfully!</span>
               </div>
             )
           }
 
           <form
-            x-data="{ 
-              title: '', 
+            x-data={`{ 
+              title: \`${post?.title || ""}\`, 
+              content: \`${post?.content || ""}\`,
               maxLength: 100, 
               get slug() { 
                 return this.title
@@ -71,8 +92,8 @@ const result = Astro.getActionResult(actions.posts.createPost);
                   .trim() // Trim leading/trailing spaces or hyphens
                   .slice(0, 100); // Limit to 100 characters
               } 
-            }"
-            action={actions.posts.createPost}
+            }`}
+            action={actions.posts.updatePost}
             method="post"
             class="flex flex-col gap-6"
           >
@@ -82,6 +103,7 @@ const result = Astro.getActionResult(actions.posts.createPost);
                 x-model="title"
                 @input="title = $event.target.value.slice(0, maxLength)"
                 type="text"
+                value={post?.title || ""}
                 class="input input-bordered w-full rounded-lg bg-white"
                 required
                 placeholder="Title"
@@ -92,10 +114,10 @@ const result = Astro.getActionResult(actions.posts.createPost);
               </p>
             </div>
 
-            <input type="hidden" name="createdAt" value={new Date().toISOString()} />
+            <input type="hidden" name="id" value={post?.id} />
             <input type="hidden" name="slug" x-model="slug" />
             <input type="hidden" name="userId" value={user?.id} />
-            <input type="hidden" name="content" id="x" />
+            <input type="hidden" value={post?.content || ""} x-model="content" name="content" id="x" />
             <div>
               <trix-editor input="x" placeholder="Write your post here..."></trix-editor>
             </div>

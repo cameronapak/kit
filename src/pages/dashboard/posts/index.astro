@@ -1,11 +1,11 @@
 ---
-import { db, Posts, eq } from "astro:db";
+import { db, Posts, eq, desc } from "astro:db";
 import { Icon } from "astro-iconify";
 import Layout from "../../../layouts/Layout.astro";
 import Header from "../../../components/Header.astro";
 
 if (!Astro.locals.auth().userId) {
-  return Astro.redirect("/login");
+  return Astro.redirect("/");
 }
 
 const user = await Astro.locals.currentUser();
@@ -13,7 +13,7 @@ const allPosts = await db
   .select()
   .from(Posts)
   .where(eq(Posts.userId, user?.id || ""))
-  .orderBy(Posts.createdAt);
+  .orderBy(desc(Posts.createdAt));
 ---
 
 <Layout title="Dashboard">
@@ -36,7 +36,9 @@ const allPosts = await db
                   <p class="m-0 text-slate-500">
                     {new Date(post.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                   </p>
-                  <a class="m-0 font-medium !text-cyan-700 link">{post.title}</a>
+                  <a href={`/dashboard/posts/edit/${post.id}`} class="m-0 font-medium !text-cyan-700 link">
+                    {post.title}
+                  </a>
                 </li>
               ))
             ) : (

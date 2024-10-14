@@ -1,9 +1,12 @@
 ---
-import { db, Posts } from "astro:db";
+import { db, Posts, desc } from "astro:db";
 import Layout from "../../layouts/Layout.astro";
 
 const pageTitle = "Posts";
-const allPosts = await db.select().from(Posts).orderBy(Posts.pubDate);
+const allPosts = await db
+  .select()
+  .from(Posts)
+  .orderBy(desc(Posts.createdAt));
 ---
 
 <Layout title={pageTitle}>

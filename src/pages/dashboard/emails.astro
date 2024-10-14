@@ -5,7 +5,7 @@ import Header from "../../components/Header.astro";
 import Layout from "../../layouts/Layout.astro";
 
 if (!Astro.locals.auth().userId) {
-  return Astro.redirect("/login");
+  return Astro.redirect("/");
 }
 
 const user = await Astro.locals.currentUser();

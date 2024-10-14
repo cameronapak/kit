@@ -9,7 +9,7 @@ import { actions } from "astro:actions";
 import Icon from "astro-iconify";
 
 if (!Astro.locals.auth().userId) {
-  return Astro.redirect("/login");
+  return Astro.redirect("/");
 }
 
 const user = await Astro.locals.currentUser();
