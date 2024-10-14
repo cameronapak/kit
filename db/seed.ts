@@ -40,7 +40,7 @@ export default async function seed() {
       title: "Test Project",
       content: "This is a test project.",
       createdAt: new Date(),
-      bannerImageId: "tldraw_jhudrk",
+      bannerImageId: "user_2hHFZTOTzVEGWVy8gpbKyB6JXPu/freedom-stack_hbfpk9",
       userId: CAMS_CLERK_USER_ID,
       slug: "test-project",
     },
