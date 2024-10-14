@@ -2,7 +2,7 @@ import { defineAction } from "astro:actions";
 import { z } from "astro:schema";
 import { db, eq, Posts } from "astro:db";
 
-export const server = {
+export const posts = {
   createPost: defineAction({
     // Accept form data
     accept: "form",

@@ -2,7 +2,7 @@ import { defineAction } from "astro:actions";
 import { z } from "astro:schema";
 import { db, eq, Leads } from "astro:db";
 
-export const server = {
+export const leads = {
   createLead: defineAction({
     accept: 'form',
     input: z.object({
