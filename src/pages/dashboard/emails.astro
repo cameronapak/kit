@@ -1,5 +1,5 @@
 ---
-import { db, Leads } from "astro:db";
+import { db, Leads, Projects, eq } from "astro:db";
 import { Icon } from "astro-iconify";
 import Header from "../../components/Header.astro";
 import Layout from "../../layouts/Layout.astro";
@@ -9,7 +9,13 @@ if (!Astro.locals.auth().userId) {
 }
 
 const user = await Astro.locals.currentUser();
-const allEmails = await db.select().from(Leads).orderBy(Leads.email);
+console.log("User:", user);
+const allProjects = await db.select().from(Projects).where(eq(Projects.userId, user?.id ?? ""));
+const firstProjectId = allProjects[0]?.id;
+let allEmails: any[] = [];
+if (firstProjectId) {
+  allEmails = await db.select().from(Leads).where(eq(Leads.projectId, firstProjectId)).orderBy(Leads.email);
+}
 ---
 
 <Layout title="Dashboard">
@@ -34,7 +40,7 @@ const allEmails = await db.select().from(Leads).orderBy(Leads.email);
             </button>
           </li>
           {
-            allEmails.map((email) => (
+            allEmails.length > 0 ? allEmails.map((email) => (
               <li class="grid grid-cols-[64px_1fr] items-start gap-3">
                 <p class="m-0 text-slate-500">
                   {new Date(email.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
@@ -45,7 +51,7 @@ const allEmails = await db.select().from(Leads).orderBy(Leads.email);
                   <blockquote class="m-0 text-slate-500 text-sm font-normal">{email.message}</blockquote>
                 </div>
               </li>
-            ))
+            )) : <li class="text-slate-500">Emails will appear here when people show interest in your project</li>
           }
         </ul>
       </section>
