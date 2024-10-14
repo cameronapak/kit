@@ -50,3 +50,13 @@ const allPosts = await db
     </main>
   </div>
 </Layout>
+
+<script>
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "1") {
+      window.location.href = "/dashboard";
+    } else if (event.key === "3") {
+      window.location.href = "/dashboard/emails";
+    }
+  });
+</script>

@@ -268,4 +268,12 @@ const result = Astro.getActionResult(actions.projects.updateProject);
       }
     }) as EventListener);
   }
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === '2') {
+      window.location.href = '/dashboard/posts';
+    } else if (event.key === '3') {
+      window.location.href = '/dashboard/emails';
+    }
+  });
 </script>

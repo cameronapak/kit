@@ -115,4 +115,14 @@ const result = Astro.getActionResult(actions.posts.createPost);
   document.addEventListener("trix-file-accept", function (event) {
     event.preventDefault();
   });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "1") {
+      window.location.href = "/dashboard";
+    } else if (event.key === "2") {
+      window.location.href = "/dashboard/posts";
+    } else if (event.key === "3") {
+      window.location.href = "/dashboard/emails";
+    }
+  });
 </script>
