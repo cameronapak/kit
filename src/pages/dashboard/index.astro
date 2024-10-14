@@ -18,7 +18,25 @@ const projects = await db
   .from(Projects)
   .where(eq(Projects.userId, user?.id || ""))
   .limit(1);
-const project = projects[0];
+
+let project = projects[0];
+
+// If no project exists, create one
+if (!project && user) {
+  const formData = new FormData();
+  formData.append("title", "My Project");
+  formData.append("slug", "my-project");
+  formData.append("content", "");
+  formData.append("userId", user.id);
+
+  const { data, error } = await actions.projects.createProject(formData);
+
+  if (error) {
+    console.error("Failed to create project:", error);
+  } else {
+    project = data.project;
+  }
+}
 
 const bannerImageUrl = getCldImageUrl({
   src: project?.bannerImageId || "",
@@ -74,6 +92,7 @@ const result = Astro.getActionResult(actions.projects.updateProject);
               >
                 <button type="button" class="w-full">
                   <img
+                    id="bannerImageEl"
                     src={bannerImageUrl || "/assets/placeholder.svg"}
                     alt=""
                     class="my-0 rounded-xl border-2 border-slate-200 aspect-video object-cover object-center w-full"
@@ -89,14 +108,41 @@ const result = Astro.getActionResult(actions.projects.updateProject);
             </div>
 
             <div>
-              <h2 class="text-slate-700">Name of Tool</h2>
-              <input
-                name="title"
-                value={project?.title || ""}
-                type="text"
-                class="input input-bordered w-full rounded-lg bg-white"
-                required
-              />
+              <h2 class="text-slate-700 !mb-0">Name of Project</h2>
+              <p class="text-slate-500">This can be changed at any time.</p>
+              <div x-data={`{ title: '${project?.title || ""}', maxLength: 100 }`}>
+                <input
+                  name="title"
+                  x-model="title"
+                  @input="title = $event.target.value.slice(0, maxLength)"
+                  type="text"
+                  class="input input-bordered w-full rounded-lg bg-white"
+                  required
+                  maxlength="100"
+                />
+                <p class="text-xs text-slate-500 mt-2 mb-0">
+                  <span x-text="title.length"></span>/<span x-text="maxLength"></span> characters
+                </p>
+              </div>
+            </div>
+
+            <div>
+              <h2 class="text-slate-700 !mb-0">Slug</h2>
+              <p class="text-slate-500">This is used in the public URL of your project.</p>
+              <label class="input input-bordered w-full rounded-lg bg-white flex items-center gap-2">
+                <Icon pack="lucide" name="link" height={16} width={16} class="shrink-0" />
+                <input
+                  name="slug"
+                  value={project?.slug || ""}
+                  type="text"
+                  placeholder="my-project"
+                  required
+                  class="focus:outline-none border-none bg-transparent w-full"
+                  x-data={`{slug: '${project?.slug || ""}'}`}
+                  x-model="slug"
+                  x-on:input="slug = $event.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-')"
+                />
+              </label>
             </div>
 
             <div>
@@ -159,16 +205,19 @@ const result = Astro.getActionResult(actions.projects.updateProject);
 
   const widget = document.querySelector("#upload-banner");
   const bannerImageIdInput = document.querySelector("#bannerImageId") as HTMLInputElement;
-
+  const bannerImageEl = document.querySelector("#bannerImageEl") as HTMLImageElement;
   if (widget) {
     widget.addEventListener("clduploadwidget:success", ((e: CustomEvent<UploadEvent>) => {
-      console.log("clduploadwidget:success", e.detail);
       // Save the public_id to the hidden input
       const publicId = e.detail.info.public_id;
       if (bannerImageIdInput) {
         bannerImageIdInput.value = publicId;
       }
-      console.log("publicId", publicId);
+
+      // Update the banner image
+      if (bannerImageEl) {
+        bannerImageEl.src = e.detail.info.url;
+      }
     }) as EventListener);
   }
 </script>
