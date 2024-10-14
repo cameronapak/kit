@@ -9,33 +9,20 @@ export const posts = {
     // Define input schema for validation
     input: z.object({
       title: z.string().min(1, "Title is required"),
-      pubDate: z.string().transform((str) => new Date(str)),
-      description: z.string(),
-      author: z.string(),
-      imageUrl: z.string().optional(),
-      imageAlt: z.string().optional(),
-      tags: z
-        .string()
-        .optional()
-        .transform((str) => (str ? JSON.parse(str) : undefined)),
+      createdAt: z.string().transform((str) => new Date(str)),
       slug: z.string().min(1, "Slug is required"),
       content: z.string(),
       userId: z.string()
     }),
     // Handler function
-    handler: async ({ title, pubDate, description, author, imageUrl, imageAlt, tags, slug, content, userId }) => {
+    handler: async ({ title, createdAt, slug, content, userId }) => {
       try {
         // Create the post in the database
         const newPost = await db
           .insert(Posts)
           .values({
             title,
-            pubDate,
-            description,
-            author,
-            imageUrl,
-            imageAlt,
-            tags,
+            createdAt,
             slug,
             content,
             userId
@@ -60,34 +47,23 @@ export const posts = {
     input: z.object({
       id: z.number(),
       title: z.string().min(1, "Title is required"),
-      pubDate: z.string().transform((str) => new Date(str)),
-      description: z.string(),
-      author: z.string(),
-      imageUrl: z.string().optional(),
-      imageAlt: z.string().optional(),
-      tags: z
-        .string()
-        .optional()
-        .transform((str) => (str ? JSON.parse(str) : undefined)),
+      createdAt: z.string().transform((str) => new Date(str)),
       slug: z.string().min(1, "Slug is required"),
-      content: z.string()
+      content: z.string(),
+      userId: z.string()
     }),
     // Handler function
-    handler: async ({ id, title, pubDate, description, author, imageUrl, imageAlt, tags, slug, content }) => {
+    handler: async ({ id, title, createdAt, slug, content, userId }) => {
       try {
         // Update the post in the database
         const updatedPost = await db
           .update(Posts)
           .set({
             title,
-            pubDate,
-            description,
-            author,
-            imageUrl,
-            imageAlt,
-            tags,
+            createdAt,
             slug,
-            content
+            content,
+            userId
           })
           .where(eq(Posts.id, id))
           .returning()

@@ -1,5 +1,5 @@
 ---
-import { db, Posts } from "astro:db";
+import { db, Posts, eq } from "astro:db";
 import { Icon } from "astro-iconify";
 import Layout from "../../../layouts/Layout.astro";
 import Header from "../../../components/Header.astro";
@@ -9,7 +9,11 @@ if (!Astro.locals.auth().userId) {
 }
 
 const user = await Astro.locals.currentUser();
-const allPosts = await db.select().from(Posts).orderBy(Posts.pubDate);
+const allPosts = await db
+  .select()
+  .from(Posts)
+  .where(eq(Posts.userId, user?.id || ""))
+  .orderBy(Posts.createdAt);
 ---
 
 <Layout title="Dashboard">
@@ -20,20 +24,24 @@ const allPosts = await db.select().from(Posts).orderBy(Posts.pubDate);
       <section class="w-full m-0">
         <ul class="m-0 list-none p-6 rounded-2xl bg-white w-full shadow flex flex-col gap-2">
           <li class="">
-            <button class="btn btn-md w-full btn-primary text-white"> 
-                <Icon pack="lucide" name="feather" height={24} width={24} class="shrink-0" />
-                Write New Post 
-            </button>
+            <a href="/dashboard/posts/new" class="btn btn-md w-full btn-primary text-white">
+              <Icon pack="lucide" name="feather" height={24} width={24} class="shrink-0" />
+              Write New Post
+            </a>
           </li>
           {
-            allPosts.map((post) => (
-              <li class="grid grid-cols-[64px_1fr] items-start gap-3">
-                <p class="m-0 text-slate-500">
-                  {new Date(post.pubDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                </p>
-                <a class="m-0 text-slate-700 font-medium text-cyan-700 link">{post.title}</a>
-              </li>
-            ))
+            allPosts.length > 0 ? (
+              allPosts.map((post) => (
+                <li class="grid grid-cols-[64px_1fr] items-start gap-3">
+                  <p class="m-0 text-slate-500">
+                    {new Date(post.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                  </p>
+                  <a class="m-0 font-medium !text-cyan-700 link">{post.title}</a>
+                </li>
+              ))
+            ) : (
+              <li class="m-0 text-center">No posts yet</li>
+            )
           }
         </ul>
       </section>
