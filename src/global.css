@@ -4,6 +4,10 @@
   @apply bg-red-500 text-white;
 }
 
+[x-cloak] {
+  display: none;
+}
+
 /* Override some of the Tailwind .prose CSS */
 .prose h1,
 .prose h2,

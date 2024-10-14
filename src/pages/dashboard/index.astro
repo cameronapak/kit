@@ -115,10 +115,7 @@ const result = Astro.getActionResult(actions.projects.updateProject);
                 </button>
               </CldUploadWidget>
               <!-- YouTube Embed Iframe -->
-              <div
-                :class="youtubeVideoUrl ? '' : 'hidden'"
-                class="mb-2"
-              >
+              <div x-show="youtubeVideoUrl" x-cloak class="mb-2">
                 <iframe
                   class="my-0 rounded-xl border-2 border-slate-200 aspect-video object-cover object-center w-full"
                   width="100%"
@@ -130,6 +127,8 @@ const result = Astro.getActionResult(actions.projects.updateProject);
               </div>
               <input type="hidden" name="bannerImageId" id="bannerImageId" value={project?.bannerImageId || ""} />
               <input
+                x-cloak
+                x-show="shouldShowYouTubeVideoInput"
                 class="input input-bordered w-full rounded-lg bg-white"
                 x-bind:type="shouldShowYouTubeVideoInput ? 'text' : 'hidden'"
                 name="youtubeVideoUrl"
@@ -139,7 +138,7 @@ const result = Astro.getActionResult(actions.projects.updateProject);
               />
               <button
                 type="button"
-                :class="shouldShowYouTubeVideoInput ? 'hidden' : ''"
+                x-show="!shouldShowYouTubeVideoInput"
                 class="mt-4 btn btn-sm btn-outline border-slate-200 hover:bg-slate-200 hover:text-slate-900 hover:border-slate-300 border-2 shadow-none"
                 @click="shouldShowYouTubeVideoInput = true"
               >
@@ -212,6 +211,9 @@ const result = Astro.getActionResult(actions.projects.updateProject);
 <script>
   // @ts-ignore - no types available
   import Trix from "trix";
+  import { setupKeyboardNavigation } from "../../libs/utils";
+
+  setupKeyboardNavigation();
 
   type UploadInfo = {
     id: string;
@@ -268,12 +270,4 @@ const result = Astro.getActionResult(actions.projects.updateProject);
       }
     }) as EventListener);
   }
-
-  document.addEventListener('keydown', (event) => {
-    if (event.key === '2') {
-      window.location.href = '/dashboard/posts';
-    } else if (event.key === '3') {
-      window.location.href = '/dashboard/emails';
-    }
-  });
 </script>

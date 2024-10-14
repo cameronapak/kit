@@ -52,11 +52,7 @@ const allPosts = await db
 </Layout>
 
 <script>
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "1") {
-      window.location.href = "/dashboard";
-    } else if (event.key === "3") {
-      window.location.href = "/dashboard/emails";
-    }
-  });
+  import { setupKeyboardNavigation } from "../../../libs/utils";
+
+  setupKeyboardNavigation();
 </script>

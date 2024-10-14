@@ -67,11 +67,7 @@ if (firstProjectId) {
 </Layout>
 
 <script>
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "1") {
-      window.location.href = "/dashboard";
-    } else if (event.key === "2") {
-      window.location.href = "/dashboard/posts";
-    }
-  });
+  import { setupKeyboardNavigation } from "../../libs/utils";
+
+  setupKeyboardNavigation();
 </script>
