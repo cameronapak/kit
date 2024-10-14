@@ -77,7 +77,22 @@ const result = Astro.getActionResult(actions.projects.updateProject);
             <input type="hidden" name="id" value={project?.id} />
             <input type="hidden" name="slug" value={project?.slug} />
 
-            <div>
+            <div
+              x-data={`{
+                youtubeVideoUrl: '${project?.youtubeVideoUrl || ""}',
+                shouldShowYouTubeVideoInput: false,
+                validateYouTubeVideoUrl(url) {
+                  if (url.includes("youtube.com") || url.includes("youtu.be") && url.includes("v=")) {
+                    return true;
+                  }
+
+                  return false;
+                },
+                get youtubeVideoId() {
+                  return this.youtubeVideoUrl.split("v=")[1];
+                }
+              }`}
+            >
               <h2 class="text-slate-700">Banner</h2>
               <CldUploadWidget
                 id="upload-banner"
@@ -90,7 +105,7 @@ const result = Astro.getActionResult(actions.projects.updateProject);
                   folder: user?.id || "default"
                 }}
               >
-                <button type="button" class="w-full">
+                <button type="button" class="w-full" :class="youtubeVideoUrl ? 'hidden' : ''">
                   <img
                     id="bannerImageEl"
                     src={bannerImageUrl || "/assets/placeholder.svg"}
@@ -99,12 +114,37 @@ const result = Astro.getActionResult(actions.projects.updateProject);
                   />
                 </button>
               </CldUploadWidget>
+              <!-- YouTube Embed Iframe -->
+              <div
+                :class="youtubeVideoUrl ? '' : 'hidden'"
+                class="mb-2"
+              >
+                <iframe
+                  class="my-0 rounded-xl border-2 border-slate-200 aspect-video object-cover object-center w-full"
+                  width="100%"
+                  height="100%"
+                  x-bind:src="'https://www.youtube.com/embed/' + youtubeVideoId"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen></iframe>
+              </div>
               <input type="hidden" name="bannerImageId" id="bannerImageId" value={project?.bannerImageId || ""} />
+              <input
+                class="input input-bordered w-full rounded-lg bg-white"
+                x-bind:type="shouldShowYouTubeVideoInput ? 'text' : 'hidden'"
+                name="youtubeVideoUrl"
+                id="youtubeVideoUrl"
+                placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                x-model="youtubeVideoUrl"
+              />
               <button
                 type="button"
+                :class="shouldShowYouTubeVideoInput ? 'hidden' : ''"
                 class="mt-4 btn btn-sm btn-outline border-slate-200 hover:bg-slate-200 hover:text-slate-900 hover:border-slate-300 border-2 shadow-none"
-                >Or, paste a YouTube video URL</button
+                @click="shouldShowYouTubeVideoInput = true"
               >
+                Or, paste a YouTube video URL
+              </button>
             </div>
 
             <div>
@@ -138,9 +178,17 @@ const result = Astro.getActionResult(actions.projects.updateProject);
                   placeholder="my-project"
                   required
                   class="focus:outline-none border-none bg-transparent w-full"
-                  x-data={`{slug: '${project?.slug || ""}'}`}
+                  x-data={`{
+                    slug: '${project?.slug || ""}',
+                    formatSlug(value) {
+                      return value.toLowerCase()
+                        .replace(/[^a-z0-9-]/g, '-')
+                        .replace(/-+/g, '-')
+                        .replace(/^-/g, '');
+                    }
+                  }`}
                   x-model="slug"
-                  x-on:input="slug = $event.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-')"
+                  x-on:input="slug = formatSlug($event.target.value)"
                 />
               </label>
             </div>

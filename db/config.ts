@@ -25,6 +25,7 @@ const Projects = defineTable({
     createdAt: column.date(),
     userId: column.text(),
     bannerImageId: column.text({ optional: true }),
+    youtubeVideoUrl: column.text({ optional: true }),
   }
 });
 
