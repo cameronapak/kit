@@ -1,4 +1,4 @@
-import { db, Posts } from "astro:db";
+import { db, Posts, Leads } from "astro:db";
 
 const content = `
 ## This is the first post of my new Astro blog.
@@ -29,6 +29,23 @@ export default async function seed() {
       slug: "my-first-blog-post",
       content,
       userId: "user_2YOFdK1g5Zg0zQ5Q5Zg0zQ5Q"
+    }
+  ]);
+
+  await db.insert(Leads).values([
+    {
+      id: 1,
+      name: "Test User",
+      email: "test@example.com",
+      message: "Love the product you're creating. I'm a big fan of the focus on developer experience. Keep up the good work!",
+      createdAt: new Date(),
+    },
+    {
+      id: 2,
+      name: "Cameron Pak",
+      email: "cameronandrewpak@gmail.com",
+      message: "Need an app like this!",
+      createdAt: new Date(),
     }
   ]);
 }

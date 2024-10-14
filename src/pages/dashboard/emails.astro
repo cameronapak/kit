@@ -1,0 +1,46 @@
+---
+import { db, Leads } from "astro:db";
+import { Icon } from "astro-iconify";
+import Header from "../../components/Header.astro";
+import Layout from "../../layouts/Layout.astro";
+
+if (!Astro.locals.auth().userId) {
+  return Astro.redirect("/login");
+}
+
+const user = await Astro.locals.currentUser();
+const allEmails = await db.select().from(Leads).orderBy(Leads.email);
+---
+
+<Layout title="Dashboard">
+  <div class="p-6 container mx-auto">
+    <Header activeTab="emails" />
+
+    <main class="py-12 flex flex-col gap-6">
+      <section class="w-full m-0">
+        <ul class="m-0 list-none p-6 rounded-2xl bg-white w-full shadow flex flex-col gap-2">
+          <li class="">
+            <button class="btn btn-md w-full btn-primary text-white">
+              <Icon pack="lucide" name="clipboard" height={24} width={24} class="shrink-0" />
+              Copy Email List
+            </button>
+          </li>
+          {
+            allEmails.map((email) => (
+              <li class="grid grid-cols-[64px_1fr] items-start gap-3">
+                <p class="m-0 text-slate-500">
+                  {new Date(email.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                </p>
+                <div class="flex flex-col gap-1">
+                  <p class="m-0 text-slate-700 font-medium !text-cyan-700 link">{email.email}</p>
+                  <p class="m-0 text-slate-500 text-sm font-medium">{email.name}</p>
+                  <blockquote class="m-0 text-slate-500 text-sm font-normal">{email.message}</blockquote>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+    </main>
+  </div>
+</Layout>
