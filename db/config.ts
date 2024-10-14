@@ -16,6 +16,17 @@ const Posts = defineTable({
   }
 });
 
+const Projects = defineTable({
+  columns: {
+    id: column.number({ primaryKey: true }),
+    title: column.text(),
+    slug: column.text({ unique: true }),
+    content: column.text(),
+    createdAt: column.date(),
+    userId: column.text(),
+  }
+});
+
 const Leads = defineTable({
   columns: {
     id: column.number({ primaryKey: true }),
@@ -23,12 +34,14 @@ const Leads = defineTable({
     email: column.text(),
     message: column.text(),
     createdAt: column.date(),
+    projectId: column.number({ references: () => Projects.columns.id }),
   }
 });
 
 export default defineDb({
   tables: {
     Posts,
-    Leads
+    Leads,
+    Projects
   }
 });
