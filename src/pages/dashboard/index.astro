@@ -1,4 +1,5 @@
 ---
+import "trix/dist/trix.css";
 import Header from "../../components/Header.astro";
 import Layout from "../../layouts/Layout.astro";
 
@@ -36,10 +37,20 @@ const user = await Astro.locals.currentUser();
 
           <div>
             <h2 class="text-slate-700">Description</h2>
-            <textarea class="textarea textarea-bordered textarea-md px-4 py-2 w-full rounded-lg bg-white"></textarea>
+            <!-- <textarea class="textarea textarea-bordered textarea-md px-4 py-2 w-full rounded-lg bg-white"></textarea> -->
+            <trix-editor></trix-editor>
           </div>
         </div>
       </section>
     </main>
   </div>
 </Layout>
+
+<script>
+  // @ts-ignore - no types available
+  import Trix from "trix";
+
+  document.addEventListener("trix-file-accept", function(event) {
+    event.preventDefault();
+  });
+</script>

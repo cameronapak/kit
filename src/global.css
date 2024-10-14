@@ -33,3 +33,25 @@
 .container {
   max-width: 768px;
 }
+
+/* Trix Editor */
+trix-toolbar .trix-button {
+  border: none;
+}
+
+trix-toolbar .trix-button-group, trix-editor, input[type="text"] {
+  @apply border-2 border-slate-200 rounded-lg;
+}
+
+trix-toolbar .trix-button.trix-active {
+  @apply bg-cyan-100;
+}
+
+trix-toolbar [data-trix-button-group="file-tools"],
+trix-toolbar [data-trix-attribute="heading1"] {
+  @apply !hidden;
+}
+
+trix-toolbar [data-trix-attribute="quote"] {
+  @apply !border-l-0;
+}
