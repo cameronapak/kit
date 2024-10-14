@@ -27,7 +27,8 @@ export default async function seed() {
       imageAlt: "The Astro logo with the word One.",
       tags: JSON.stringify(["astro", "blogging", "learning in public"]),
       slug: "my-first-blog-post",
-      content
+      content,
+      userId: "user_2YOFdK1g5Zg0zQ5Q5Zg0zQ5Q"
     }
   ]);
 }

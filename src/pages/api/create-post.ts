@@ -14,11 +14,12 @@ export async function POST(context: APIContext): Promise<Response> {
       imageAlt: formData.get("imageAlt") as string | null,
       tags: formData.get("tags") ? JSON.parse(formData.get("tags") as string) : null,
       slug: formData.get("slug") as string,
-      content: formData.get("content") as string
+      content: formData.get("content") as string,
+      userId: formData.get("userId") as string
     };
 
     // Validate required fields
-    if (!post.title || !post.pubDate || !post.description || !post.author || !post.slug || !post.content) {
+    if (!post.title || !post.pubDate || !post.description || !post.author || !post.slug || !post.content || !post.userId) {
       return new Response("Missing required fields", { status: 400 });
     }
 

@@ -12,6 +12,7 @@ const Posts = defineTable({
     tags: column.json({ optional: true }),
     slug: column.text({ unique: true }),
     content: column.text(),
+    userId: column.text(),
   }
 });
 
