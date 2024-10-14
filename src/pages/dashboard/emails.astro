@@ -25,6 +25,14 @@ const allEmails = await db.select().from(Leads).orderBy(Leads.email);
               Copy Email List
             </button>
           </li>
+          <li class="justify-self-end w-full">
+            <button
+              class="btn w-fit self-center btn-sm btn-outline border-slate-200 hover:bg-slate-200 hover:text-slate-900 hover:border-slate-300 border-2 shadow-none"
+            >
+              <Icon pack="lucide" name="plus" height={20} width={20} class="shrink-0" />
+              Manually Add Email
+            </button>
+          </li>
           {
             allEmails.map((email) => (
               <li class="grid grid-cols-[64px_1fr] items-start gap-3">
