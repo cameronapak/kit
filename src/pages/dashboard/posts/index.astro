@@ -1,12 +1,15 @@
 ---
+import { db, Posts } from "astro:db";
 import { SignOutButton } from "@clerk/astro/components";
-import Layout from "../../layouts/Layout.astro";
+import { Icon } from "astro-iconify";
+import Layout from "../../../layouts/Layout.astro";
 
 if (!Astro.locals.auth().userId) {
   return Astro.redirect("/login");
 }
 
 const user = await Astro.locals.currentUser();
+const allPosts = await db.select().from(Posts).orderBy(Posts.pubDate);
 ---
 
 <Layout title="Dashboard">
@@ -31,8 +34,8 @@ const user = await Astro.locals.currentUser();
         </svg>
 
         <div role="tablist" class="not-prose tabs tabs-boxed w-fit">
-          <a role="tab" href="/dashboard" class="tab tab-active">Page</a>
-          <a role="tab" href="/dashboard/posts" class="tab">Posts</a>
+          <a role="tab" href="/dashboard" class="tab">Page</a>
+          <a role="tab" href="/dashboard/posts" class="tab tab-active">Posts</a>
           <a role="tab" href="/dashboard/emails" class="tab">Emails</a>
         </div>
 
@@ -43,30 +46,27 @@ const user = await Astro.locals.currentUser();
     </header>
 
     <main class="py-12 flex flex-col gap-6">
-      <h1 class="text-center">Edit Page</h1>
+      <h1 class="text-center">Edit Posts</h1>
 
       <section class="w-full">
-        <div class="p-6 rounded-2xl bg-white w-full shadow flex flex-col gap-12">
-          <div>
-            <h2 class="text-slate-700">Banner</h2>
-            <img
-              src="/assets/placeholder.svg"
-              alt=""
-              class="my-0 rounded-xl border-2 border-slate-200 aspect-video object-cover object-center w-full"
-            />
-            <button class="mt-4 btn btn-sm btn-outline border-slate-200 hover:bg-slate-200 hover:text-slate-900 hover:border-slate-300 border-2 shadow-none">Or, paste a YouTube video URL</button>
-          </div>
-
-          <div>
-            <h2 class="text-slate-700">Name of Tool</h2>
-            <input type="text" class="input input-bordered w-full rounded-lg bg-white" />
-          </div>
-
-          <div>
-            <h2 class="text-slate-700">Description</h2>
-            <textarea class="textarea textarea-bordered textarea-md px-4 py-2 w-full rounded-lg bg-white"></textarea>
-          </div>
-        </div>
+        <ul class="list-none p-6 rounded-2xl bg-white w-full shadow flex flex-col gap-2">
+          <li class="">
+            <button class="btn btn-md w-full btn-primary text-white"> 
+                <Icon pack="lucide" name="feather" height={24} width={24} class="shrink-0" />
+                Write New Post 
+            </button>
+          </li>
+          {
+            allPosts.map((post) => (
+              <li class="grid grid-cols-[64px_1fr] items-start gap-3">
+                <p class="m-0 text-slate-500">
+                  {new Date(post.pubDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                </p>
+                <a class="m-0 text-slate-700 font-medium text-cyan-700 link">{post.title}</a>
+              </li>
+            ))
+          }
+        </ul>
       </section>
     </main>
   </div>
