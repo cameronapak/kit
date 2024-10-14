@@ -1,5 +1,6 @@
 ---
 import "trix/dist/trix.css";
+import { CldUploadWidget } from "astro-cloudinary";
 import Header from "../../components/Header.astro";
 import Layout from "../../layouts/Layout.astro";
 
@@ -19,11 +20,25 @@ const user = await Astro.locals.currentUser();
         <div class="p-6 rounded-2xl bg-white w-full shadow flex flex-col gap-12">
           <div>
             <h2 class="text-slate-700">Banner</h2>
-            <img
-              src="/assets/placeholder.svg"
-              alt=""
-              class="my-0 rounded-xl border-2 border-slate-200 aspect-video object-cover object-center w-full"
-            />
+            <CldUploadWidget
+              id="upload-banner"
+              uploadPreset="ml_default"
+              options={{
+                sources: ['local'],
+                multiple: false,
+                maxFiles: 1,
+                croppingAspectRatio: 16 / 9,
+                folder: user?.id || "default",
+              }}
+            >
+              <button class="w-full">
+                <img
+                  src="/assets/placeholder.svg"
+                  alt=""
+                  class="my-0 rounded-xl border-2 border-slate-200 aspect-video object-cover object-center w-full"
+                />
+              </button>
+            </CldUploadWidget>
             <button
               class="mt-4 btn btn-sm btn-outline border-slate-200 hover:bg-slate-200 hover:text-slate-900 hover:border-slate-300 border-2 shadow-none"
               >Or, paste a YouTube video URL</button
@@ -50,7 +65,52 @@ const user = await Astro.locals.currentUser();
   // @ts-ignore - no types available
   import Trix from "trix";
 
-  document.addEventListener("trix-file-accept", function(event) {
+  type UploadInfo = {
+    id: string;
+    batchId: string;
+    asset_id: string;
+    public_id: string;
+    version: number;
+    version_id: string;
+    signature: string;
+    width: number;
+    height: number;
+    format: string;
+    resource_type: string;
+    created_at: string;
+    tags: string[];
+    bytes: number;
+    type: string;
+    etag: string;
+    placeholder: boolean;
+    url: string;
+    secure_url: string;
+    asset_folder: string;
+    display_name: string;
+    existing: boolean;
+    original_filename: string;
+    path: string;
+    thumbnail_url: string;
+  };
+
+  type UploadEvent = {
+    event: string;
+    info: UploadInfo;
+    UploadWidget: Record<string, unknown>;
+  };
+
+  document.addEventListener("trix-file-accept", function (event) {
     event.preventDefault();
   });
+
+  const widget = document.querySelector("#upload-banner");
+
+  if (widget) {
+    widget.addEventListener("clduploadwidget:success", ((e: CustomEvent<UploadEvent>) => {
+      console.log("clduploadwidget:success", e.detail);
+      // Save the public_id to the database
+      const publicId = e.detail.info.public_id;
+      console.log("publicId", publicId);
+    }) as EventListener);
+  }
 </script>

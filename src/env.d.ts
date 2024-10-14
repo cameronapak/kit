@@ -36,6 +36,14 @@ interface ImportMetaEnv {
   readonly PUBLIC_CLERK_PUBLISHABLE_KEY: string;
   /** https://clerk.com/docs/deployments/clerk-environment-variables#clerk-environment-variables */
   readonly CLERK_SECRET_KEY: string;
+  /** https://astro.cloudinary.dev */
+  readonly PUBLIC_CLOUDINARY_CLOUD_NAME: string;
+  /** https://astro.cloudinary.dev */
+  readonly PUBLIC_CLOUDINARY_API_KEY: string;
+  /** https://astro.cloudinary.dev */
+  readonly CLOUDINARY_API_SECRET: string;
+  /** https://astro.cloudinary.dev */
+  readonly PUBLIC_ASSETS_DIRECTORY: string;
 }
 
 interface ImportMeta {
