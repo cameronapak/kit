@@ -31,6 +31,7 @@
     "@sentry/astro": "^8.30.0",
     "alpinejs": "^3.14.1",
     "astro": "^4.15.4",
+    "astro-cloudinary": "^1.1.0",
     "astro-iconify": "^1.2.0",
     "better-sqlite3": "^11.3.0",
     "htmx.org": "2.0.1",
