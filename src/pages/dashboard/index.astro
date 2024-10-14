@@ -1,6 +1,8 @@
 ---
 import "trix/dist/trix.css";
 import { CldUploadWidget } from "astro-cloudinary";
+import { getCldImageUrl } from "astro-cloudinary/helpers";
+import { db, Projects, eq } from "astro:db";
 import Header from "../../components/Header.astro";
 import Layout from "../../layouts/Layout.astro";
 
@@ -9,6 +11,19 @@ if (!Astro.locals.auth().userId) {
 }
 
 const user = await Astro.locals.currentUser();
+const projects = await db
+  .select()
+  .from(Projects)
+  .where(eq(Projects.userId, user?.id || ""))
+  .limit(1);
+const project = projects[0];
+
+const bannerImageUrl = getCldImageUrl({
+  src: project?.bannerImageId || "",
+  width: 1200,
+  crop: "fill",
+  format: "webp"
+});
 ---
 
 <Layout title="Dashboard">
@@ -24,16 +39,16 @@ const user = await Astro.locals.currentUser();
               id="upload-banner"
               uploadPreset="ml_default"
               options={{
-                sources: ['local'],
+                sources: ["local"],
                 multiple: false,
                 maxFiles: 1,
                 croppingAspectRatio: 16 / 9,
-                folder: user?.id || "default",
+                folder: user?.id || "default"
               }}
             >
               <button class="w-full">
                 <img
-                  src="/assets/placeholder.svg"
+                  src={bannerImageUrl || "/assets/placeholder.svg"}
                   alt=""
                   class="my-0 rounded-xl border-2 border-slate-200 aspect-video object-cover object-center w-full"
                 />
@@ -47,13 +62,13 @@ const user = await Astro.locals.currentUser();
 
           <div>
             <h2 class="text-slate-700">Name of Tool</h2>
-            <input type="text" class="input input-bordered w-full rounded-lg bg-white" />
+            <input value={project?.title || ""} type="text" class="input input-bordered w-full rounded-lg bg-white" />
           </div>
 
           <div>
             <h2 class="text-slate-700">Description</h2>
-            <!-- <textarea class="textarea textarea-bordered textarea-md px-4 py-2 w-full rounded-lg bg-white"></textarea> -->
-            <trix-editor></trix-editor>
+            <input id="x" value={project?.content || ""} type="hidden" name="content">
+            <trix-editor input="x"></trix-editor>
           </div>
         </div>
       </section>

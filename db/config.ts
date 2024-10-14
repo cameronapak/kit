@@ -24,6 +24,7 @@ const Projects = defineTable({
     content: column.text(),
     createdAt: column.date(),
     userId: column.text(),
+    bannerImageId: column.text({ optional: true }),
   }
 });
 

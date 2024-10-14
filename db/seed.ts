@@ -14,6 +14,8 @@ Never gonna make you cry, never gonna say goodbye.
 Never gonna tell a lie and hurt you.
 `.trim();
 
+const CAMS_CLERK_USER_ID = "user_2hHFZTOTzVEGWVy8gpbKyB6JXPu";
+
 // https://astro.build/db/seed
 export default async function seed() {
   await db.insert(Posts).values([
@@ -28,7 +30,7 @@ export default async function seed() {
       tags: JSON.stringify(["astro", "blogging", "learning in public"]),
       slug: "my-first-blog-post",
       content,
-      userId: "user_2hHFZTOTzVEGWVy8gpbKyB6JXPu"
+      userId: CAMS_CLERK_USER_ID
     }
   ]);
 
@@ -38,7 +40,8 @@ export default async function seed() {
       title: "Test Project",
       content: "This is a test project.",
       createdAt: new Date(),
-      userId: "user_2hHFZTOTzVEGWVy8gpbKyB6JXPu",
+      bannerImageId: "tldraw_jhudrk",
+      userId: CAMS_CLERK_USER_ID,
       slug: "test-project",
     },
   ]);
