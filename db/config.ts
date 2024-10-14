@@ -16,8 +16,19 @@ const Posts = defineTable({
   }
 });
 
+const Leads = defineTable({
+  columns: {
+    id: column.number({ primaryKey: true }),
+    name: column.text(),
+    email: column.text(),
+    message: column.text(),
+    createdAt: column.date(),
+  }
+});
+
 export default defineDb({
   tables: {
-    Posts
+    Posts,
+    Leads
   }
 });
