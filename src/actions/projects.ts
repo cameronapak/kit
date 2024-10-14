@@ -13,7 +13,7 @@ export const projects = {
       slug: z.string().min(1, "Slug is required"),
       content: z.string(),
       bannerImageId: z.string().optional(),
-      youtubeVideoUrl: z.string().optional()
+      youtubeVideoUrl: z.string().optional().nullable().transform(v => v === "" ? null : v)
     }),
     // Handler function
     handler: async ({ id, title, slug, content, bannerImageId, youtubeVideoUrl }) => {
@@ -21,7 +21,7 @@ export const projects = {
         // Update the project in the database
         const updatedProject = await db
           .update(Projects)
-          .set({ title, slug, content, bannerImageId, youtubeVideoUrl })
+          .set({ title, slug, content, bannerImageId, youtubeVideoUrl: youtubeVideoUrl || null })
           .where(eq(Projects.id, id))
           .returning()
           .get();
@@ -50,7 +50,7 @@ export const projects = {
       content: z.string(),
       userId: z.string(),
       bannerImageId: z.string().optional(),
-      youtubeVideoUrl: z.string().optional()
+      youtubeVideoUrl: z.string().optional().nullable().transform(v => v === "" ? null : v)
     }),
     // Handler function
     handler: async ({ title, slug, content, userId, bannerImageId, youtubeVideoUrl }) => {
@@ -64,7 +64,7 @@ export const projects = {
             content,
             userId,
             bannerImageId,
-            youtubeVideoUrl,
+            youtubeVideoUrl: youtubeVideoUrl || null,
             createdAt: new Date()
           })
           .returning()
