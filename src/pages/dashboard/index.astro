@@ -5,6 +5,8 @@ import { getCldImageUrl } from "astro-cloudinary/helpers";
 import { db, Projects, eq } from "astro:db";
 import Header from "../../components/Header.astro";
 import Layout from "../../layouts/Layout.astro";
+import { actions } from "astro:actions";
+import Icon from "astro-iconify";
 
 if (!Astro.locals.auth().userId) {
   return Astro.redirect("/login");
@@ -24,6 +26,9 @@ const bannerImageUrl = getCldImageUrl({
   crop: "fill",
   format: "webp"
 });
+
+// Handle form submission result
+const result = Astro.getActionResult(actions.projects.updateProject);
 ---
 
 <Layout title="Dashboard">
@@ -32,45 +37,79 @@ const bannerImageUrl = getCldImageUrl({
 
     <main class="py-12 flex flex-col gap-6">
       <section class="w-full">
-        <div class="p-6 rounded-2xl bg-white w-full shadow flex flex-col gap-12">
-          <div>
-            <h2 class="text-slate-700">Banner</h2>
-            <CldUploadWidget
-              id="upload-banner"
-              uploadPreset="ml_default"
-              options={{
-                sources: ["local"],
-                multiple: false,
-                maxFiles: 1,
-                croppingAspectRatio: 16 / 9,
-                folder: user?.id || "default"
-              }}
-            >
-              <button class="w-full">
-                <img
-                  src={bannerImageUrl || "/assets/placeholder.svg"}
-                  alt=""
-                  class="my-0 rounded-xl border-2 border-slate-200 aspect-video object-cover object-center w-full"
-                />
-              </button>
-            </CldUploadWidget>
-            <button
-              class="mt-4 btn btn-sm btn-outline border-slate-200 hover:bg-slate-200 hover:text-slate-900 hover:border-slate-300 border-2 shadow-none"
-              >Or, paste a YouTube video URL</button
-            >
-          </div>
+        <form method="POST" action={actions.projects.updateProject}>
+          <div class="p-6 rounded-2xl bg-white w-full shadow flex flex-col gap-12">
+            {
+              result?.error && (
+                <div role="alert" class="alert alert-error bg-red-100 border-red-200 text-red-900">
+                  <Icon pack="lucide" name="x-circle" height={20} width={20} class="shrink-0" />
+                  <span>{result.error.message || "An error occurred"}</span>
+                </div>
+              )
+            }
+            {
+              result?.data?.success && (
+                <div role="alert" class="alert alert-info bg-cyan-100 border-cyan-200 text-cyan-900">
+                  <Icon pack="lucide" name="check-circle" height={20} width={20} class="shrink-0" />
+                  <span>Project updated successfully!</span>
+                </div>
+              )
+            }
 
-          <div>
-            <h2 class="text-slate-700">Name of Tool</h2>
-            <input value={project?.title || ""} type="text" class="input input-bordered w-full rounded-lg bg-white" />
-          </div>
+            <input type="hidden" name="id" value={project?.id} />
+            <input type="hidden" name="slug" value={project?.slug} />
 
-          <div>
-            <h2 class="text-slate-700">Description</h2>
-            <input id="x" value={project?.content || ""} type="hidden" name="content">
-            <trix-editor input="x"></trix-editor>
+            <div>
+              <h2 class="text-slate-700">Banner</h2>
+              <CldUploadWidget
+                id="upload-banner"
+                uploadPreset="ml_default"
+                options={{
+                  sources: ["local"],
+                  multiple: false,
+                  maxFiles: 1,
+                  croppingAspectRatio: 16 / 9,
+                  folder: user?.id || "default"
+                }}
+              >
+                <button type="button" class="w-full">
+                  <img
+                    src={bannerImageUrl || "/assets/placeholder.svg"}
+                    alt=""
+                    class="my-0 rounded-xl border-2 border-slate-200 aspect-video object-cover object-center w-full"
+                  />
+                </button>
+              </CldUploadWidget>
+              <input type="hidden" name="bannerImageId" id="bannerImageId" value={project?.bannerImageId || ""} />
+              <button
+                type="button"
+                class="mt-4 btn btn-sm btn-outline border-slate-200 hover:bg-slate-200 hover:text-slate-900 hover:border-slate-300 border-2 shadow-none"
+                >Or, paste a YouTube video URL</button
+              >
+            </div>
+
+            <div>
+              <h2 class="text-slate-700">Name of Tool</h2>
+              <input
+                name="title"
+                value={project?.title || ""}
+                type="text"
+                class="input input-bordered w-full rounded-lg bg-white"
+                required
+              />
+            </div>
+
+            <div>
+              <h2 class="text-slate-700">Description</h2>
+              <input id="x" value={project?.content || ""} type="hidden" name="content" />
+              <trix-editor input="x"></trix-editor>
+            </div>
+
+            <div>
+              <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
           </div>
-        </div>
+        </form>
       </section>
     </main>
   </div>
@@ -119,12 +158,16 @@ const bannerImageUrl = getCldImageUrl({
   });
 
   const widget = document.querySelector("#upload-banner");
+  const bannerImageIdInput = document.querySelector("#bannerImageId") as HTMLInputElement;
 
   if (widget) {
     widget.addEventListener("clduploadwidget:success", ((e: CustomEvent<UploadEvent>) => {
       console.log("clduploadwidget:success", e.detail);
-      // Save the public_id to the database
+      // Save the public_id to the hidden input
       const publicId = e.detail.info.public_id;
+      if (bannerImageIdInput) {
+        bannerImageIdInput.value = publicId;
+      }
       console.log("publicId", publicId);
     }) as EventListener);
   }
