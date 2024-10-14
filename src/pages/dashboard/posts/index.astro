@@ -48,8 +48,8 @@ const allPosts = await db.select().from(Posts).orderBy(Posts.pubDate);
     <main class="py-12 flex flex-col gap-6">
       <h1 class="text-center">Edit Posts</h1>
 
-      <section class="w-full">
-        <ul class="list-none p-6 rounded-2xl bg-white w-full shadow flex flex-col gap-2">
+      <section class="w-full m-0">
+        <ul class="m-0 list-none p-6 rounded-2xl bg-white w-full shadow flex flex-col gap-2">
           <li class="">
             <button class="btn btn-md w-full btn-primary text-white"> 
                 <Icon pack="lucide" name="feather" height={24} width={24} class="shrink-0" />
