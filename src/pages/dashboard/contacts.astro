@@ -1,0 +1,145 @@
+---
+import { db, Leads, Projects, eq } from "astro:db";
+import { Icon } from "astro-iconify";
+import { actions } from "astro:actions";
+import Header from "../../components/Header.astro";
+import Layout from "../../layouts/Layout.astro";
+
+if (!Astro.locals.auth().userId) {
+  return Astro.redirect("/");
+}
+
+const user = await Astro.locals.currentUser();
+console.log("User:", user);
+const allProjects = await db
+  .select()
+  .from(Projects)
+  .where(eq(Projects.userId, user?.id ?? ""));
+const project = allProjects[0];
+const firstProjectId = project?.id;
+let allEmails: any[] = [];
+if (firstProjectId) {
+  allEmails = await db.select().from(Leads).where(eq(Leads.projectId, firstProjectId)).orderBy(Leads.email);
+}
+
+const result = Astro.getActionResult(actions.leads.createLead);
+---
+
+<Layout title="Dashboard">
+  <div
+    x-data={`{ 
+      emailConsent: false, 
+      name: '', 
+      email: '', 
+      get isFormComplete() { 
+        return emailConsent && name && email 
+      } 
+    }`}
+    class="p-6 container mx-auto"
+  >
+    <Header activeTab="contacts" />
+
+    <dialog x-ref="getUpdatesModal" id="my_modal_2" class="modal">
+      <div class="modal-box bg-white flex flex-col gap-6 p-6 max-w-md">
+        <h2 class="text-2xl my-0 items-center w-full">
+          <Icon pack="lucide" name="mail" class="w-8 h-8 inline-block mr-1 align-top" />
+          <span>Import Contact</span>
+        </h2>
+        <form method="POST" class="flex flex-col gap-4 w-full" action={actions.leads.createLead}>
+          <label class="form-control w-full">
+            <div class="label">
+              <span class="text-base label-text">Name</span>
+              <span class="text-xs label-text text-slate-500">Required</span>
+            </div>
+            <input
+              type="text"
+              name="name"
+              x-model="name"
+              class="input input-lg text-base bg-white rounded-lg input-bordered w-full"
+              placeholder="Their name"
+              required
+            />
+          </label>
+          <label class="form-control w-full">
+            <div class="label">
+              <span class="text-base label-text">Email</span>
+              <span class="text-xs label-text text-slate-500">Required</span>
+            </div>
+            <input
+              type="email"
+              name="email"
+              x-model="email"
+              class="input input-lg text-base bg-white rounded-lg input-bordered w-full"
+              placeholder="email@example.com"
+              required
+            />
+          </label>
+          <input type="hidden" name="projectId" value={project?.id} />
+          <div class="form-control">
+            <label class="label cursor-pointer flex gap-3 items-center justify-start">
+              <input type="checkbox" x-model="emailConsent" class="checkbox p-0" />
+              <p class="block label-text p-0">
+                I confirm the owner of this email has consented to receive updates on {project?.title}
+              </p>
+            </label>
+          </div>
+          <div class="flex flex-col gap-4">
+            <button x-bind:disabled="!isFormComplete" class="btn btn-primary mt-4 w-full">Submit</button>
+            <p class="text-center text-slate-500 text-sm py-0 my-0">
+              By signing up, you're agreeing to receive updates on {project?.title} from the creator of the project.
+            </p>
+          </div>
+        </form>
+      </div>
+      <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+      </form>
+    </dialog>
+
+    <main class="py-12 flex flex-col gap-6">
+      <section class="w-full m-0">
+        <ul class="m-0 list-none p-6 rounded-2xl bg-white w-full shadow flex flex-col gap-2">
+          <li class="">
+            <button class="btn btn-md w-full btn-primary text-white">
+              <Icon pack="lucide" name="clipboard" height={24} width={24} class="shrink-0" />
+              Copy Email List
+            </button>
+          </li>
+          <li class="justify-self-end w-full">
+            <button
+              @click="$refs.getUpdatesModal.showModal()"
+              class="btn w-fit self-center btn-sm btn-outline border-slate-200 hover:bg-slate-200 hover:text-slate-900 hover:border-slate-300 border-2 shadow-none"
+            >
+              <Icon pack="lucide" name="plus" height={20} width={20} class="shrink-0" />
+              Import Contact
+            </button>
+          </li>
+          {
+            allEmails.length > 0 ? (
+              allEmails.map((email) => (
+                <li class="grid grid-cols-[64px_1fr] items-start gap-3">
+                  <p class="m-0 text-slate-500">
+                    {new Date(email.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                  </p>
+                  <div class="flex flex-col gap-1">
+                    <p class="m-0 text-slate-700 font-medium !text-cyan-700 link">{email.email}</p>
+                    <p class="m-0 text-slate-500 text-sm font-medium">{email.name}</p>
+                    <blockquote class="m-0 text-slate-500 text-sm font-normal">{email.message}</blockquote>
+                  </div>
+                </li>
+              ))
+            ) : (
+              <li class="text-slate-500">Emails will appear here when people show interest in your project</li>
+            )
+          }
+        </ul>
+      </section>
+    </main>
+  </div>
+</Layout>
+
+<script>
+  import { setupKeyboardNavigation } from "../../libs/utils";
+
+  setupKeyboardNavigation();
+</script>

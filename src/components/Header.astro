@@ -1,7 +1,7 @@
 ---
 import { SignOutButton } from "@clerk/astro/components";
 interface Props {
-  activeTab: "page" | "posts" | "emails";
+  activeTab: "page" | "posts" | "contacts";
 }
 
 const { activeTab }: Props = Astro.props;
@@ -32,10 +32,10 @@ const { activeTab }: Props = Astro.props;
     </defs>
   </svg>
 
-  <div role="tablist" class="justify-self-center self-center not-prose tabs tabs-boxed w-fit bg-slate-200">
+  <div role="tablist" class="grid grid-cols-3 justify-self-center self-center not-prose tabs tabs-boxed w-fit bg-slate-200">
     <a role="tab" href="/dashboard" class={`tab ${activeTab === "page" ? "tab-active" : ""}`}>Page</a>
     <a role="tab" href="/dashboard/posts" class={`tab ${activeTab === "posts" ? "tab-active" : ""}`}>Posts</a>
-    <a role="tab" href="/dashboard/emails" class={`tab ${activeTab === "emails" ? "tab-active" : ""}`}>Emails</a>
+    <a role="tab" href="/dashboard/contacts" class={`tab ${activeTab === "contacts" ? "tab-active" : ""}`}>Contacts</a>
   </div>
 
   <SignOutButton

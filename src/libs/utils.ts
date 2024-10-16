@@ -13,7 +13,7 @@ export const navigateByKeyboard = (event: KeyboardEvent) => {
     } else if (event.key === "2") {
       window.location.href = "/dashboard/posts";
     } else if (event.key === "3") {
-      window.location.href = "/dashboard/emails";
+      window.location.href = "/dashboard/contacts";
     }
   }
 };
