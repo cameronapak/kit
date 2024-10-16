@@ -1,13 +1,8 @@
 ---
-import "trix/dist/trix.css";
 import { getCldImageUrl } from "astro-cloudinary/helpers";
-import { db, Projects, eq } from "astro:db";
-import Layout from "../../layouts/Layout.astro";
+import { db, eq, Projects, Posts } from "astro:db";
 import Icon from "astro-iconify";
-
-if (!Astro.locals.auth().userId) {
-  return Astro.redirect("/");
-}
+import Layout from "../../../layouts/Layout.astro";
 
 // Get the project ID from the URL
 const projectId = Number(Astro.params.id?.split("-")?.[0] || 0);
@@ -31,11 +26,11 @@ const youtubeVideoId = project?.youtubeVideoUrl?.split("v=")[1] as string | unde
 const youtubeVideoUrl = new URL(`https://www.youtube.com/embed/${youtubeVideoId}`);
 youtubeVideoUrl.searchParams.set("rel", "0");
 
-const activeTab = Astro.url.searchParams.get("tab") || "page";
+const posts = await db.select().from(Posts).where(eq(Posts.projectId, projectId));
 ---
 
 <Layout title="Dashboard">
-  <div class="p-6 py-12 container mx-auto flex flex-col gap-12">
+  <div x-data class="p-6 py-12 container mx-auto flex flex-col gap-12">
     <header class="flex justify-center">
       <svg height="24" viewBox="0 0 942 116" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
@@ -81,43 +76,62 @@ const activeTab = Astro.url.searchParams.get("tab") || "page";
             <h1 class="pt-2 line-clamp-2 ellipsis my-0">{project?.title}</h1>
             <p class="text-lg text-slate-500 my-0">By Techless</p>
           </div>
-          <div role="tablist" class="justify-self-start self-start mt-2 not-prose tabs tabs-boxed w-fit bg-slate-200">
-            <a role="tab" href="/dashboard" class={`tab ${activeTab === "page" ? "tab-active" : ""}`}>Page</a>
-            <a role="tab" href="/dashboard/posts" class={`tab ${activeTab === "posts" ? "tab-active" : ""}`}>Posts</a>
-          </div>
+          <!-- Button to sign up -->
+          <button @click="$refs.getUpdatesModal.showModal()" class="btn btn-primary">Get Updates</button>
         </section>
 
-        <div class="text-xl">
+        <div class="text-xl" slot="content">
           <Fragment set:html={project?.content} />
         </div>
 
-        <div class="mt-6 flex flex-col gap-3 items-center self-center border-2 border-slate-200 p-6 rounded-2xl w-full w-full">
-          <h2 class="text-2xl my-0 items-center w-full max-w-sm">
-            <Icon pack="lucide" name="mail" class="w-8 h-8 inline-block mr-1 align-top" />
-            <span>Get {project?.title} Updates</span>
-          </h2>
-          <form class="flex flex-col gap-4 w-full max-w-sm">
-            <label class="form-control w-full">
-              <div class="label">
-                <span class="text-base label-text text-slate-500">What's your email?</span>
-              </div>
-              <input
-                type="email"
-                class="input input-lg text-base bg-white rounded-lg input-bordered w-full"
-                placeholder="email@example.com"
-              />
-            </label>
-            <label class="form-control w-full">
-              <div class="label">
-                <span class="text-base label-text text-slate-500">First impression of {project?.title}?</span>
-              </div>
-              <textarea
-                class="textarea textarea-lg text-base bg-white rounded-lg textarea-bordered w-full"
-                placeholder="Optional"></textarea>
-            </label>
-            <button class="btn btn-primary mt-4 w-full">Sign Up</button>
+        <dialog x-ref="getUpdatesModal" id="my_modal_2" class="modal">
+          <div class="modal-box bg-white flex flex-col gap-6 p-6 max-w-md">
+            <h2 class="text-2xl my-0 items-center w-full">
+              <Icon pack="lucide" name="mail" class="w-8 h-8 inline-block mr-1 align-top" />
+              <span>Get {project?.title} Updates</span>
+            </h2>
+            <form class="flex flex-col gap-4 w-full">
+              <label class="form-control w-full">
+                <div class="label">
+                  <span class="text-base label-text text-slate-500">What's your email?</span>
+                </div>
+                <input
+                  type="email"
+                  class="input input-lg text-base bg-white rounded-lg input-bordered w-full"
+                  placeholder="email@example.com"
+                />
+              </label>
+              <label class="form-control w-full">
+                <div class="label">
+                  <span class="text-base label-text text-slate-500">First impression of {project?.title}?</span>
+                </div>
+                <textarea
+                  class="textarea textarea-lg text-base bg-white rounded-lg textarea-bordered w-full"
+                  placeholder="Optional"></textarea>
+              </label>
+              <button class="btn btn-primary mt-4 w-full">Get Updates</button>
+            </form>
+          </div>
+          <form method="dialog" class="modal-backdrop">
+            <button>close</button>
           </form>
-        </div>
+        </dialog>
+
+        <section class="mt-6">
+          <h2 class="text-2xl my-0">Posts</h2>
+          <ul class="list-none p-0 m-0">
+            {
+              posts.map((post) => (
+                <li class="p-0 m-0 grid grid-cols-[76px_1fr] gap-2">
+                  <time datetime={post.createdAt.toISOString()}>
+                    {post.createdAt.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                  </time>
+                  <a href={`/app/${projectId}/posts/${post.slug}`}>{post.title}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
       </div>
     </main>
   </div>

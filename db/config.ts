@@ -8,6 +8,7 @@ const Posts = defineTable({
     slug: column.text({ unique: true }),
     content: column.text(),
     userId: column.text(),
+    projectId: column.number({ references: () => Projects.columns.id }),
   }
 });
 
