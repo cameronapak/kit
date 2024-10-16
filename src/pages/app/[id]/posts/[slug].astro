@@ -1,0 +1,190 @@
+---
+import { getCldImageUrl } from "astro-cloudinary/helpers";
+import { db, eq, Projects, Posts } from "astro:db";
+import Icon from "astro-iconify";
+import { actions } from "astro:actions";
+import Layout from "../../../../layouts/Layout.astro";
+
+// Get the project ID from the URL
+const projectId = Number(Astro.params.id?.split("-")?.[0] || 0);
+
+if (!projectId) {
+  return Astro.redirect("/");
+}
+
+const projects = await db.select().from(Projects).where(eq(Projects.id, projectId)).limit(1);
+
+let project = projects[0];
+
+const bannerImageUrl = getCldImageUrl({
+  src: project?.bannerImageId || "",
+  width: 1200,
+  crop: "fill",
+  format: "webp"
+});
+
+const youtubeVideoId = project?.youtubeVideoUrl?.split("v=")[1] as string | undefined;
+const youtubeVideoUrl = new URL(`https://www.youtube.com/embed/${youtubeVideoId}`);
+youtubeVideoUrl.searchParams.set("rel", "0");
+
+const { slug } = Astro.params;
+
+const posts = await db
+  .select()
+  .from(Posts)
+  .where(eq(Posts.slug, slug || ""))
+  .limit(1);
+
+const post = posts[0];
+
+const result = Astro.getActionResult(actions.leads.createLead);
+---
+
+<Layout title="Dashboard">
+  <div x-data class="p-6 py-12 container mx-auto flex flex-col gap-12">
+    <header class="flex justify-center">
+      <svg height="32" viewBox="0 0 646 181" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#clip0_1089_220)">
+          <path
+            d="M13.5963 117.75C97.598 30.51 213.076 67.3512 297.077 164.539"
+            stroke="#2B2B2B"
+            stroke-opacity="0.4"
+            stroke-width="25.9221"
+            stroke-linecap="round"></path>
+          <path
+            d="M13 117.038C97.0017 204.278 213.077 162.189 297.079 65"
+            stroke="#2B2B2B"
+            stroke-width="25.9221"
+            stroke-linecap="round"></path>
+        </g>
+        <path
+          d="M404.064 141.757L404.146 99.8561H409.23L449.573 52.0514H489.67L435.469 115.354H427.187L404.064 141.757ZM372.413 178V10.0685H407.344V178H372.413ZM451.131 178L414.068 123.143L437.355 98.4621L492.048 178H451.131ZM506.807 178V52.0514H541.738V178H506.807ZM524.355 35.8158C519.161 35.8158 514.706 34.0939 510.989 30.6499C507.326 27.1514 505.495 22.9695 505.495 18.1043C505.495 13.2937 507.326 9.16652 510.989 5.72262C514.706 2.22404 519.161 0.474752 524.355 0.474752C529.548 0.474752 533.976 2.22404 537.638 5.72262C541.356 9.16652 543.214 13.2937 543.214 18.1043C543.214 22.9695 541.356 27.1514 537.638 30.6499C533.976 34.0939 529.548 35.8158 524.355 35.8158ZM636.712 52.0514V78.2907H560.864V52.0514H636.712ZM578.084 21.8762H613.015V139.297C613.015 142.522 613.507 145.037 614.491 146.841C615.475 148.59 616.841 149.82 618.591 150.531C620.395 151.241 622.472 151.597 624.822 151.597C626.462 151.597 628.102 151.46 629.742 151.187C631.382 150.859 632.64 150.613 633.514 150.449L639.008 176.442C637.259 176.989 634.799 177.617 631.628 178.328C628.458 179.093 624.604 179.558 620.067 179.722C611.648 180.05 604.268 178.929 597.927 176.36C591.641 173.791 586.748 169.8 583.25 164.388C579.751 158.977 578.029 152.143 578.084 143.889V21.8762Z"
+          fill="#2B2B2B"></path>
+        <defs>
+          <clipPath id="clip0_1089_220">
+            <rect width="310" height="126" fill="white" transform="translate(0 52)"></rect>
+          </clipPath>
+        </defs>
+      </svg>
+    </header>
+
+    {
+      result?.error && (
+        <div class="toast toast-top toast-center">
+          <div role="alert" class="alert alert-error bg-red-100 border-red-200 text-red-900">
+            <Icon pack="lucide" name="x-circle" height={20} width={20} class="shrink-0" />
+            <span>{result.error.message || "An error occurred"}</span>
+          </div>
+        </div>
+      )
+    }
+    {
+      result?.data?.success && (
+        <div
+          x-data="{ show: true }"
+          x-show="show"
+          x-transition:enter="transition ease-out duration-300"
+          x-transition:enter-start="opacity-0 transform -translate-y-2"
+          x-transition:enter-end="opacity-100 transform translate-y-0"
+          x-transition:leave="transition ease-in duration-300"
+          x-transition:leave-start="opacity-100 transform translate-y-0"
+          x-transition:leave-end="opacity-0 transform -translate-y-2"
+          x-init="setTimeout(() => show = false, 5000)"
+          class="toast toast-top toast-center"
+        >
+          <div role="alert" class="alert alert-info bg-cyan-100 border-cyan-200 text-cyan-900">
+            <Icon pack="lucide" name="check-circle" height={20} width={20} class="shrink-0" />
+            <span>Signed up for {project?.title} updates!</span>
+          </div>
+        </div>
+      )
+    }
+
+    <dialog x-ref="getUpdatesModal" id="my_modal_2" class="modal">
+      <div class="modal-box bg-white flex flex-col gap-6 p-6 max-w-md">
+        <h2 class="text-2xl my-0 items-center w-full">
+          <Icon pack="lucide" name="mail" class="w-8 h-8 inline-block mr-1 align-top" />
+          <span>Get Updates</span>
+        </h2>
+        <form method="POST" class="flex flex-col gap-4 w-full" action={actions.leads.createLead}>
+          <label class="form-control w-full">
+            <div class="label">
+              <span class="text-base label-text">What's your name?</span>
+              <span class="text-xs label-text text-slate-500">Required</span>
+            </div>
+            <input
+              type="text"
+              name="name"
+              class="input input-lg text-base bg-white rounded-lg input-bordered w-full"
+              placeholder="Your name"
+              required
+            />
+          </label>
+          <label class="form-control w-full">
+            <div class="label">
+              <span class="text-base label-text">And, your email?</span>
+              <span class="text-xs label-text text-slate-500">Required</span>
+            </div>
+            <input
+              type="email"
+              name="email"
+              class="input input-lg text-base bg-white rounded-lg input-bordered w-full"
+              placeholder="email@example.com"
+              required
+            />
+          </label>
+          <input type="hidden" name="projectId" value={project?.id} />
+          <label class="form-control w-full">
+            <div class="label">
+              <span class="text-base label-text">First impression of {project?.title}?</span>
+              <span class="text-xs label-text text-slate-500">Optional</span>
+            </div>
+            <textarea
+              name="message"
+              class="textarea textarea-lg text-base bg-white rounded-lg textarea-bordered w-full"
+              placeholder="Optional"></textarea>
+          </label>
+          <div class="flex flex-col gap-4">
+            <button class="btn btn-primary mt-4 w-full">Submit</button>
+            <p class="text-center text-slate-500 text-sm py-0 my-0">
+              By signing up, you're agreeing to receive updates on {project?.title} from the creator of the project.
+            </p>
+          </div>
+        </form>
+      </div>
+      <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+      </form>
+    </dialog>
+
+    <main class="flex flex-col gap-6 w-full">
+      <div class="relative w-full flex flex-col">
+        <div
+          class="absolute z-10 top-0 left-0 right-0 scale-[95%] bg-slate-200 m-0 list-none p-4 py-1 pb-12 rounded-xl w-full shadow-sm flex flex-col gap-2"
+        >
+          <!-- daisyUI breadcrumbs -->
+          <div class="not-prose breadcrumbs text-sm flex justify-center text-slate-800">
+            <ul>
+              <li>
+                <a href={`/app/${Astro.params.id}`} class="flex items-center gap-2">
+                  {project?.title}
+                </a>
+              </li>
+              <li class="flex items-center gap-2">
+                <Icon pack="lucide" name="feather" height={16} width={16} class="shrink-0" />
+                Post
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="w-full relative translate-y-10 z-20 m-0 list-none p-6 rounded-2xl bg-white w-full shadow-[0_4px_20px_rgb(0,0,0,0.08)] flex flex-col gap-2"
+        >
+          <h1 class="text-2xl font-bold">{post?.title}</h1>
+          <Fragment set:html={post?.content} />
+          <button @click="$refs.getUpdatesModal.showModal()" class="mt-4 btn btn-secondary w-fit">Get Updates</button>
+        </div>
+      </div>
+    </main>
+  </div>
+</Layout>
