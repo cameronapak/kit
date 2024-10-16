@@ -2,6 +2,7 @@
 import { SignIn } from "@clerk/astro/components";
 import Logo from "../components/Logo.astro";
 import Layout from "../layouts/Layout.astro";
+import Footer from "../components/Footer.astro";
 
 if (Astro.locals.auth().userId) {
   return Astro.redirect("/dashboard");
@@ -19,6 +20,7 @@ if (Astro.locals.auth().userId) {
         <p class="max-w-sm text-center text-balance">kit makes it easier to keep in touch with what's new in faith & tech.</p>
       </div>
       <SignIn />
+      <Footer />
     </div>
   </main>
 </Layout>

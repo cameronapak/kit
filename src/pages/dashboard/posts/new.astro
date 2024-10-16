@@ -1,15 +1,27 @@
 ---
 import "trix/dist/trix.css";
+import { db, Projects, eq } from "astro:db";
 import { Icon } from "astro-iconify";
+import { actions } from "astro:actions";
 import Layout from "../../../layouts/Layout.astro";
 import Header from "../../../components/Header.astro";
-import { actions } from "astro:actions";
 
 if (!Astro.locals.auth().userId) {
   return Astro.redirect("/");
 }
 
 const user = await Astro.locals.currentUser();
+const projects = await db
+  .select()
+  .from(Projects)
+  .where(eq(Projects.userId, user?.id || ""))
+  .limit(1);
+
+let project = projects[0];
+
+if (!project) {
+  return Astro.redirect("/dashboard");
+}
 
 // Handle form submission result
 const result = Astro.getActionResult(actions.posts.createPost);
@@ -95,7 +107,9 @@ const result = Astro.getActionResult(actions.posts.createPost);
             <input type="hidden" name="createdAt" value={new Date().toISOString()} />
             <input type="hidden" name="slug" x-model="slug" />
             <input type="hidden" name="userId" value={user?.id} />
+            <input type="hidden" name="projectId" value={project?.id} />
             <input type="hidden" name="content" id="x" />
+
             <div>
               <trix-editor input="x" placeholder="Write your post here..."></trix-editor>
             </div>
