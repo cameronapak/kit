@@ -2,6 +2,7 @@
 import { getCldImageUrl } from "astro-cloudinary/helpers";
 import { db, eq, Projects, Posts } from "astro:db";
 import Icon from "astro-iconify";
+import { actions } from "astro:actions";
 import Layout from "../../../layouts/Layout.astro";
 
 // Get the project ID from the URL
@@ -27,6 +28,8 @@ const youtubeVideoUrl = new URL(`https://www.youtube.com/embed/${youtubeVideoId}
 youtubeVideoUrl.searchParams.set("rel", "0");
 
 const posts = await db.select().from(Posts).where(eq(Posts.projectId, projectId));
+
+const result = Astro.getActionResult(actions.leads.createLead);
 ---
 
 <Layout title="Dashboard">
@@ -49,6 +52,39 @@ const posts = await db.select().from(Posts).where(eq(Posts.projectId, projectId)
           fill="black"></path>
       </svg>
     </header>
+
+    {
+      result?.error && (
+        <div class="toast toast-top toast-center">
+          <div role="alert" class="alert alert-error bg-red-100 border-red-200 text-red-900">
+            <Icon pack="lucide" name="x-circle" height={20} width={20} class="shrink-0" />
+            <span>{result.error.message || "An error occurred"}</span>
+          </div>
+        </div>
+      )
+    }
+    {
+      result?.data?.success && (
+        <div
+          x-data="{ show: true }"
+          x-show="show"
+          x-transition:enter="transition ease-out duration-300"
+          x-transition:enter-start="opacity-0 transform -translate-y-2"
+          x-transition:enter-end="opacity-100 transform translate-y-0"
+          x-transition:leave="transition ease-in duration-300"
+          x-transition:leave-start="opacity-100 transform translate-y-0"
+          x-transition:leave-end="opacity-0 transform -translate-y-2"
+          x-init="setTimeout(() => show = false, 5000)"
+          class="toast toast-top toast-center"
+        >
+          <div role="alert" class="alert alert-info bg-cyan-100 border-cyan-200 text-cyan-900">
+            <Icon pack="lucide" name="check-circle" height={20} width={20} class="shrink-0" />
+            <span>Signed up for {project?.title} updates!</span>
+          </div>
+        </div>
+      )
+    }
+
     <main class="flex flex-col gap-6 w-full">
       <div class="p-6 rounded-2xl bg-white w-full shadow flex flex-col gap-6">
         {
@@ -90,22 +126,41 @@ const posts = await db.select().from(Posts).where(eq(Posts.projectId, projectId)
               <Icon pack="lucide" name="mail" class="w-8 h-8 inline-block mr-1 align-top" />
               <span>Get {project?.title} Updates</span>
             </h2>
-            <form class="flex flex-col gap-4 w-full">
+            <form method="POST" class="flex flex-col gap-4 w-full" action={actions.leads.createLead}>
               <label class="form-control w-full">
                 <div class="label">
-                  <span class="text-base label-text text-slate-500">What's your email?</span>
+                  <span class="text-base label-text">What's your name?</span>
+                  <span class="text-xs label-text text-slate-500">Required</span>
                 </div>
                 <input
-                  type="email"
+                  type="text"
+                  name="name"
                   class="input input-lg text-base bg-white rounded-lg input-bordered w-full"
-                  placeholder="email@example.com"
+                  placeholder="Your name"
+                  required
                 />
               </label>
               <label class="form-control w-full">
                 <div class="label">
-                  <span class="text-base label-text text-slate-500">First impression of {project?.title}?</span>
+                  <span class="text-base label-text">And, your email?</span>
+                  <span class="text-xs label-text text-slate-500">Required</span>
+                </div>
+                <input
+                  type="email"
+                  name="email"
+                  class="input input-lg text-base bg-white rounded-lg input-bordered w-full"
+                  placeholder="email@example.com"
+                  required
+                />
+              </label>
+              <input type="hidden" name="projectId" value={project?.id} />
+              <label class="form-control w-full">
+                <div class="label">
+                  <span class="text-base label-text">First impression of {project?.title}?</span>
+                  <span class="text-xs label-text text-slate-500">Optional</span>
                 </div>
                 <textarea
+                  name="message"
                   class="textarea textarea-lg text-base bg-white rounded-lg textarea-bordered w-full"
                   placeholder="Optional"></textarea>
               </label>
