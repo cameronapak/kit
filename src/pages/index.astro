@@ -1,5 +1,6 @@
 ---
 import { SignIn } from "@clerk/astro/components";
+import Logo from "../components/Logo.astro";
 import Layout from "../layouts/Layout.astro";
 
 if (Astro.locals.auth().userId) {
@@ -8,11 +9,15 @@ if (Astro.locals.auth().userId) {
 ---
 
 <Layout
-  title="Freedom Stack Boilerplate"
-  description="A free full-stack boilerplate that feels freeing. Astro, HTMX, Alpine.js, Astro DB, Clerk Auth, Preline UI, & daisyUI."
+  title="faith.tools kit"
+  description="Helping Christian creatives keep in touch with their community and helping Christians discover what's new in the faith and tech space."
 >
   <main class="relative overflow-hidden not-prose">
-    <div class="container flex justify-center items-center h-screen mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="container flex flex-col gap-12 justify-center items-center h-screen mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col gap-4 items-center">
+        <Logo />
+        <p class="max-w-sm text-center text-balance">kit makes it easier to keep in touch with what's new in faith & tech.</p>
+      </div>
       <SignIn />
     </div>
   </main>

@@ -5,6 +5,8 @@ import Icon from "astro-iconify";
 import { actions } from "astro:actions";
 import Layout from "../../../../layouts/Layout.astro";
 import Footer from "../../../../components/Footer.astro";
+import Logo from "../../../../components/Logo.astro";
+
 // Get the project ID from the URL
 const projectId = Number(Astro.params.id?.split("-")?.[0] || 0);
 
@@ -41,31 +43,9 @@ const result = Astro.getActionResult(actions.leads.createLead);
 ---
 
 <Layout title="Dashboard">
-  <div x-data class="p-6 py-12 container mx-auto flex flex-col gap-12">
+  <div x-data class="p-6 pb-12 container mx-auto flex flex-col gap-12">
     <header class="flex justify-center">
-      <svg height="32" viewBox="0 0 646 181" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g clip-path="url(#clip0_1089_220)">
-          <path
-            d="M13.5963 117.75C97.598 30.51 213.076 67.3512 297.077 164.539"
-            stroke="#2B2B2B"
-            stroke-opacity="0.4"
-            stroke-width="25.9221"
-            stroke-linecap="round"></path>
-          <path
-            d="M13 117.038C97.0017 204.278 213.077 162.189 297.079 65"
-            stroke="#2B2B2B"
-            stroke-width="25.9221"
-            stroke-linecap="round"></path>
-        </g>
-        <path
-          d="M404.064 141.757L404.146 99.8561H409.23L449.573 52.0514H489.67L435.469 115.354H427.187L404.064 141.757ZM372.413 178V10.0685H407.344V178H372.413ZM451.131 178L414.068 123.143L437.355 98.4621L492.048 178H451.131ZM506.807 178V52.0514H541.738V178H506.807ZM524.355 35.8158C519.161 35.8158 514.706 34.0939 510.989 30.6499C507.326 27.1514 505.495 22.9695 505.495 18.1043C505.495 13.2937 507.326 9.16652 510.989 5.72262C514.706 2.22404 519.161 0.474752 524.355 0.474752C529.548 0.474752 533.976 2.22404 537.638 5.72262C541.356 9.16652 543.214 13.2937 543.214 18.1043C543.214 22.9695 541.356 27.1514 537.638 30.6499C533.976 34.0939 529.548 35.8158 524.355 35.8158ZM636.712 52.0514V78.2907H560.864V52.0514H636.712ZM578.084 21.8762H613.015V139.297C613.015 142.522 613.507 145.037 614.491 146.841C615.475 148.59 616.841 149.82 618.591 150.531C620.395 151.241 622.472 151.597 624.822 151.597C626.462 151.597 628.102 151.46 629.742 151.187C631.382 150.859 632.64 150.613 633.514 150.449L639.008 176.442C637.259 176.989 634.799 177.617 631.628 178.328C628.458 179.093 624.604 179.558 620.067 179.722C611.648 180.05 604.268 178.929 597.927 176.36C591.641 173.791 586.748 169.8 583.25 164.388C579.751 158.977 578.029 152.143 578.084 143.889V21.8762Z"
-          fill="#2B2B2B"></path>
-        <defs>
-          <clipPath id="clip0_1089_220">
-            <rect width="310" height="126" fill="white" transform="translate(0 52)"></rect>
-          </clipPath>
-        </defs>
-      </svg>
+      <Logo />
     </header>
 
     {

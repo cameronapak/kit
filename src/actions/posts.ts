@@ -12,10 +12,11 @@ export const posts = {
       createdAt: z.string().transform((str) => new Date(str)),
       slug: z.string().min(1, "Slug is required"),
       content: z.string(),
-      userId: z.string()
+      userId: z.string(),
+      projectId: z.number()
     }),
     // Handler function
-    handler: async ({ title, createdAt, slug, content, userId }) => {
+    handler: async ({ title, createdAt, slug, content, userId, projectId }) => {
       try {
         // Create the post in the database
         const newPost = await db
@@ -25,7 +26,8 @@ export const posts = {
             createdAt,
             slug,
             content,
-            userId
+            userId,
+            projectId
           })
           .returning()
           .get();
@@ -49,10 +51,11 @@ export const posts = {
       title: z.string().min(1, "Title is required"),
       slug: z.string().min(1, "Slug is required"),
       content: z.string(),
-      userId: z.string()
+      userId: z.string(),
+      projectId: z.number()
     }),
     // Handler function
-    handler: async ({ id, title, slug, content, userId }) => {
+    handler: async ({ id, title, slug, content, userId, projectId }) => {
       try {
         // Update the post in the database
         const updatedPost = await db
@@ -61,7 +64,8 @@ export const posts = {
             title,
             slug,
             content,
-            userId
+            userId,
+            projectId
           })
           .where(eq(Posts.id, id))
           .returning()

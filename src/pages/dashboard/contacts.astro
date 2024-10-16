@@ -26,7 +26,7 @@ const commaSeparatedEmails = allEmails.map((email) => email.email).join(",");
 const result = Astro.getActionResult(actions.leads.createLead);
 ---
 
-<Layout title="Dashboard">
+<Layout title="Contacts">
   <div
     x-data={`{ 
       emailConsent: false, 
