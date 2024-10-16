@@ -71,17 +71,32 @@ const result = Astro.getActionResult(actions.projects.updateProject);
           <div class="p-6 rounded-2xl bg-white w-full shadow flex flex-col gap-12">
             {
               result?.error && (
-                <div role="alert" class="alert alert-error bg-red-100 border-red-200 text-red-900">
-                  <Icon pack="lucide" name="x-circle" height={20} width={20} class="shrink-0" />
-                  <span>{result.error.message || "An error occurred"}</span>
+                <div class="toast toast-top toast-center">
+                  <div role="alert" class="alert alert-error bg-red-100 border-red-200 text-red-900">
+                    <Icon pack="lucide" name="x-circle" height={20} width={20} class="shrink-0" />
+                    <span>{result.error.message || "An error occurred"}</span>
+                  </div>
                 </div>
               )
             }
             {
               result?.data?.success && (
-                <div role="alert" class="alert alert-info bg-cyan-100 border-cyan-200 text-cyan-900">
-                  <Icon pack="lucide" name="check-circle" height={20} width={20} class="shrink-0" />
-                  <span>Project updated successfully!</span>
+                <div
+                  x-data="{ show: true }"
+                  x-show="show"
+                  x-transition:enter="transition ease-out duration-300"
+                  x-transition:enter-start="opacity-0 transform -translate-y-2"
+                  x-transition:enter-end="opacity-100 transform translate-y-0"
+                  x-transition:leave="transition ease-in duration-300"
+                  x-transition:leave-start="opacity-100 transform translate-y-0"
+                  x-transition:leave-end="opacity-0 transform -translate-y-2"
+                  x-init="setTimeout(() => show = false, 5000)"
+                  class="toast toast-top toast-center"
+                >
+                  <div role="alert" class="alert alert-info bg-cyan-100 border-cyan-200 text-cyan-900">
+                    <Icon pack="lucide" name="check-circle" height={20} width={20} class="shrink-0" />
+                    <span>Project updated successfully!</span>
+                  </div>
                 </div>
               )
             }
@@ -166,7 +181,7 @@ const result = Astro.getActionResult(actions.projects.updateProject);
                   x-model="title"
                   @input="title = $event.target.value.slice(0, maxLength)"
                   type="text"
-                  class="input input-bordered w-full rounded-lg bg-white"
+                  class="input text-xl input-lg input-bordered w-full rounded-lg bg-white"
                   required
                   maxlength="100"
                 />
@@ -179,7 +194,7 @@ const result = Astro.getActionResult(actions.projects.updateProject);
             <div>
               <h2 class="text-slate-700">Description</h2>
               <input id="x" value={project?.content || ""} type="hidden" name="content" />
-              <trix-editor input="x"></trix-editor>
+              <trix-editor class="text-xl" input="x"></trix-editor>
             </div>
 
             <div class="flex gap-2">
