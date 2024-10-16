@@ -10,18 +10,17 @@ export const projects = {
     input: z.object({
       id: z.number(),
       title: z.string().min(1, "Title is required"),
-      slug: z.string().min(1, "Slug is required"),
       content: z.string(),
       bannerImageId: z.string().optional(),
       youtubeVideoUrl: z.string().optional().nullable().transform(v => v === "" ? null : v)
     }),
     // Handler function
-    handler: async ({ id, title, slug, content, bannerImageId, youtubeVideoUrl }) => {
+    handler: async ({ id, title, content, bannerImageId, youtubeVideoUrl }) => {
       try {
         // Update the project in the database
         const updatedProject = await db
           .update(Projects)
-          .set({ title, slug, content, bannerImageId, youtubeVideoUrl: youtubeVideoUrl || null })
+          .set({ title, content, bannerImageId, youtubeVideoUrl: youtubeVideoUrl || null })
           .where(eq(Projects.id, id))
           .returning()
           .get();
@@ -46,21 +45,19 @@ export const projects = {
     // Define input schema for validation
     input: z.object({
       title: z.string().min(1, "Title is required"),
-      slug: z.string().min(1, "Slug is required"),
       content: z.string(),
       userId: z.string(),
       bannerImageId: z.string().optional(),
       youtubeVideoUrl: z.string().optional().nullable().transform(v => v === "" ? null : v)
     }),
     // Handler function
-    handler: async ({ title, slug, content, userId, bannerImageId, youtubeVideoUrl }) => {
+    handler: async ({ title, content, userId, bannerImageId, youtubeVideoUrl }) => {
       try {
         // Create the project in the database
         const newProject = await db
           .insert(Projects)
           .values({
             title,
-            slug,
             content,
             userId,
             bannerImageId,

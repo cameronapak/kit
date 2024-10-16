@@ -15,7 +15,6 @@ const Projects = defineTable({
   columns: {
     id: column.number({ primaryKey: true }),
     title: column.text(),
-    slug: column.text({ unique: true }),
     content: column.text(),
     createdAt: column.date(),
     userId: column.text(),

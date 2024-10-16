@@ -25,7 +25,6 @@ let project = projects[0];
 if (!project && user) {
   const formData = new FormData();
   formData.append("title", "My Project");
-  formData.append("slug", "my-project");
   formData.append("content", "");
   formData.append("userId", user.id);
 
@@ -162,32 +161,6 @@ const result = Astro.getActionResult(actions.projects.updateProject);
                   <span x-text="title.length"></span>/<span x-text="maxLength"></span> characters
                 </p>
               </div>
-            </div>
-
-            <div>
-              <h2 class="text-slate-700 !mb-0">Slug</h2>
-              <p class="text-slate-500">This is used in the public URL of your project.</p>
-              <label class="input input-bordered w-full rounded-lg bg-white flex items-center gap-2">
-                <Icon pack="lucide" name="link" height={16} width={16} class="shrink-0" />
-                <input
-                  name="slug"
-                  type="text"
-                  placeholder="my-project"
-                  required
-                  class="focus:outline-none border-none bg-transparent w-full"
-                  x-data={`{
-                    slug: '${project?.slug || ""}',
-                    formatSlug(value) {
-                      return value.toLowerCase()
-                        .replace(/[^a-z0-9-]/g, '-')
-                        .replace(/-+/g, '-')
-                        .replace(/^-/g, '');
-                    }
-                  }`}
-                  x-model="slug"
-                  x-on:input="slug = formatSlug($event.target.value)"
-                />
-              </label>
             </div>
 
             <div>

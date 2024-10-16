@@ -37,7 +37,6 @@ export default async function seed() {
       createdAt: new Date(),
       bannerImageId: "user_2hHFZTOTzVEGWVy8gpbKyB6JXPu/freedom-stack_hbfpk9",
       userId: CAMS_CLERK_USER_ID,
-      slug: "test-project",
     },
   ]);
 
