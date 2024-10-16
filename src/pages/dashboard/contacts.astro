@@ -10,7 +10,6 @@ if (!Astro.locals.auth().userId) {
 }
 
 const user = await Astro.locals.currentUser();
-console.log("User:", user);
 const allProjects = await db
   .select()
   .from(Projects)
@@ -21,6 +20,8 @@ let allEmails: any[] = [];
 if (firstProjectId) {
   allEmails = await db.select().from(Leads).where(eq(Leads.projectId, firstProjectId)).orderBy(Leads.email);
 }
+
+const commaSeparatedEmails = allEmails.map((email) => email.email).join(",");
 
 const result = Astro.getActionResult(actions.leads.createLead);
 ---
@@ -33,7 +34,11 @@ const result = Astro.getActionResult(actions.leads.createLead);
       email: '', 
       get isFormComplete() { 
         return emailConsent && name && email 
-      } 
+      },
+      async copyEmailList() {
+        await navigator.clipboard.writeText(${JSON.stringify(commaSeparatedEmails)});
+        alert("Comma separated list of emails copied to clipboard");
+      },
     }`}
     class="p-6 container mx-auto"
   >
@@ -100,7 +105,7 @@ const result = Astro.getActionResult(actions.leads.createLead);
       <section class="w-full m-0">
         <ul class="m-0 list-none p-6 rounded-2xl bg-white w-full shadow flex flex-col gap-2">
           <li class="">
-            <button class="btn btn-md w-full btn-primary text-white">
+            <button @click="copyEmailList()" class="btn btn-md w-full btn-primary text-white">
               <Icon pack="lucide" name="clipboard" height={24} width={24} class="shrink-0" />
               Copy Email List
             </button>
