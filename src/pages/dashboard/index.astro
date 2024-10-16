@@ -54,7 +54,20 @@ const result = Astro.getActionResult(actions.projects.updateProject);
 
     <main class="py-12 flex flex-col gap-6">
       <section class="w-full">
-        <form method="POST" action={actions.projects.updateProject}>
+        <form
+          x-data={`{ 
+            projectId: '${project?.id || ""}',
+            title: '${project?.title || ""}', 
+            maxLength: 100,
+            get previewUrl() {
+              // Make title only lowercase alphanumeric and replace spaces with hyphens
+              const formattedTitle = this.title.toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-");
+              return '/app/' + this.projectId + '-' + formattedTitle;
+            }
+          }`}
+          method="POST"
+          action={actions.projects.updateProject}
+        >
           <div class="p-6 rounded-2xl bg-white w-full shadow flex flex-col gap-12">
             {
               result?.error && (
@@ -147,7 +160,7 @@ const result = Astro.getActionResult(actions.projects.updateProject);
             <div>
               <h2 class="text-slate-700 !mb-0">Name of Project</h2>
               <p class="text-slate-500">This can be changed at any time.</p>
-              <div x-data={`{ title: '${project?.title || ""}', maxLength: 100 }`}>
+              <div>
                 <input
                   name="title"
                   x-model="title"
@@ -169,8 +182,9 @@ const result = Astro.getActionResult(actions.projects.updateProject);
               <trix-editor input="x"></trix-editor>
             </div>
 
-            <div>
+            <div class="flex gap-2">
               <button type="submit" class="btn btn-primary">Save Changes</button>
+              <a x-bind:href="previewUrl" class="btn btn-ghost">Preview Project</a>
             </div>
           </div>
         </form>

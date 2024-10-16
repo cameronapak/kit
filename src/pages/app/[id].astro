@@ -9,7 +9,7 @@ if (!Astro.locals.auth().userId) {
 }
 
 // Get the project ID from the URL
-const projectId = Number(Astro.params.id || 0);
+const projectId = Number(Astro.params.id?.split("-")?.[0] || 0);
 
 if (!projectId) {
   return Astro.redirect("/");
@@ -25,19 +25,47 @@ const bannerImageUrl = getCldImageUrl({
   crop: "fill",
   format: "webp"
 });
+
+const youtubeVideoId = project?.youtubeVideoUrl?.split("v=")[1] as string | undefined;
+const youtubeVideoUrl = new URL(`https://www.youtube.com/embed/${youtubeVideoId}`);
+youtubeVideoUrl.searchParams.set("rel", "0");
 ---
 
 <Layout title="Dashboard">
   <div class="p-6 container mx-auto">
     <main class="py-12 flex flex-col gap-6 w-full">
       <div class="p-6 rounded-2xl bg-white w-full shadow flex flex-col gap-6">
-        <img
-          src={bannerImageUrl}
-          alt=""
-          class="my-0 rounded-xl border-2 border-slate-200 aspect-video object-cover object-center w-full"
-        />
-        <h1 class="text-2xl font-bold">{project?.title}</h1>
-        <Fragment set:html={project?.content}></Fragment>
+        {
+          youtubeVideoId ? (
+            <iframe
+              class="my-0 rounded-xl border-2 border-slate-200 aspect-video object-cover object-center w-full"
+              width="100%"
+              height="100%"
+              src={youtubeVideoUrl.toString()}
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            />
+          ) : (
+            <img
+              src={bannerImageUrl}
+              alt=""
+              class="my-0 rounded-xl border-2 border-slate-200 aspect-video object-cover object-center w-full"
+            />
+          )
+        }
+        <h1 class="pt-2">{project?.title}</h1>
+        <!-- Add email sign up -->
+        <div class="bg-white flex flex-col gap-2 border-2 border-slate-200 p-6 rounded-xl">
+          <h2 class="text-lg my-0 font-normal">Get notified when {project?.title} is ready</h2>
+          <form class="grid grid-cols-[1fr_auto] gap-3 max-w-sm">
+            <input type="email" class="input input-bordered" placeholder="Email" />
+            <button class="btn btn-primary w-fit">Submit</button>
+          </form>
+        </div>
+        <div class="text-xl">
+          <Fragment set:html={project?.content} />
+        </div>
       </div>
     </main>
   </div>
