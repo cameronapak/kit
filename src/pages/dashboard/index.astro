@@ -75,7 +75,6 @@ const result = Astro.getActionResult(actions.projects.updateProject);
             }
 
             <input type="hidden" name="id" value={project?.id} />
-            <input type="hidden" name="slug" value={project?.slug} />
 
             <div
               x-data={`{
@@ -172,7 +171,6 @@ const result = Astro.getActionResult(actions.projects.updateProject);
                 <Icon pack="lucide" name="link" height={16} width={16} class="shrink-0" />
                 <input
                   name="slug"
-                  value={project?.slug || ""}
                   type="text"
                   placeholder="my-project"
                   required
