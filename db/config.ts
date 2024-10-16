@@ -12,6 +12,7 @@ const Projects = defineTable({
     youtubeVideoUrl: column.text({ optional: true }),
   }
 });
+
 const Posts = defineTable({
   columns: {
     id: column.number({ primaryKey: true }),
