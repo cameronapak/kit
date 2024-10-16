@@ -12,6 +12,13 @@ Never gonna make you cry, never gonna say goodbye.
 Never gonna tell a lie and hurt you.
 `.trim();
 
+const SEED_PROJECT_CONTENT = `
+What if it were easier to live a holy life digitally? 
+We're building a healthy smartphone for the modern age, with no browser, no social media, no porn, and no games.
+It has all the essential tools, like a camera, texting, phone calls, calendar, etc. 
+And, our curated app store only has safe apps to be used as tools to get a job done.
+`.trim();
+
 const CAMS_CLERK_USER_ID = "user_2hHFZTOTzVEGWVy8gpbKyB6JXPu";
 
 // https://astro.build/db/seed
@@ -19,10 +26,10 @@ export default async function seed() {
   await db.insert(Projects).values([
     {
       id: 1,
-      title: "Test Project",
-      content: content,
+      title: "Wisephone II",
+      content: SEED_PROJECT_CONTENT,
       createdAt: new Date(),
-      bannerImageId: "user_2hHFZTOTzVEGWVy8gpbKyB6JXPu/freedom-stack_hbfpk9",
+      bannerImageId: "user_2hHFZTOTzVEGWVy8gpbKyB6JXPu/Slide_16_9_-_1_iyuklo",
       userId: CAMS_CLERK_USER_ID,
     },
   ]);
@@ -30,9 +37,9 @@ export default async function seed() {
   await db.insert(Posts).values([
     {
       id: 1,
-      title: "My First Blog Post",
+      title: "Wisephone II is Shipping!",
       createdAt: new Date("2024-10-14"),
-      slug: "my-first-blog-post",
+      slug: "wisephone-ii-is-shipping",
       content,
       userId: CAMS_CLERK_USER_ID,
       projectId: 1,
