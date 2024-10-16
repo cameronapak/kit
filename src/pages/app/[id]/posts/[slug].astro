@@ -4,7 +4,7 @@ import { db, eq, Projects, Posts } from "astro:db";
 import Icon from "astro-iconify";
 import { actions } from "astro:actions";
 import Layout from "../../../../layouts/Layout.astro";
-
+import Footer from "../../../../components/Footer.astro";
 // Get the project ID from the URL
 const projectId = Number(Astro.params.id?.split("-")?.[0] || 0);
 
@@ -157,7 +157,7 @@ const result = Astro.getActionResult(actions.leads.createLead);
       </form>
     </dialog>
 
-    <main class="flex flex-col gap-6 w-full">
+    <main class="flex flex-col gap-6 w-full mb-12">
       <div class="relative w-full flex flex-col">
         <div
           class="absolute z-10 top-0 left-0 right-0 scale-[95%] bg-slate-200 m-0 list-none p-4 py-1 pb-12 rounded-xl w-full shadow-sm flex flex-col gap-2"
@@ -186,5 +186,7 @@ const result = Astro.getActionResult(actions.leads.createLead);
         </div>
       </div>
     </main>
+    
+    <Footer  />
   </div>
 </Layout>
