@@ -1,5 +1,17 @@
 import { defineDb, defineTable, column } from "astro:db";
 
+const Projects = defineTable({
+  columns: {
+    id: column.number({ primaryKey: true }),
+    authors: column.text(),
+    title: column.text(),
+    content: column.text(),
+    createdAt: column.date(),
+    userId: column.text(),
+    bannerImageId: column.text({ optional: true }),
+    youtubeVideoUrl: column.text({ optional: true }),
+  }
+});
 const Posts = defineTable({
   columns: {
     id: column.number({ primaryKey: true }),
@@ -9,18 +21,6 @@ const Posts = defineTable({
     content: column.text(),
     userId: column.text(),
     projectId: column.number({ references: () => Projects.columns.id }),
-  }
-});
-
-const Projects = defineTable({
-  columns: {
-    id: column.number({ primaryKey: true }),
-    title: column.text(),
-    content: column.text(),
-    createdAt: column.date(),
-    userId: column.text(),
-    bannerImageId: column.text({ optional: true }),
-    youtubeVideoUrl: column.text({ optional: true }),
   }
 });
 

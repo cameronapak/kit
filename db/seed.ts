@@ -24,6 +24,7 @@ export default async function seed() {
     {
       id: 1,
       title: "Wisephone II • Demo",
+      authors: "Techless",
       content: SEED_PROJECT_CONTENT,
       createdAt: new Date(),
       bannerImageId: "user_2hHFZTOTzVEGWVy8gpbKyB6JXPu/Slide_16_9_-_1_iyuklo",

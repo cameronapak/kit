@@ -56,6 +56,7 @@ const result = Astro.getActionResult(actions.projects.updateProject);
       <section class="w-full">
         <form
           x-data={`{ 
+            authors: '${project?.authors || ""}',
             projectId: '${project?.id || ""}',
             title: '${project?.title || ""}', 
             maxLength: 100,
@@ -188,6 +189,22 @@ const result = Astro.getActionResult(actions.projects.updateProject);
                 <p class="text-xs text-slate-500 mt-2 mb-0">
                   <span x-text="title.length"></span>/<span x-text="maxLength"></span> characters
                 </p>
+              </div>
+            </div>
+
+            <div>
+              <h2 class="text-slate-700 !mb-0">Author(s)</h2>
+              <p class="text-slate-500">You can set this as yourself, a team, or a company.</p>
+              <div>
+                <input
+                  name="authors"
+                  x-model="authors"
+                  type="text"
+                  class="input text-xl input-lg input-bordered w-full rounded-lg bg-white"
+                  required
+                  maxlength="256"
+                  placeholder="Jane Doe & John Doe"
+                />
               </div>
             </div>
 

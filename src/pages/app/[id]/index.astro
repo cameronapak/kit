@@ -118,7 +118,7 @@ const result = Astro.getActionResult(actions.leads.createLead);
         <section class="flex gap-3 max-sm:flex-col justify-between items-start">
           <div class="flex flex-col gap-1">
             <h1 class="pt-2 line-clamp-2 ellipsis my-0">{project?.title}</h1>
-            <p class="text-lg text-slate-500 my-0">By Techless</p>
+            <p class="text-lg text-slate-500 my-0">By {project?.authors}</p>
           </div>
           <!-- Button to sign up -->
           <button @click="$refs.getUpdatesModal.showModal()" class="max-sm:w-full btn btn-primary">Get Updates</button>

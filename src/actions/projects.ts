@@ -12,15 +12,22 @@ export const projects = {
       title: z.string().min(1, "Title is required"),
       content: z.string(),
       bannerImageId: z.string().optional(),
-      youtubeVideoUrl: z.string().optional().nullable().transform(v => v === "" ? null : v)
+      youtubeVideoUrl: z.string().optional().nullable().transform(v => v === "" ? null : v),
+      authors: z.string(),
     }),
     // Handler function
-    handler: async ({ id, title, content, bannerImageId, youtubeVideoUrl }) => {
+    handler: async ({ id, title, content, bannerImageId, youtubeVideoUrl, authors }) => {
       try {
         // Update the project in the database
         const updatedProject = await db
           .update(Projects)
-          .set({ title, content, bannerImageId, youtubeVideoUrl: youtubeVideoUrl || null })
+          .set({ 
+            title, 
+            content, 
+            bannerImageId, 
+            youtubeVideoUrl: youtubeVideoUrl || null,
+            authors: authors || ""
+          })
           .where(eq(Projects.id, id))
           .returning()
           .get();
@@ -48,10 +55,11 @@ export const projects = {
       content: z.string(),
       userId: z.string(),
       bannerImageId: z.string().optional(),
-      youtubeVideoUrl: z.string().optional().nullable().transform(v => v === "" ? null : v)
+      youtubeVideoUrl: z.string().optional().nullable().transform(v => v === "" ? null : v),
+      authors: z.string(),
     }),
     // Handler function
-    handler: async ({ title, content, userId, bannerImageId, youtubeVideoUrl }) => {
+    handler: async ({ title, content, userId, bannerImageId, youtubeVideoUrl, authors }) => {
       try {
         // Create the project in the database
         const newProject = await db
@@ -62,6 +70,7 @@ export const projects = {
             userId,
             bannerImageId,
             youtubeVideoUrl: youtubeVideoUrl || null,
+            authors: authors || "",
             createdAt: new Date()
           })
           .returning()
