@@ -1,0 +1,48 @@
+---
+import "trix/dist/trix.css";
+import { CldUploadWidget } from "astro-cloudinary";
+import { getCldImageUrl } from "astro-cloudinary/helpers";
+import { db, Projects, eq } from "astro:db";
+import Header from "../../components/Header.astro";
+import Layout from "../../layouts/Layout.astro";
+import { actions } from "astro:actions";
+import Icon from "astro-iconify";
+
+if (!Astro.locals.auth().userId) {
+  return Astro.redirect("/");
+}
+
+// Get the project ID from the URL
+const projectId = Number(Astro.params.id || 0);
+
+if (!projectId) {
+  return Astro.redirect("/");
+}
+
+const projects = await db.select().from(Projects).where(eq(Projects.id, projectId)).limit(1);
+
+let project = projects[0];
+
+const bannerImageUrl = getCldImageUrl({
+  src: project?.bannerImageId || "",
+  width: 1200,
+  crop: "fill",
+  format: "webp"
+});
+---
+
+<Layout title="Dashboard">
+  <div class="p-6 container mx-auto">
+    <main class="py-12 flex flex-col gap-6 w-full">
+      <div class="p-6 rounded-2xl bg-white w-full shadow flex flex-col gap-6">
+        <img
+          src={bannerImageUrl}
+          alt=""
+          class="my-0 rounded-xl border-2 border-slate-200 aspect-video object-cover object-center w-full"
+        />
+        <h1 class="text-2xl font-bold">{project?.title}</h1>
+        <Fragment set:html={project?.content}></Fragment>
+      </div>
+    </main>
+  </div>
+</Layout>
