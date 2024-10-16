@@ -107,7 +107,7 @@ const result = Astro.getActionResult(actions.projects.updateProject);
             <div
               x-data={`{
                 youtubeVideoUrl: '${project?.youtubeVideoUrl || ""}',
-                shouldShowYouTubeVideoInput: false,
+                shouldShowYouTubeVideoInput: ${Boolean(project?.youtubeVideoUrl || false)},
                 validateYouTubeVideoUrl(url) {
                   if (url.includes("youtube.com") || url.includes("youtu.be") && url.includes("v=")) {
                     return true;
@@ -153,16 +153,30 @@ const result = Astro.getActionResult(actions.projects.updateProject);
                   allowfullscreen></iframe>
               </div>
               <input type="hidden" name="bannerImageId" id="bannerImageId" value={project?.bannerImageId || ""} />
-              <input
-                x-cloak
-                x-show="shouldShowYouTubeVideoInput"
-                class="input input-bordered w-full rounded-lg bg-white"
-                x-bind:type="shouldShowYouTubeVideoInput ? 'text' : 'hidden'"
-                name="youtubeVideoUrl"
-                id="youtubeVideoUrl"
-                placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-                x-model="youtubeVideoUrl"
-              />
+
+              <div x-collapse x-cloak x-show="shouldShowYouTubeVideoInput" class="mt-4 flex flex-col gap-2">
+                <div class="grid grid-cols-[1fr_auto] gap-2 items-center">
+                  <input
+                    class="input input-bordered w-full rounded-lg bg-white"
+                    x-bind:type="shouldShowYouTubeVideoInput ? 'text' : 'hidden'"
+                    name="youtubeVideoUrl"
+                    id="youtubeVideoUrl"
+                    placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                    x-model="youtubeVideoUrl"
+                  />
+                  <button
+                    type="button"
+                    @click="youtubeVideoUrl = ''; shouldShowYouTubeVideoInput = false"
+                    class="btn btn-md btn-ghost btn-circle"
+                  >
+                    <Icon pack="lucide" name="x" height={24} width={24} />
+                  </button>
+                </div>
+                <p class="text-slate-500 text-sm mt-2">
+                  Given the video is set, it will be used instead of your banner image.
+                </p>
+              </div>
+
               <button
                 type="button"
                 x-show="!shouldShowYouTubeVideoInput"
