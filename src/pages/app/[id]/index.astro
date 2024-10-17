@@ -85,13 +85,13 @@ const result = Astro.getActionResult(actions.leads.createLead);
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowfullscreen
             />
-          ) : (
+          ) : bannerImageUrl ? (
             <img
               src={bannerImageUrl}
               alt=""
               class="my-0 rounded-xl border-2 border-slate-200 aspect-video object-cover object-center w-full"
             />
-          )
+          ) : null
         }
 
         <section class="flex gap-3 max-sm:flex-col justify-between items-start">
@@ -164,21 +164,23 @@ const result = Astro.getActionResult(actions.leads.createLead);
           </form>
         </dialog>
 
-        <section class="mt-6">
-          <h2 class="text-2xl my-0">Posts</h2>
-          <ul class="list-none p-0 m-0">
-            {
-              posts.map((post) => (
-                <li class="p-0 m-0 grid grid-cols-[76px_1fr] gap-2">
-                  <time datetime={post.createdAt.toISOString()}>
-                    {post.createdAt.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                  </time>
-                  <a href={`/app/${projectId}/posts/${post.slug}`}>{post.title}</a>
-                </li>
-              ))
-            }
-          </ul>
-        </section>
+        {
+          posts.length > 0 ? (
+            <section class="mt-6">
+              <h2 class="text-2xl my-0">Posts</h2>
+              <ul class="list-none p-0 m-0">
+                {posts.map((post) => (
+                  <li class="p-0 m-0 grid grid-cols-[76px_1fr] gap-2">
+                    <time datetime={post.createdAt.toISOString()}>
+                      {post.createdAt.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                    </time>
+                    <a href={`/app/${projectId}/posts/${post.slug}`}>{post.title}</a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null
+        }
       </div>
     </main>
     <Footer />
