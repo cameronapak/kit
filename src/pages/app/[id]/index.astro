@@ -174,7 +174,7 @@ const result = Astro.getActionResult(actions.leads.createLead);
                     <time datetime={post.createdAt.toISOString()}>
                       {post.createdAt.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                     </time>
-                    <a href={`/app/${projectId}/posts/${post.slug}`}>{post.title}</a>
+                    <a href={`/app/${Astro.params.id}/posts/${post.slug}`}>{post.title}</a>
                   </li>
                 ))}
               </ul>
