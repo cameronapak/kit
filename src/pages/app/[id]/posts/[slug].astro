@@ -2,6 +2,7 @@
 import { getCldImageUrl } from "astro-cloudinary/helpers";
 import { db, eq, Projects, Posts } from "astro:db";
 import Icon from "astro-iconify";
+import DOMPurify from 'isomorphic-dompurify';
 import { actions } from "astro:actions";
 import Layout from "../../../../layouts/Layout.astro";
 import Footer from "../../../../components/Footer.astro";
@@ -39,10 +40,19 @@ const posts = await db
 
 const post = posts[0];
 
+// Extract text content from post.content
+const contentText = post?.content
+  ? DOMPurify.sanitize(post.content, { ALLOWED_TAGS: [] }).replace(/<[^>]*>?/g, "")
+  : "";
+
+const description = contentText.length > 150 ? contentText.slice(0, 150) + "..." : contentText;
+
+const title = post?.title;
+
 const result = Astro.getActionResult(actions.leads.createLead);
 ---
 
-<Layout title="Dashboard">
+<Layout title={title} description={description} ogImage={bannerImageUrl}>
   <div x-data class="p-6 pb-12 container mx-auto flex flex-col gap-12">
     <header class="flex justify-center">
       <Logo />
