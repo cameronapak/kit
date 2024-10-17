@@ -27,6 +27,7 @@ if (!project && user) {
   formData.append("title", "My Project");
   formData.append("content", "");
   formData.append("userId", user.id);
+  formData.append("authors", user?.fullName || user?.firstName ||"John Doe");
 
   const { data, error } = await Astro.callAction(actions.projects.createProject, formData);
 
