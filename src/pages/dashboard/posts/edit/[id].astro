@@ -2,7 +2,7 @@
 import "trix/dist/trix.css";
 import { Icon } from "astro-iconify";
 import { actions } from "astro:actions";
-import { db, Posts, eq } from "astro:db";
+import { db, Posts, Projects, eq } from "astro:db";
 import Layout from "../../../../layouts/Layout.astro";
 import Header from "../../../../components/Header.astro";
 
@@ -16,6 +16,14 @@ const postId = Astro.params.id;
 if (!postId) {
   return Astro.redirect("/dashboard/posts");
 }
+
+const projects = await db
+  .select()
+  .from(Projects)
+  .where(eq(Projects.userId, user?.id || ""))
+  .limit(1);
+
+let project = projects[0];
 
 // Handle form submission result
 const result = Astro.getActionResult(actions.posts.updatePost);
@@ -53,7 +61,7 @@ post = posts[0];
                   Posts
                 </a>
               </li>
-              <li>New</li>
+              <li>Edit Post</li>
             </ul>
           </div>
         </div>
@@ -114,15 +122,17 @@ post = posts[0];
               </p>
             </div>
 
+            <input type="hidden" name="projectId" value={project?.id} />
             <input type="hidden" name="id" value={post?.id} />
             <input type="hidden" name="slug" x-model="slug" />
             <input type="hidden" name="userId" value={user?.id} />
             <input type="hidden" value={post?.content || ""} x-model="content" name="content" id="x" />
+
             <div>
               <trix-editor input="x" placeholder="Write your post here..."></trix-editor>
             </div>
 
-            <button type="submit" class="btn btn-md btn-primary text-white">Create Post</button>
+            <button type="submit" class="btn btn-md btn-primary text-white">Update Post</button>
           </form>
         </div>
       </section>
