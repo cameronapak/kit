@@ -28,7 +28,7 @@ if (!project && user) {
   formData.append("content", "");
   formData.append("userId", user.id);
 
-  const { data, error } = await actions.projects.createProject(formData);
+  const { data, error } = await Astro.callAction(actions.projects.createProject, formData);
 
   if (error) {
     console.error("Failed to create project:", error);
