@@ -4,9 +4,10 @@ import "../global.css";
 interface Props {
   title: string;
   description?: string;
+  ogImage?: string;
 }
 
-const { title, description = "" } = Astro.props;
+const { title, description = "", ogImage } = Astro.props;
 ---
 
 <!doctype html>
@@ -17,7 +18,7 @@ const { title, description = "" } = Astro.props;
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:image" content={ogImage || "/og-image.png"} />
     <title>kit • {title}</title>
   </head>
 
