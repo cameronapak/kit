@@ -25,7 +25,7 @@ let project = projects[0];
 if (!project && user) {
   const formData = new FormData();
   formData.append("title", "My Project");
-  formData.append("content", "");
+  formData.append("content", "Write about your project...");
   formData.append("userId", user.id);
   formData.append("authors", user?.fullName || user?.firstName ||"John Doe");
 
