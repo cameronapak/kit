@@ -18,7 +18,8 @@ export default defineConfig({
     tailwind(), // This entrypoint file is where Alpine plugins are registered.
     alpinejs({
       entrypoint: "/src/entrypoint"
-    }), // To enable Sentry monitoring, add the following environment variables.
+    }),
+    // To enable Sentry monitoring, add the following environment variables.
     // Learn more at https://docs.sentry.io/platforms/javascript/guides/astro/#prerequisites.
     isSentryEnabled &&
       sentry({
