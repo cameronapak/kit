@@ -42,6 +42,8 @@ const posts = await db
   .where(eq(Posts.id, Number(postId)))
   .limit(1);
 post = posts[0];
+
+Astro.response.headers.set('CDN-Cache-Control', "public, max-age=45, must-revalidate");
 ---
 
 <Layout title="Dashboard">

@@ -42,6 +42,16 @@ const contentText = project?.content
 const description = contentText.length > 150 ? contentText.slice(0, 150) + "..." : contentText;
 
 const title = project?.title;
+
+// Cache for 4 hours, revalidate once per hour, and serve stale if error for 24 hours.
+Astro.response.headers.set(
+  "Cache-Control",
+  "public, max-age=14400, stale-if-error=86400"
+);
+Astro.response.headers.set(
+  "CDN-Cache-Control",
+  "public, max-age=14400, stale-while-revalidate=3600, stale-if-error=86400"
+);
 ---
 
 <Layout title={title} description={description} ogImage={bannerImageUrl}>

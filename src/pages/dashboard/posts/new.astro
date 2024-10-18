@@ -26,6 +26,8 @@ if (!project) {
 
 // Handle form submission result
 const result = Astro.getActionResult(actions.posts.createPost);
+
+Astro.response.headers.set('CDN-Cache-Control', "public, max-age=45, must-revalidate");
 ---
 
 <Layout title="New Post">
