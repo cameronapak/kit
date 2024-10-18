@@ -41,7 +41,12 @@ const posts = await db
   .from(Posts)
   .where(eq(Posts.id, Number(postId)))
   .limit(1);
+
 post = posts[0];
+
+if (!post) {
+  return Astro.redirect("/dashboard/posts");
+}
 
 Astro.response.headers.set("CDN-Cache-Control", "public, max-age=45, must-revalidate");
 ---
@@ -105,7 +110,6 @@ Astro.response.headers.set("CDN-Cache-Control", "public, max-age=45, must-revali
                 x-model="title"
                 @input="title = $event.target.value.slice(0, maxLength)"
                 type="text"
-                value={post?.title || ""}
                 class="input input-lg text-xl input-bordered w-full rounded-lg bg-white"
                 required
                 placeholder="Title"

@@ -86,7 +86,7 @@ Astro.response.headers.set("CDN-Cache-Control", "public, max-age=45, must-revali
               <input
                 name="title"
                 x-model="title"
-                @input="title = $event.target.value.slice(0, maxLength)"
+                @input="title = $el.value.slice(0, maxLength)"
                 type="text"
                 class="input input-lg input-bordered w-full rounded-lg bg-white text-xl"
                 required
