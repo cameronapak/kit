@@ -3,10 +3,11 @@ import "trix/dist/trix.css";
 import { CldUploadWidget } from "astro-cloudinary";
 import { getCldImageUrl } from "astro-cloudinary/helpers";
 import { db, Projects, eq } from "astro:db";
-import Header from "../../components/Header.astro";
-import Layout from "../../layouts/Layout.astro";
 import { actions } from "astro:actions";
 import Icon from "astro-iconify";
+import Header from "../../components/Header.astro";
+import Layout from "../../layouts/Layout.astro";
+import Footer from "../../components/Footer.astro";
 
 if (!Astro.locals.auth().userId) {
   return Astro.redirect("/");
@@ -245,6 +246,8 @@ const result = Astro.getActionResult(actions.projects.updateProject);
         </form>
       </section>
     </main>
+
+    <Footer />
   </div>
 </Layout>
 

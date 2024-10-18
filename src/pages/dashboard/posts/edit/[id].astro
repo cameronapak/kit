@@ -5,6 +5,7 @@ import { actions } from "astro:actions";
 import { db, Posts, Projects, eq } from "astro:db";
 import Layout from "../../../../layouts/Layout.astro";
 import Header from "../../../../components/Header.astro";
+import Footer from "../../../../components/Footer.astro";
 
 if (!Astro.locals.auth().userId) {
   return Astro.redirect("/");
@@ -137,6 +138,7 @@ post = posts[0];
         </div>
       </section>
     </main>
+    <Footer />
   </div>
 </Layout>
 

@@ -4,6 +4,7 @@ import { Icon } from "astro-iconify";
 import { actions } from "astro:actions";
 import Header from "../../components/Header.astro";
 import Layout from "../../layouts/Layout.astro";
+import Footer from "../../components/Footer.astro";
 
 if (!Astro.locals.auth().userId) {
   return Astro.redirect("/");
@@ -173,6 +174,7 @@ const result = Astro.getActionResult(actions.leads.createLead);
         </ul>
       </section>
     </main>
+    <Footer />
   </div>
 </Layout>
 

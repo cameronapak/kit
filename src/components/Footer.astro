@@ -1,3 +1,8 @@
+---
+const user = await Astro.locals.currentUser();
+const isDashboard = Astro.url.pathname.startsWith("/dashboard");
+---
+
 <footer class="text-center text-slate-500 text-sm py-0 my-0">
   <p class="py-0 my-0">kit <em>(keep in touch)</em> © 2024 • a faith.tools experiment</p>
   <ul class="list-none p-0 m-0 flex gap-2 justify-center">
@@ -7,6 +12,25 @@
       <a class="text-inherit font-normal" href="https://faith.tools/posts/privacy-policy" target="_blank">Privacy</a>
     </li>
     <li><a class="text-inherit font-normal" href="https://go.faith.tools/contact" target="_blank">Feedback</a></li>
-    <li><a class="text-inherit font-normal" href="/" target="_blank">Sign In</a></li>
+
+    {
+      user && !isDashboard ? (
+        <li>
+          <a class="text-inherit font-normal" href="/dashboard" target="_blank">
+            Open Dashboard
+          </a>
+        </li>
+      ) : null
+    }
+
+    {
+      !user ? (
+        <li>
+          <a class="text-inherit font-normal" href="/" target="_blank">
+            Sign In
+          </a>
+        </li>
+      ) : null
+    }
   </ul>
 </footer>
