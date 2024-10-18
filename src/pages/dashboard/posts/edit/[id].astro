@@ -48,7 +48,7 @@ if (!post) {
   return Astro.redirect("/dashboard/posts");
 }
 
-Astro.response.headers.set("CDN-Cache-Control", "public, max-age=45, must-revalidate");
+Astro.response.headers.set("CDN-Cache-Control", "no-store, max-age=0");
 ---
 
 <Layout title="Dashboard">
