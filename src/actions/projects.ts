@@ -56,6 +56,10 @@ export const projects = {
     }),
     handler: async ({ projectId, webhookUrl }) => {
       const updatedProject = await db.update(Projects).set({ webhookUrl }).where(eq(Projects.id, projectId)).returning().get();
+      return {
+        success: true,
+        project: updatedProject
+      };
     }
   }),
 

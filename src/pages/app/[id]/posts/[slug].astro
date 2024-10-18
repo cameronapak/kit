@@ -50,6 +50,7 @@ const description = contentText.length > 150 ? contentText.slice(0, 150) + "..."
 const title = post?.title;
 
 const result = Astro.getActionResult(actions.leads.createLead);
+const addWebhookResult = Astro.getActionResult(actions.projects.addWebhook);
 ---
 
 <Layout title={title} description={description} ogImage={bannerImageUrl}>
@@ -68,6 +69,18 @@ const result = Astro.getActionResult(actions.leads.createLead);
         </div>
       )
     }
+
+    {
+      addWebhookResult?.error && (
+        <div class="toast toast-top toast-center">
+          <div role="alert" class="alert alert-error bg-red-100 border-red-200 text-red-900">
+            <Icon pack="lucide" name="x-circle" height={20} width={20} class="shrink-0" />
+            <span>{addWebhookResult.error.message || "An error occurred"}</span>
+          </div>
+        </div>
+      )
+    }
+
     {
       result?.data?.success && (
         <div
@@ -85,6 +98,17 @@ const result = Astro.getActionResult(actions.leads.createLead);
           <div role="alert" class="alert alert-info bg-cyan-100 border-cyan-200 text-cyan-900">
             <Icon pack="lucide" name="check-circle" height={20} width={20} class="shrink-0" />
             <span>Signed up for {project?.title} updates!</span>
+          </div>
+        </div>
+      )
+    }
+
+    {
+      addWebhookResult?.data?.success && (
+        <div class="toast toast-top toast-center">
+          <div role="alert" class="alert alert-success bg-green-100 border-green-200 text-green-900">
+            <Icon pack="lucide" name="check-circle" height={20} width={20} class="shrink-0" />
+            <span>Webhook added!</span>
           </div>
         </div>
       )
