@@ -43,7 +43,7 @@ const posts = await db
   .limit(1);
 post = posts[0];
 
-Astro.response.headers.set('CDN-Cache-Control', "public, max-age=45, must-revalidate");
+Astro.response.headers.set("CDN-Cache-Control", "public, max-age=45, must-revalidate");
 ---
 
 <Layout title="Dashboard">
@@ -92,17 +92,8 @@ Astro.response.headers.set('CDN-Cache-Control', "public, max-age=45, must-revali
             x-data={`{ 
               title: \`${post?.title || ""}\`, 
               content: \`${post?.content || ""}\`,
-              maxLength: 100, 
-              get slug() { 
-                return this.title
-                  .toLowerCase()
-                  .replace(/[^\w\s-]/g, '') // Remove non-word chars (except hyphens and spaces)
-                  .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}]/gu, '') // Remove emojis
-                  .replace(/\s+/g, '-') // Replace spaces with hyphens
-                  .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
-                  .trim() // Trim leading/trailing spaces or hyphens
-                  .slice(0, 100); // Limit to 100 characters
-              } 
+              slug: \`${post?.slug || ""}\`,
+              maxLength: 100,
             }`}
             action={actions.posts.updatePost}
             method="post"
@@ -127,13 +118,36 @@ Astro.response.headers.set('CDN-Cache-Control', "public, max-age=45, must-revali
 
             <input type="hidden" name="projectId" value={project?.id} />
             <input type="hidden" name="id" value={post?.id} />
-            <input type="hidden" name="slug" x-model="slug" />
             <input type="hidden" name="userId" value={user?.id} />
             <input type="hidden" value={post?.content || ""} x-model="content" name="content" id="x" />
 
             <div>
               <trix-editor input="x" class="text-xl px-6 py-4" placeholder="Write your post here..."></trix-editor>
             </div>
+
+            <label class="form-control w-full">
+              <div class="not-prose label flex items-baseline justify-start gap-1">
+                <p class="label-text text-slate-500">
+                  kit.faith.tools/{project.id}/posts/
+                </p>
+                <span class="inline-block badge text-slate-800 line-clamp-1" x-text="slug || '-'"></span>
+              </div>
+              <input 
+                name="slug"
+                x-model="slug"
+                @input="slug = $el.value.toLowerCase().replace(/\\s+/g, '-').replace(/[^a-z0-9-]/g, '')"
+                type="text"
+                maxlength="100"
+                placeholder="example-post-path"
+                class="input input-lg input-bordered w-full max-w-md bg-white"
+                autocomplete="off"
+              />
+              <div class="label">
+                <span class="label-text-alt text-xs text-slate-500">
+                  <span x-text="slug.length"></span>/<span x-text="maxLength"></span> characters
+                </span>
+              </div>
+            </label>
 
             <button type="submit" class="btn btn-md btn-primary text-white">Update Post</button>
           </form>
@@ -142,16 +156,16 @@ Astro.response.headers.set('CDN-Cache-Control', "public, max-age=45, must-revali
     </main>
     <Footer />
   </div>
+
+  <script>
+    // @ts-ignore - no types available
+    import Trix from "trix";
+    import { setupKeyboardNavigation } from "../../../../libs/utils";
+
+    document.addEventListener("trix-file-accept", function (event) {
+      event.preventDefault();
+    });
+
+    setupKeyboardNavigation();
+  </script>
 </Layout>
-
-<script>
-  // @ts-ignore - no types available
-  import Trix from "trix";
-  import { setupKeyboardNavigation } from "../../../../libs/utils";
-
-  document.addEventListener("trix-file-accept", function (event) {
-    event.preventDefault();
-  });
-
-  setupKeyboardNavigation();
-</script>
