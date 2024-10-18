@@ -30,6 +30,7 @@ const result = Astro.getActionResult(actions.leads.createLead);
 <Layout title="Contacts">
   <div
     x-data={`{ 
+      webhookUrl: '${project?.webhookUrl}',
       emailConsent: false, 
       name: '', 
       email: '', 
@@ -76,6 +77,41 @@ const result = Astro.getActionResult(actions.leads.createLead);
         </div>
       )
     }
+
+    <dialog x-ref="addWebhookModal" id="my_modal_2" class="modal">
+      <div class="modal-box bg-white flex flex-col gap-6 p-6 max-w-md">
+        <h2 class="text-2xl my-0 items-center w-full">
+          <Icon pack="lucide" name="mail" class="w-8 h-8 inline-block mr-1 align-top" />
+          <span>Get notified of new contacts</span>
+        </h2>
+        <form method="POST" class="flex flex-col gap-4 w-full" action={actions.projects.addWebhook}>
+          <label class="form-control w-full">
+            <div class="label">
+              <span class="text-base label-text">Webhook URL</span>
+              <span class="text-xs label-text text-slate-500">Required</span>
+            </div>
+            <input
+              type="text"
+              name="webhookUrl"
+              x-model="webhookUrl"
+              class="input input-lg text-base bg-white rounded-lg input-bordered w-full"
+              placeholder="https://example.com/webhook"
+              required
+            />
+          </label>
+          <input type="hidden" name="projectId" value={project?.id} />
+          <div class="flex flex-col gap-4">
+            <button x-bind:disabled="!isFormComplete" class="btn btn-primary mt-4 w-full">Submit</button>
+            <p class="text-center text-slate-500 text-sm py-0 my-0">
+              The webhook will send a POST request to the URL with the contact information when a new contact is added.
+            </p>
+          </div>
+        </form>
+      </div>
+      <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+      </form>
+    </dialog>
 
     <dialog x-ref="getUpdatesModal" id="my_modal_2" class="modal">
       <div class="modal-box bg-white flex flex-col gap-6 p-6 max-w-md">
@@ -144,13 +180,20 @@ const result = Astro.getActionResult(actions.leads.createLead);
               Copy Email List
             </button>
           </li>
-          <li class="justify-self-end w-full">
+          <li class="justify-self-end w-full flex gap-3 items-center">
             <button
               @click="$refs.getUpdatesModal.showModal()"
               class="btn w-fit self-center btn-sm btn-outline border-slate-200 hover:bg-slate-200 hover:text-slate-900 hover:border-slate-300 border-2 shadow-none"
             >
               <Icon pack="lucide" name="plus" height={20} width={20} class="shrink-0" />
               Import Contact
+            </button>
+            <button
+              @click="$refs.addWebhookModal.showModal()"
+              class="btn w-fit self-center btn-sm btn-outline border-slate-200 hover:bg-slate-200 hover:text-slate-900 hover:border-slate-300 border-2 shadow-none"
+            >
+              <Icon pack="lucide" name="webhook" height={20} width={20} class="shrink-0" />
+              Add Webhook
             </button>
           </li>
           {

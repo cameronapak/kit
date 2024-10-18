@@ -10,6 +10,7 @@ const Projects = defineTable({
     userId: column.text(),
     bannerImageId: column.text({ optional: true }),
     youtubeVideoUrl: column.text({ optional: true }),
+    webhookUrl: column.text({ optional: true }),
   }
 });
 

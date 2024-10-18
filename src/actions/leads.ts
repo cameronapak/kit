@@ -1,6 +1,24 @@
 import { defineAction } from "astro:actions";
 import { z } from "astro:schema";
-import { db, eq, Leads } from "astro:db";
+import { db, eq, Leads, Projects } from "astro:db";
+
+async function sendWebhook(webhookUrl: string, data: any) {
+  try {
+    const response = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      console.error(`Webhook request failed: ${response.statusText}`);
+    }
+  } catch (error) {
+    console.error(`Error sending webhook: ${error instanceof Error ? error.message : "Unknown error"}`);
+  }
+}
 
 export const leads = {
   createLead: defineAction({
@@ -23,6 +41,19 @@ export const leads = {
           })
           .returning()
           .get();
+
+        // Fetch the project to get the webhookUrl
+        const project = await db.select()
+          .from(Projects)
+          .where(eq(Projects.id, projectId))
+          .get();
+
+        if (project && project.webhookUrl) {
+          await sendWebhook(project.webhookUrl, {
+            event: 'lead_created',
+            lead: newLead,
+          });
+        }
 
         return {
           success: true,

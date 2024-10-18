@@ -14,9 +14,10 @@ export const projects = {
       bannerImageId: z.string().optional(),
       youtubeVideoUrl: z.string().optional().nullable().transform(v => v === "" ? null : v),
       authors: z.string(),
+      webhookUrl: z.string().url().optional().nullable(),
     }),
     // Handler function
-    handler: async ({ id, title, content, bannerImageId, youtubeVideoUrl, authors }) => {
+    handler: async ({ id, title, content, bannerImageId, youtubeVideoUrl, authors, webhookUrl }) => {
       try {
         // Update the project in the database
         const updatedProject = await db
@@ -26,7 +27,8 @@ export const projects = {
             content, 
             bannerImageId, 
             youtubeVideoUrl: youtubeVideoUrl || null,
-            authors: authors || ""
+            authors: authors || "",
+            webhookUrl: webhookUrl || null,
           })
           .where(eq(Projects.id, id))
           .returning()
@@ -46,6 +48,17 @@ export const projects = {
     }
   }),
 
+  addWebhook: defineAction({
+    accept: "form",
+    input: z.object({
+      projectId: z.number(),
+      webhookUrl: z.string().url().optional().nullable(),
+    }),
+    handler: async ({ projectId, webhookUrl }) => {
+      const updatedProject = await db.update(Projects).set({ webhookUrl }).where(eq(Projects.id, projectId)).returning().get();
+    }
+  }),
+
   createProject: defineAction({
     // Accept form data
     accept: "form",
@@ -57,9 +70,10 @@ export const projects = {
       bannerImageId: z.string().optional(),
       youtubeVideoUrl: z.string().optional().nullable().transform(v => v === "" ? null : v),
       authors: z.string(),
+      webhookUrl: z.string().url().optional().nullable(),
     }),
     // Handler function
-    handler: async ({ title, content, userId, bannerImageId, youtubeVideoUrl, authors }) => {
+    handler: async ({ title, content, userId, bannerImageId, youtubeVideoUrl, authors, webhookUrl }) => {
       try {
         // Create the project in the database
         const newProject = await db
@@ -71,6 +85,7 @@ export const projects = {
             bannerImageId,
             youtubeVideoUrl: youtubeVideoUrl || null,
             authors: authors || "",
+            webhookUrl: webhookUrl || null,
             createdAt: new Date()
           })
           .returning()
