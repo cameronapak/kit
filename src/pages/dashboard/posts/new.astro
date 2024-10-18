@@ -95,7 +95,7 @@ const result = Astro.getActionResult(actions.posts.createPost);
                 x-model="title"
                 @input="title = $event.target.value.slice(0, maxLength)"
                 type="text"
-                class="input input-bordered w-full rounded-lg bg-white"
+                class="input input-lg input-bordered w-full rounded-lg bg-white text-xl"
                 required
                 placeholder="Title"
                 maxlength="100"
@@ -112,7 +112,7 @@ const result = Astro.getActionResult(actions.posts.createPost);
             <input type="hidden" name="content" id="x" />
 
             <div>
-              <trix-editor input="x" placeholder="Write your post here..."></trix-editor>
+              <trix-editor input="x" class="text-xl px-6 py-4" placeholder="Write your post here..."></trix-editor>
             </div>
 
             <button type="submit" class="btn btn-md btn-primary text-white">Create Post</button>

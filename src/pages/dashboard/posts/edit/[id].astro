@@ -113,7 +113,7 @@ post = posts[0];
                 @input="title = $event.target.value.slice(0, maxLength)"
                 type="text"
                 value={post?.title || ""}
-                class="input input-bordered w-full rounded-lg bg-white"
+                class="input input-lg text-xl input-bordered w-full rounded-lg bg-white"
                 required
                 placeholder="Title"
                 maxlength="100"
@@ -130,7 +130,7 @@ post = posts[0];
             <input type="hidden" value={post?.content || ""} x-model="content" name="content" id="x" />
 
             <div>
-              <trix-editor input="x" placeholder="Write your post here..."></trix-editor>
+              <trix-editor input="x" class="text-xl px-6 py-4" placeholder="Write your post here..."></trix-editor>
             </div>
 
             <button type="submit" class="btn btn-md btn-primary text-white">Update Post</button>

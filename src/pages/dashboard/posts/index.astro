@@ -29,16 +29,18 @@ const allPosts = await db
         </a>
         <p class="text-slate-500 p-0 m-0">
           Post to update your kit page with what's new, events, stories, and more. 
+          Posts are not automatically emailed to your community, so you'll
+          need to email them manually (for now).
         </p>
         <ul class="p-0 m-0 list-none flex flex-col gap-2">
           {
             allPosts.length > 0 ? (
               allPosts.map((post) => (
-                <li class="grid grid-cols-[64px_1fr] items-start gap-3">
+                <li class="text-xl p-0 m-0 grid grid-cols-[64px_1fr] items-start gap-3">
                   <p class="m-0 text-slate-500">
                     {new Date(post.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                   </p>
-                  <a href={`/dashboard/posts/edit/${post.id}`} class="m-0 font-medium !text-cyan-700 link">
+                  <a href={`/dashboard/posts/edit/${post.id}`} class="m-0 font-medium text-slate-800 link">
                     {post.title}
                   </a>
                 </li>

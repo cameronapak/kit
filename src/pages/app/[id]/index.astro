@@ -180,11 +180,11 @@ const title = project?.title;
               <h2 class="text-2xl my-0">Posts</h2>
               <ul class="list-none p-0 m-0">
                 {posts.map((post) => (
-                  <li class="p-0 m-0 grid grid-cols-[76px_1fr] gap-2">
+                  <li class="p-0 m-0 grid grid-cols-[76px_1fr] gap-2 text-xl">
                     <time datetime={post.createdAt.toISOString()}>
                       {post.createdAt.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                     </time>
-                    <a href={`/app/${Astro.params.id}/posts/${post.slug}`}>{post.title}</a>
+                    <a class="text-slate-800 hover:text-slate-900" href={`/app/${Astro.params.id}/posts/${post.slug}`}>{post.title}</a>
                   </li>
                 ))}
               </ul>
