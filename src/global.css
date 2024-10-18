@@ -59,3 +59,15 @@ trix-toolbar [data-trix-attribute="heading1"] {
 trix-toolbar [data-trix-attribute="quote"] {
   @apply !border-l-0;
 }
+
+[data-floating-ui-portal] h1 {
+  @apply text-base m-0;
+}
+
+[data-floating-ui-portal] p {
+  @apply mt-1;
+}
+
+[data-floating-ui-portal] button.cl-formButtonPrimary {
+  @apply rounded-full;
+}
