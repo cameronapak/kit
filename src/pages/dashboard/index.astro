@@ -49,7 +49,7 @@ const bannerImageUrl = getCldImageUrl({
 // Handle form submission result
 const result = Astro.getActionResult(actions.projects.updateProject);
 
-Astro.response.headers.set('CDN-Cache-Control', "public, max-age=45, must-revalidate");
+Astro.response.headers.set("CDN-Cache-Control", "no-store, max-age=0");
 ---
 
 <Layout title="Dashboard">

@@ -16,7 +16,7 @@ const allPosts = await db
   .where(eq(Posts.userId, user?.id || ""))
   .orderBy(desc(Posts.createdAt));
 
-Astro.response.headers.set('CDN-Cache-Control', "public, max-age=45, must-revalidate");
+Astro.response.headers.set("CDN-Cache-Control", "no-store, max-age=0");
 ---
 
 <Layout title="Posts">
