@@ -40,7 +40,8 @@ export default async function seed() {
       slug: "wisephone-ii-is-shipping",
       content,
       userId: CAMS_CLERK_USER_ID,
-      projectId: 1
+      projectId: 1,
+      isFeatured: true
     }
   ]);
 

@@ -4,6 +4,7 @@
   "version": "1.0.1",
   "scripts": {
     "dev": "astro dev",
+    "dev:remote": "astro dev --remote",
     "dev:host": "astro dev --host",
     "update-packages": "npx npm-check-updates -u",
     "start": "astro dev",

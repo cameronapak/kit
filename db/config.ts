@@ -11,7 +11,6 @@ const Projects = defineTable({
     bannerImageId: column.text({ optional: true }),
     youtubeVideoUrl: column.text({ optional: true }),
     webhookUrl: column.text({ optional: true }),
-    isFeatured: column.boolean({ default: false }),
   }
 });
 
@@ -24,6 +23,7 @@ const Posts = defineTable({
     content: column.text(),
     userId: column.text(),
     projectId: column.number({ references: () => Projects.columns.id }),
+    isFeatured: column.boolean({ default: false }),
   }
 });
 
