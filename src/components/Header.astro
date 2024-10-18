@@ -9,31 +9,42 @@ interface Props {
 const { activeTab }: Props = Astro.props;
 ---
 
-<header class="not-prose grid grid-cols-3 w-full">
-  <Logo />
+<header class="not-prose flex flex-col gap-6 w-full">
+  <div class="grid max-sm:grid-cols-2 grid-cols-3">
+    <Logo />
 
+    <div
+      role="tablist"
+      class="max-sm:hidden grid grid-cols-3 justify-self-center self-center not-prose tabs tabs-boxed w-fit bg-slate-200"
+    >
+      <a role="tab" href="/dashboard" class={`tab ${activeTab === "page" ? "tab-active" : ""}`}>Page</a>
+      <a role="tab" href="/dashboard/posts" class={`tab ${activeTab === "posts" ? "tab-active" : ""}`}>Posts</a>
+      <a role="tab" href="/dashboard/contacts" class={`tab ${activeTab === "contacts" ? "tab-active" : ""}`}>Contacts</a
+      >
+    </div>
+
+    <div class="justify-self-end self-center">
+      <div class="relative bg-slate-200 h-[28px] w-[28px] rounded-full">
+        <div
+          x-cloak
+          x-show="visible"
+          x-data="{ visible: false }"
+          x-init="setTimeout(() => visible = true, 250)"
+          x-transition.opacity
+          x-transition.duration.500ms
+          class="absolute top-0 left-0 right-0 bottom-0"
+        >
+          <UserButton />
+        </div>
+      </div>
+    </div>
+  </div>
   <div
     role="tablist"
-    class="grid grid-cols-3 justify-self-center self-center not-prose tabs tabs-boxed w-fit bg-slate-200"
+    class="sm:hidden w-full grid grid-cols-3 justify-self-center self-center not-prose tabs tabs-boxed w-fit bg-slate-200"
   >
     <a role="tab" href="/dashboard" class={`tab ${activeTab === "page" ? "tab-active" : ""}`}>Page</a>
     <a role="tab" href="/dashboard/posts" class={`tab ${activeTab === "posts" ? "tab-active" : ""}`}>Posts</a>
     <a role="tab" href="/dashboard/contacts" class={`tab ${activeTab === "contacts" ? "tab-active" : ""}`}>Contacts</a>
-  </div>
-
-  <div class="justify-self-end self-center">
-    <div class="relative bg-slate-200 h-[28px] w-[28px] rounded-full">
-      <div
-        x-cloak
-        x-show="visible"
-        x-data="{ visible: false }"
-        x-init="setTimeout(() => visible = true, 250)"
-        x-transition.opacity
-        x-transition.duration.500ms
-        class="absolute top-0 left-0 right-0 bottom-0"
-      >
-        <UserButton />
-      </div>
-    </div>
   </div>
 </header>
