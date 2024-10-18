@@ -1,5 +1,5 @@
 ---
-import { SignOutButton } from "@clerk/astro/components";
+import { UserButton } from "@clerk/astro/components";
 import Logo from "./Logo.astro";
 
 interface Props {
@@ -21,7 +21,19 @@ const { activeTab }: Props = Astro.props;
     <a role="tab" href="/dashboard/contacts" class={`tab ${activeTab === "contacts" ? "tab-active" : ""}`}>Contacts</a>
   </div>
 
-  <SignOutButton
-    class="btn w-fit justify-self-end self-center btn-sm btn-outline border-slate-200 hover:bg-slate-200 hover:text-slate-900 hover:border-slate-300 border-2 shadow-none"
-  />
+  <div class="justify-self-end self-center">
+    <div class="relative bg-slate-200 h-[28px] w-[28px] rounded-full">
+      <div
+        x-cloak
+        x-show="visible"
+        x-data="{ visible: false }"
+        x-init="setTimeout(() => visible = true, 250)"
+        x-transition.opacity
+        x-transition.duration.500ms
+        class="absolute top-0 left-0 right-0 bottom-0"
+      >
+        <UserButton />
+      </div>
+    </div>
+  </div>
 </header>
