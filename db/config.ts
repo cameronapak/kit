@@ -11,6 +11,7 @@ const Projects = defineTable({
     bannerImageId: column.text({ optional: true }),
     youtubeVideoUrl: column.text({ optional: true }),
     webhookUrl: column.text({ optional: true }),
+    isFeatured: column.boolean({ default: false }),
   }
 });
 
