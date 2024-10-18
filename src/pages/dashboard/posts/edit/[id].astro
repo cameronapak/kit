@@ -47,8 +47,6 @@ post = posts[0];
 if (!post) {
   return Astro.redirect("/dashboard/posts");
 }
-
-Astro.response.headers.set("CDN-Cache-Control", "no-store, max-age=0");
 ---
 
 <Layout title="Dashboard">

@@ -35,7 +35,5 @@ export default defineConfig({
     }
   },
   output: "server",
-  adapter: netlify({
-    cacheOnDemandPages: true,
-  }),
+  adapter: netlify(),
 });

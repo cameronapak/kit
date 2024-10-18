@@ -26,8 +26,6 @@ const commaSeparatedEmails = allEmails.map((email) => email.email).join(",");
 
 const result = Astro.getActionResult(actions.leads.createLead);
 const addWebhookResult = Astro.getActionResult(actions.projects.addWebhook);
-
-Astro.response.headers.set("CDN-Cache-Control", "no-store, max-age=0");
 ---
 
 <Layout title="Contacts">
