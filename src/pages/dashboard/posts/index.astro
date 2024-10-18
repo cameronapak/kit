@@ -22,14 +22,15 @@ const allPosts = await db
     <Header activeTab="posts" />
 
     <main class="py-12 flex flex-col gap-6">
-      <section class="w-full m-0">
-        <ul class="m-0 list-none p-6 rounded-2xl bg-white w-full shadow flex flex-col gap-2">
-          <li class="">
-            <a href="/dashboard/posts/new" class="btn btn-md w-full btn-primary text-white">
-              <Icon pack="lucide" name="feather" height={24} width={24} class="shrink-0" />
-              Write New Post
-            </a>
-          </li>
+      <section class="flex flex-col gap-6 w-full m-0 p-6 rounded-2xl bg-white shadow">
+        <a href="/dashboard/posts/new" class="btn btn-md w-full btn-primary text-white">
+          <Icon pack="lucide" name="feather" height={24} width={24} class="shrink-0" />
+          Write New Post
+        </a>
+        <p class="text-slate-500 p-0 m-0">
+          Post to update your kit page with what's new, events, stories, and more. 
+        </p>
+        <ul class="p-0 m-0 list-none flex flex-col gap-2">
           {
             allPosts.length > 0 ? (
               allPosts.map((post) => (
@@ -49,6 +50,7 @@ const allPosts = await db
         </ul>
       </section>
     </main>
+
     <Footer />
   </div>
 </Layout>
