@@ -1,6 +1,6 @@
 ---
 import { getCldImageUrl } from "astro-cloudinary/helpers";
-import { db, eq, Projects, Posts } from "astro:db";
+import { db, eq, Projects, Posts, desc } from "astro:db";
 import Icon from "astro-iconify";
 import { actions } from "astro:actions";
 import DOMPurify from "isomorphic-dompurify";
@@ -30,7 +30,11 @@ const youtubeVideoId = project?.youtubeVideoUrl?.split("v=")[1] as string | unde
 const youtubeVideoUrl = new URL(`https://www.youtube.com/embed/${youtubeVideoId}`);
 youtubeVideoUrl.searchParams.set("rel", "0");
 
-const posts = await db.select().from(Posts).where(eq(Posts.projectId, projectId));
+const posts = await db
+  .select()
+  .from(Posts)
+  .where(eq(Posts.projectId, projectId))
+  .orderBy(desc(Posts.createdAt));
 
 const result = Astro.getActionResult(actions.leads.createLead);
 
@@ -44,10 +48,7 @@ const description = contentText.length > 150 ? contentText.slice(0, 150) + "..."
 const title = project?.title;
 
 // Cache for 4 hours, revalidate once per hour, and serve stale if error for 24 hours.
-Astro.response.headers.set(
-  "Cache-Control",
-  "public, max-age=14400, stale-if-error=86400"
-);
+Astro.response.headers.set("Cache-Control", "public, max-age=14400, stale-if-error=86400");
 Astro.response.headers.set(
   "CDN-Cache-Control",
   "public, max-age=14400, stale-while-revalidate=3600, stale-if-error=86400"
@@ -188,13 +189,15 @@ Astro.response.headers.set(
           posts.length > 0 ? (
             <section class="mt-6">
               <h2 class="text-2xl my-0">Posts</h2>
-              <ul class="list-none p-0 m-0">
+              <ul class="list-none p-0 m-0 flex flex-col gap-2">
                 {posts.map((post) => (
                   <li class="p-0 m-0 grid grid-cols-[76px_1fr] gap-2 text-xl">
                     <time datetime={post.createdAt.toISOString()}>
                       {post.createdAt.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                     </time>
-                    <a class="text-slate-800 hover:text-slate-900" href={`/app/${Astro.params.id}/posts/${post.slug}`}>{post.title}</a>
+                    <a class="text-slate-800 hover:text-slate-900" href={`/app/${Astro.params.id}/posts/${post.slug}`}>
+                      {post.title}
+                    </a>
                   </li>
                 ))}
               </ul>
