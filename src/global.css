@@ -71,3 +71,8 @@ trix-toolbar [data-trix-attribute="quote"] {
 [data-floating-ui-portal] button.cl-formButtonPrimary {
   @apply rounded-full;
 }
+
+
+.btn-primary {
+  @apply text-white;
+}
