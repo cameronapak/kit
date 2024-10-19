@@ -28,7 +28,8 @@ export default async function seed() {
       content: SEED_PROJECT_CONTENT,
       createdAt: new Date(),
       bannerImageId: "user_2hHFZTOTzVEGWVy8gpbKyB6JXPu/Slide_16_9_-_1_iyuklo",
-      userId: CAMS_CLERK_USER_ID
+      userId: CAMS_CLERK_USER_ID,
+      slug: "wisephone-ii-demo"
     }
   ]);
 

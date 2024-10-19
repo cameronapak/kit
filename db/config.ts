@@ -10,7 +10,8 @@ const Projects = defineTable({
     userId: column.text(),
     bannerImageId: column.text({ optional: true }),
     youtubeVideoUrl: column.text({ optional: true }),
-    webhookUrl: column.text({ optional: true }),
+    slug: column.text({ default: crypto.randomUUID() }),
+    webhookUrl: column.text({ optional: true })
   }
 });
 
@@ -23,7 +24,7 @@ const Posts = defineTable({
     content: column.text(),
     userId: column.text(),
     projectId: column.number({ references: () => Projects.columns.id }),
-    isFeatured: column.boolean({ default: false }),
+    isFeatured: column.boolean({ default: false })
   }
 });
 
@@ -34,7 +35,7 @@ const Leads = defineTable({
     email: column.text(),
     message: column.text(),
     createdAt: column.date(),
-    projectId: column.number({ references: () => Projects.columns.id }),
+    projectId: column.number({ references: () => Projects.columns.id })
   }
 });
 
