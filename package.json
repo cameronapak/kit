@@ -35,10 +35,12 @@
     "astro": "^4.15.4",
     "astro-cloudinary": "^1.1.0",
     "astro-iconify": "^1.2.0",
+    "astro-integration-lottie": "^0.3.1",
     "astro-seo": "^0.8.4",
     "better-sqlite3": "^11.3.0",
     "htmx.org": "2.0.1",
     "isomorphic-dompurify": "^2.15.0",
+    "lottie-web": "^5.12.2",
     "marked": "^14.1.2",
     "tinymce": "^7.3.0",
     "trix": "^2.1.6"

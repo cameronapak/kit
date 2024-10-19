@@ -5,6 +5,7 @@ import netlify from "@astrojs/netlify";
 import sentry from "@sentry/astro";
 import db from "@astrojs/db";
 import clerk from "@clerk/astro";
+import lottie from "astro-integration-lottie";
 
 const SENTRY_DSN = import.meta.env.SENTRY_DSN;
 const SENTRY_AUTH_TOKEN = import.meta.env.SENTRY_AUTH_TOKEN;
@@ -27,7 +28,8 @@ export default defineConfig({
         auth: SENTRY_AUTH_TOKEN,
         project: SENTRY_PROJECT
       }),
-    clerk()
+    clerk(),
+    lottie()
   ],
   vite: {
     optimizeDeps: {

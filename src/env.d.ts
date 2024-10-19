@@ -2,6 +2,7 @@
 /// <reference types="@clerk/astro/dist/types" />
 /// <reference path="../.astro/db-types.d.ts" />
 /// <reference path="../.astro/types.d.ts" />
+/// <reference types="astro-integration-lottie/env" />
 
 import * as htmx from "htmx.org";
 import type { Auth, UserResource } from "@clerk/types";
