@@ -193,8 +193,17 @@ Astro.response.headers.set(
 
         {
           posts.length > 0 ? (
-            <section class="mt-6">
-              <h2 class="text-2xl my-0">Posts</h2>
+            <section class="mt-6 flex flex-col gap-4">
+              <h2 class="text-2xl my-0 flex items-center gap-3">
+                Posts
+                <a
+                  href={`/api/posts/rss.xml?projectId=${projectId}`}
+                  class="btn w-fit self-center btn-sm btn-outline border-slate-200 hover:bg-slate-200 hover:text-slate-900 hover:border-slate-300 border-2 shadow-none"
+                >
+                  <Icon pack="lucide" name="rss" height={20} width={20} class="shrink-0" />
+                  RSS Feed
+                </a>
+              </h2>
               <ul class="list-none p-0 m-0 flex flex-col gap-2">
                 {posts.map((post) => (
                   <li class="p-0 m-0 grid grid-cols-[76px_1fr] gap-2 text-xl">
