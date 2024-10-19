@@ -1,31 +1,84 @@
 ---
+import { SEO } from "astro-seo";
 import "../global.css";
 
 interface Props {
   title: string;
   description?: string;
-  ogImage?: string;
+  bodyClasses?: string;
+  canonicalUrl?: string;
+  faviconUrl?: string;
+  ogImageUrl?: string;
 }
 
-const { title, description = "", ogImage } = Astro.props;
+const {
+  title,
+  description = "Equipping believers with technology to help them live their God-given calling every single day, together",
+  bodyClasses,
+  canonicalUrl,
+  faviconUrl,
+  ogImageUrl = "/og-image.png"
+} = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en" class="bg-slate-50">
+  <!-- "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life." John 3:16 NIV -->
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description || title} />
-    <meta name="viewport" content="width=device-width" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <meta property="og:image" content={ogImage || "/og-image.png"} />
+    <meta property="og:image" content={ogImageUrl} />
     <meta property="og:title" content={`${title} • faith.tools kit`} />
     <meta property="og:description" content={description} />
     <title>{title} • faith.tools kit</title>
     <slot name="head" />
+
+    <SEO
+      charset="utf-8"
+      title={title}
+      description={description}
+      canonical={canonicalUrl || Astro.url}
+      openGraph={{
+        basic: {
+          title: title,
+          type: "website",
+          image: ogImageUrl
+        },
+        optional: {
+          description: description
+        }
+      }}
+      twitter={{
+        card: "summary_large_image",
+        title: title,
+        description: description,
+        image: ogImageUrl,
+        site: canonicalUrl || Astro.url.href,
+        imageAlt: description
+      }}
+      extend={{
+        link: [
+          {
+            rel: "icon",
+            href: faviconUrl || "/favicon.svg",
+            type: faviconUrl ? "image/png" : "image/svg+xml"
+          }
+          // {
+          //   rel: "apple-touch-icon",
+          //   href: "/apple-touch-icon.png"
+          // }
+        ]
+      }}
+    />
   </head>
 
-  <body class="!max-w-[100vw] w-full">
+  <body class={`!max-w-[100vw] w-full ${bodyClasses}`}>
     <slot />
   </body>
 </html>

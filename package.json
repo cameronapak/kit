@@ -35,6 +35,7 @@
     "astro": "^4.15.4",
     "astro-cloudinary": "^1.1.0",
     "astro-iconify": "^1.2.0",
+    "astro-seo": "^0.8.4",
     "better-sqlite3": "^11.3.0",
     "htmx.org": "2.0.1",
     "isomorphic-dompurify": "^2.15.0",
