@@ -2,7 +2,7 @@
 import { getCldImageUrl } from "astro-cloudinary/helpers";
 import { db, eq, Projects, Posts } from "astro:db";
 import Icon from "astro-iconify";
-import DOMPurify from 'isomorphic-dompurify';
+import DOMPurify from "isomorphic-dompurify";
 import { actions } from "astro:actions";
 import Layout from "../../../../layouts/Layout.astro";
 import Footer from "../../../../components/Footer.astro";
@@ -51,11 +51,10 @@ const title = post?.title;
 
 const result = Astro.getActionResult(actions.leads.createLead);
 
+const rssUrl = new URL(`/api/posts/rss.xml?projectId=${projectId}`, Astro.url);
+
 // Cache for 4 hours, revalidate once per hour, and serve stale if error for 24 hours.
-Astro.response.headers.set(
-  "Cache-Control",
-  "public, max-age=14400, stale-if-error=86400"
-);
+Astro.response.headers.set("Cache-Control", "public, max-age=14400, stale-if-error=86400");
 Astro.response.headers.set(
   "CDN-Cache-Control",
   "public, max-age=14400, stale-while-revalidate=3600, stale-if-error=86400"
@@ -63,6 +62,14 @@ Astro.response.headers.set(
 ---
 
 <Layout title={title} description={description} ogImage={bannerImageUrl}>
+  <link
+    slot="head"
+    rel="alternate"
+    type="application/rss+xml"
+    title={`${title} • faith.tools kit`}
+    href={rssUrl.toString()}
+  />
+
   <div x-data class="prose p-6 pb-12 container mx-auto flex flex-col gap-12">
     <header class="flex justify-center">
       <Logo />
@@ -187,7 +194,7 @@ Astro.response.headers.set(
         </div>
       </div>
     </main>
-    
-    <Footer  />
+
+    <Footer />
   </div>
 </Layout>

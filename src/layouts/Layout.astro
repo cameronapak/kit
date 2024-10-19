@@ -22,6 +22,7 @@ const { title, description = "", ogImage } = Astro.props;
     <meta property="og:title" content={`${title} • faith.tools kit`} />
     <meta property="og:description" content={description} />
     <title>{title} • faith.tools kit</title>
+    <slot name="head" />
   </head>
 
   <body class="!max-w-[100vw] w-full">
