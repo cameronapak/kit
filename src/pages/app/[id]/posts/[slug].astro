@@ -51,7 +51,7 @@ const title = post?.title;
 
 const result = Astro.getActionResult(actions.leads.createLead);
 
-const rssUrl = new URL(`/api/posts/rss.xml?projectId=${project.id}`, Astro.url);
+const rssUrl = new URL(`/api/posts/rss.xml?projectId=${project?.id}`, Astro.url);
 
 // Cache for 4 hours, revalidate once per hour, and serve stale if error for 24 hours.
 Astro.response.headers.set("Cache-Control", "public, max-age=14400, stale-if-error=86400");
@@ -174,7 +174,7 @@ Astro.response.headers.set(
           <div class="not-prose breadcrumbs text-sm flex justify-center text-slate-800">
             <ul>
               <li>
-                <a href={`/app/${Astro.params.id}`} class="flex items-center gap-2">
+                <a href={`/app/${projectSlug}`} class="flex items-center gap-2">
                   {project?.title}
                 </a>
               </li>
@@ -191,7 +191,7 @@ Astro.response.headers.set(
           <h1 class="text-2xl font-bold">
             {post?.title}
             <button
-              @click={`navigator.clipboard.writeText(window.location.origin + \`/app/${project?.id}/posts/${post?.slug}\`); alert('Copied to clipboard!');`}
+              @click={`navigator.clipboard.writeText(window.location.origin + \`/app/${project?.slug}/posts/${post?.slug}\`); alert('Copied to clipboard!');`}
               class="btn btn-sm btn-ghost btn-circle hover:bg-slate-100"
             >
               <Icon pack="lucide" name="share" height={20} width={20} class="shrink-0 text-slate-500" />
