@@ -35,7 +35,9 @@ export default defineConfig({
     }
   },
   redirects: {
-    "/app/1-introducing-faith-tools-kit": "/app/kit"
+    "/app/1-introducing-faith-tools-kit": "/app/kit",
+    "/app/1/posts/kit-update-1": "/app/kit/posts/kit-update-1",
+    "/app/1/posts/introducing-kit": "/app/kit/posts/introducing-kit"
   },
   output: "server",
   adapter: netlify()
