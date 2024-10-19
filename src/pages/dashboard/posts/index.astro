@@ -1,5 +1,5 @@
 ---
-import { db, Posts, eq, desc } from "astro:db";
+import { db, Posts, Projects, eq, desc } from "astro:db";
 import { Icon } from "astro-iconify";
 import Layout from "../../../layouts/Layout.astro";
 import Header from "../../../components/Header.astro";
@@ -15,6 +15,14 @@ const allPosts = await db
   .from(Posts)
   .where(eq(Posts.userId, user?.id || ""))
   .orderBy(desc(Posts.createdAt));
+
+const project = await db
+  .select()
+  .from(Projects)
+  .where(eq(Projects.userId, user?.id || ""))
+  .limit(1);
+
+const projectId = project?.[0]?.id;
 ---
 
 <Layout title="Posts">
@@ -27,10 +35,18 @@ const allPosts = await db
           <Icon pack="lucide" name="feather" height={24} width={24} class="shrink-0" />
           Write New Post
         </a>
+        <div>
+          <a
+            href={`/api/posts/rss.xml?projectId=${projectId}`}
+            class="btn w-fit self-center btn-sm btn-outline border-slate-200 hover:bg-slate-200 hover:text-slate-900 hover:border-slate-300 border-2 shadow-none"
+          >
+            <Icon pack="lucide" name="rss" height={20} width={20} class="shrink-0" />
+            Open RSS Feed
+          </a>
+        </div>
         <p class="text-slate-500 p-0 m-0">
-          Post to update your kit page with what's new, events, stories, and more. 
-          Posts are not automatically emailed to your community, so you'll
-          need to email them manually (for now).
+          Post to update your kit page with what's new, events, stories, and more. Posts are not automatically emailed
+          to your community, so you'll need to email them manually (for now).
         </p>
         <ul class="p-0 m-0 list-none flex flex-col gap-2">
           {
