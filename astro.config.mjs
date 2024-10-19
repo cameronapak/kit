@@ -34,6 +34,9 @@ export default defineConfig({
       exclude: ["astro:db"]
     }
   },
+  redirects: {
+    "/app/1-introducing-faith-tools-kit": "/app/kit"
+  },
   output: "server",
-  adapter: netlify(),
+  adapter: netlify()
 });
