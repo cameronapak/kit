@@ -9,13 +9,13 @@ import Footer from "../../../../components/Footer.astro";
 import Logo from "../../../../components/Logo.astro";
 
 // Get the project ID from the URL
-const projectId = Number(Astro.params.id?.split("-")?.[0] || 0);
+const projectSlug = Astro.params.id;
 
-if (!projectId) {
+if (!projectSlug) {
   return Astro.redirect("/");
 }
 
-const projects = await db.select().from(Projects).where(eq(Projects.id, projectId)).limit(1);
+const projects = await db.select().from(Projects).where(eq(Projects.slug, projectSlug)).limit(1);
 
 let project = projects[0];
 
@@ -51,7 +51,7 @@ const title = post?.title;
 
 const result = Astro.getActionResult(actions.leads.createLead);
 
-const rssUrl = new URL(`/api/posts/rss.xml?projectId=${projectId}`, Astro.url);
+const rssUrl = new URL(`/api/posts/rss.xml?projectId=${project.id}`, Astro.url);
 
 // Cache for 4 hours, revalidate once per hour, and serve stale if error for 24 hours.
 Astro.response.headers.set("Cache-Control", "public, max-age=14400, stale-if-error=86400");

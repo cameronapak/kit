@@ -24,11 +24,13 @@ let project = projects[0];
 
 // If no project exists, create one
 if (!project && user) {
+  const uuid = crypto.randomUUID();
   const formData = new FormData();
   formData.append("title", "My Project");
   formData.append("content", "Write about your project...");
   formData.append("userId", user.id);
-  formData.append("authors", user?.fullName || user?.firstName ||"John Doe");
+  formData.append("authors", user?.fullName || user?.firstName || "John Doe");
+  formData.append("slug", uuid);
 
   const { data, error } = await Astro.callAction(actions.projects.createProject, formData);
 
@@ -61,12 +63,11 @@ const result = Astro.getActionResult(actions.projects.updateProject);
             authors: '${project?.authors || ""}',
             projectId: '${project?.id || ""}',
             title: '${project?.title || ""}', 
+            slug: '${project?.slug || ""}',
             maxLength: 100,
             get previewUrl() {
-              // Make title only lowercase alphanumeric and replace spaces with hyphens
-              const formattedTitle = this.title.toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-");
-              return '/app/' + this.projectId + '-' + formattedTitle;
-            }
+              return '/app/' + this.slug;
+            },
           }`}
           method="POST"
           action={actions.projects.updateProject}
@@ -112,6 +113,33 @@ const result = Astro.getActionResult(actions.projects.updateProject);
               <Icon pack="lucide" name="globe" height={20} width={20} class="shrink-0" />
               View Page
             </a>
+
+            <div>
+              <h2 class="text-slate-700 !mb-0">Path</h2>
+              <p class="text-slate-500 m-0">
+                This is the path that will be used to access your project. It can be changed at any time, but use
+                caution, as this will change the URL of your project.
+              </p>
+              <p class="text-sm m-0 my-4 text-slate-500 flex items-baseline gap-1">
+                kit.faith.tools/app/<span class="inline-block badge text-slate-800 line-clamp-1" x-text="slug || '-'">
+                  {project?.slug || "-"}
+                </span>
+              </p>
+              <input
+                name="slug"
+                x-model="slug"
+                value={project?.slug || ""}
+                @input="slug = $event.target.value.toLowerCase().replace(/\\s+/g, '-').replace(/[^a-z0-9-]/g, '')"
+                type="text"
+                class="input text-xl input-lg input-bordered w-full rounded-lg bg-white"
+                required
+                maxlength="100"
+                placeholder="example-project-name"
+              />
+              <p class="text-xs text-slate-500 mt-2 mb-0">
+                <span x-text="slug.length">{project?.slug?.length || 0}</span>/<span x-text="maxLength">100</span> characters
+              </p>
+            </div>
 
             <input type="hidden" name="id" value={project?.id} />
 
@@ -236,7 +264,7 @@ const result = Astro.getActionResult(actions.projects.updateProject);
             <div>
               <h2 class="text-slate-700">Description</h2>
               <input id="x" value={project?.content || ""} type="hidden" name="content" />
-              <trix-editor class="text-xl" input="x"></trix-editor>
+              <trix-editor class="text-xl px-6 py-4" input="x"></trix-editor>
             </div>
 
             <div class="flex gap-2">

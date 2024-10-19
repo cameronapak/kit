@@ -14,10 +14,11 @@ export const projects = {
       bannerImageId: z.string().optional(),
       youtubeVideoUrl: z.string().optional().nullable().transform(v => v === "" ? null : v),
       authors: z.string(),
+      slug: z.string(),
       webhookUrl: z.string().url().optional().nullable(),
     }),
     // Handler function
-    handler: async ({ id, title, content, bannerImageId, youtubeVideoUrl, authors, webhookUrl }) => {
+    handler: async ({ id, title, content, bannerImageId, youtubeVideoUrl, authors, webhookUrl, slug }) => {
       try {
         // Update the project in the database
         const updatedProject = await db
@@ -28,6 +29,7 @@ export const projects = {
             bannerImageId, 
             youtubeVideoUrl: youtubeVideoUrl || null,
             authors: authors || "",
+            slug,
             webhookUrl: webhookUrl || null,
           })
           .where(eq(Projects.id, id))
@@ -74,10 +76,11 @@ export const projects = {
       bannerImageId: z.string().optional(),
       youtubeVideoUrl: z.string().optional().nullable().transform(v => v === "" ? null : v),
       authors: z.string(),
+      slug: z.string().optional(),
       webhookUrl: z.string().url().optional().nullable(),
     }),
     // Handler function
-    handler: async ({ title, content, userId, bannerImageId, youtubeVideoUrl, authors, webhookUrl }) => {
+    handler: async ({ title, content, userId, bannerImageId, youtubeVideoUrl, authors, webhookUrl, slug }) => {
       try {
         // Create the project in the database
         const newProject = await db
@@ -89,6 +92,7 @@ export const projects = {
             bannerImageId,
             youtubeVideoUrl: youtubeVideoUrl || null,
             authors: authors || "",
+            slug: slug || "",
             webhookUrl: webhookUrl || null,
             createdAt: new Date()
           })

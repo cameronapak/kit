@@ -9,13 +9,13 @@ import Footer from "../../../components/Footer.astro";
 import Logo from "../../../components/Logo.astro";
 
 // Get the project ID from the URL
-const projectId = Number(Astro.params.id?.split("-")?.[0] || 0);
+const slug = Astro.params.id;
 
-if (!projectId) {
+if (!slug) {
   return Astro.redirect("/");
 }
 
-const projects = await db.select().from(Projects).where(eq(Projects.id, projectId)).limit(1);
+const projects = await db.select().from(Projects).where(eq(Projects.slug, slug)).limit(1);
 
 let project = projects[0];
 
@@ -30,7 +30,7 @@ const youtubeVideoId = project?.youtubeVideoUrl?.split("v=")[1] as string | unde
 const youtubeVideoUrl = new URL(`https://www.youtube.com/embed/${youtubeVideoId}`);
 youtubeVideoUrl.searchParams.set("rel", "0");
 
-const posts = await db.select().from(Posts).where(eq(Posts.projectId, projectId)).orderBy(desc(Posts.createdAt));
+const posts = await db.select().from(Posts).where(eq(Posts.projectId, project.id)).orderBy(desc(Posts.createdAt));
 
 const result = Astro.getActionResult(actions.leads.createLead);
 
@@ -43,7 +43,7 @@ const description = contentText.length > 150 ? contentText.slice(0, 150) + "..."
 
 const title = project?.title;
 
-const rssUrl = new URL(`/api/posts/rss.xml?projectId=${projectId}`, Astro.url);
+const rssUrl = new URL(`/api/posts/rss.xml?projectId=${project.id}`, Astro.url);
 
 // Cache for 4 hours, revalidate once per hour, and serve stale if error for 24 hours.
 Astro.response.headers.set("Cache-Control", "public, max-age=14400, stale-if-error=86400");
@@ -127,7 +127,9 @@ Astro.response.headers.set(
             <p class="text-lg text-slate-500 my-0">By {project?.authors}</p>
           </div>
           <!-- Button to sign up -->
-          <button @click="$refs.getUpdatesModal.showModal()" class="max-sm:w-full btn btn-primary text-white">Get Updates</button>
+          <button @click="$refs.getUpdatesModal.showModal()" class="max-sm:w-full btn btn-primary text-white"
+            >Get Updates</button
+          >
         </section>
 
         <div class="text-xl" slot="content">
@@ -197,7 +199,7 @@ Astro.response.headers.set(
               <h2 class="text-2xl my-0 flex items-center gap-3">
                 Posts
                 <a
-                  href={`/api/posts/rss.xml?projectId=${projectId}`}
+                  href={`/api/posts/rss.xml?projectId=${project.id}`}
                   class="btn w-fit self-center btn-sm btn-outline border-slate-200 hover:bg-slate-200 hover:text-slate-900 hover:border-slate-300 border-2 shadow-none"
                 >
                   <Icon pack="lucide" name="rss" height={20} width={20} class="shrink-0" />
@@ -210,7 +212,7 @@ Astro.response.headers.set(
                     <time datetime={post.createdAt.toISOString()}>
                       {post.createdAt.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                     </time>
-                    <a class="text-slate-800 hover:text-slate-900" href={`/app/${Astro.params.id}/posts/${post.slug}`}>
+                    <a class="text-slate-800 hover:text-slate-900" href={`/app/${slug}/posts/${post.slug}`}>
                       {post.title}
                     </a>
                   </li>
