@@ -32,7 +32,7 @@ Astro.response.headers.set("CDN-Cache-Control", "public, max-age=45, must-revali
 
 <Layout title="New Post">
   <div class="prose p-6 container mx-auto">
-    <Header activeTab="posts" />
+    <Header activeTab="posts" projectSlug={project?.slug} />
 
     <main class="mb-12 py-12 flex flex-col gap-6">
       <section class="relative w-full m-0">

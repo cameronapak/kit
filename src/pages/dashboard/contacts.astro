@@ -45,7 +45,7 @@ const addWebhookResult = Astro.getActionResult(actions.projects.addWebhook);
     }`}
     class="prose p-6 container mx-auto"
   >
-    <Header activeTab="contacts" />
+    <Header activeTab="contacts" projectSlug={project?.slug} />
 
     {
       result?.error && (

@@ -1,12 +1,14 @@
 ---
 import { UserButton } from "@clerk/astro/components";
+import { Icon } from "astro-iconify";
 import Logo from "./Logo.astro";
 
 interface Props {
   activeTab: "page" | "posts" | "contacts";
+  projectSlug?: string;
 }
 
-const { activeTab }: Props = Astro.props;
+const { activeTab, projectSlug }: Props = Astro.props;
 ---
 
 <header class="not-prose flex flex-col gap-6 w-full">
@@ -23,8 +25,20 @@ const { activeTab }: Props = Astro.props;
       >
     </div>
 
-    <div class="justify-self-end self-center">
-      <div class="relative bg-slate-200 h-[28px] w-[28px] rounded-full">
+    <div class="flex justify-self-end self-center gap-2 items-center">
+      {
+        projectSlug ? (
+          <a
+            class="flex btn btn-sm shrink-0 btn-outline border-slate-200 hover:bg-slate-200 hover:text-slate-900 hover:border-slate-300 border-2 shadow-none"
+            href={`/app/${projectSlug}`}
+            target="_blank"
+          >
+            <Icon pack="lucide" name="globe" height={16} width={16} class="shrink-0" />
+            View Site
+          </a>
+        ) : null
+      }
+      <div class="relative bg-slate-200 h-8 w-8 rounded-full">
         <div
           x-cloak
           x-show="visible"
@@ -32,7 +46,7 @@ const { activeTab }: Props = Astro.props;
           x-init="setTimeout(() => visible = true, 250)"
           x-transition.opacity
           x-transition.duration.500ms
-          class="absolute top-0 left-0 right-0 bottom-0"
+          class="absolute top-[2px] left-[2px] right-[2px] bottom-[2px]"
         >
           <UserButton />
         </div>
