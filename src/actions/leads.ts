@@ -54,7 +54,7 @@ export const leads = {
         }
 
         return {
-          success: true,
+          success: "Contact created successfully!",
           lead: newLead
         };
       } catch (error) {
@@ -86,7 +86,7 @@ export const leads = {
         }
 
         return {
-          success: true,
+          success: "Contact updated successfully!",
           lead: updatedLead
         };
       } catch (error) {
@@ -109,8 +109,8 @@ export const leads = {
         }
 
         return {
-          success: true,
-          message: "Lead deleted successfully"
+          success: "Contact deleted successfully!",
+          message: "Contact deleted successfully"
         };
       } catch (error) {
         throw new Error(`Failed to delete lead: ${error instanceof Error ? error.message : "Unknown error"}`);

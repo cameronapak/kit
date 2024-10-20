@@ -41,7 +41,7 @@ export const projects = {
         }
 
         return {
-          success: true,
+          success: "Project updated successfully!",
           project: updatedProject
         };
       } catch (error) {
@@ -59,7 +59,7 @@ export const projects = {
     handler: async ({ projectId, webhookUrl }) => {
       const updatedProject = await db.update(Projects).set({ webhookUrl }).where(eq(Projects.id, projectId)).returning().get();
       return {
-        success: true,
+        success: "Webhook updated successfully!",
         project: updatedProject
       };
     }
@@ -100,7 +100,7 @@ export const projects = {
           .get();
 
         return {
-          success: true,
+          success: "Project created successfully!",
           project: newProject
         };
       } catch (error) {

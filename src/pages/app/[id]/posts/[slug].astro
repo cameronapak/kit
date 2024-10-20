@@ -17,7 +17,15 @@ if (!projectSlug) {
 
 const projects = await db.select().from(Projects).where(eq(Projects.slug, projectSlug)).limit(1);
 
+if (!projects.length) {
+  return Astro.redirect("/404");
+}
+
 let project = projects[0];
+
+if (!project.isPublished) {
+  return Astro.redirect("/404");
+}
 
 const bannerImageUrl = getCldImageUrl({
   src: project?.bannerImageId || "",
@@ -70,43 +78,17 @@ Astro.response.headers.set(
     href={rssUrl.toString()}
   />
 
-  <div x-data class="prose p-6 pb-12 container mx-auto flex flex-col gap-12">
+  <div 
+    x-init={`
+      toastErrorMessage = \`${result?.error?.message || ''}\`;
+      toastMessage = \`${result?.data?.success ? "Successfully signed up for updates!" : ""}\`;
+    `}
+    x-data 
+    class="prose p-6 pb-12 container mx-auto flex flex-col gap-12"
+  >
     <header class="flex justify-center">
       <Logo />
     </header>
-
-    {
-      result?.error && (
-        <div class="toast toast-top toast-center">
-          <div role="alert" class="alert alert-error bg-red-100 border-red-200 text-red-900">
-            <Icon pack="lucide" name="x-circle" height={20} width={20} class="shrink-0" />
-            <span>{result.error.message || "An error occurred"}</span>
-          </div>
-        </div>
-      )
-    }
-
-    {
-      result?.data?.success && (
-        <div
-          x-data="{ show: true }"
-          x-show="show"
-          x-transition:enter="transition ease-out duration-300"
-          x-transition:enter-start="opacity-0 transform -translate-y-2"
-          x-transition:enter-end="opacity-100 transform translate-y-0"
-          x-transition:leave="transition ease-in duration-300"
-          x-transition:leave-start="opacity-100 transform translate-y-0"
-          x-transition:leave-end="opacity-0 transform -translate-y-2"
-          x-init="setTimeout(() => show = false, 5000)"
-          class="toast toast-top toast-center"
-        >
-          <div role="alert" class="alert alert-info bg-cyan-100 border-cyan-200 text-cyan-900">
-            <Icon pack="lucide" name="check-circle" height={20} width={20} class="shrink-0" />
-            <span>Signed up for {project?.title} updates!</span>
-          </div>
-        </div>
-      )
-    }
 
     <dialog x-ref="getUpdatesModal" id="my_modal_2" class="modal">
       <div class="modal-box bg-white flex flex-col gap-6 p-6 max-w-md">

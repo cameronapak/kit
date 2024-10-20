@@ -11,7 +11,8 @@ const Projects = defineTable({
     bannerImageId: column.text({ optional: true }),
     youtubeVideoUrl: column.text({ optional: true }),
     slug: column.text({ default: crypto.randomUUID() }),
-    webhookUrl: column.text({ optional: true })
+    webhookUrl: column.text({ optional: true }),
+    isPublished: column.boolean({ default: false })
   }
 });
 

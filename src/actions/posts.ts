@@ -33,7 +33,7 @@ export const posts = {
           .get();
 
         return {
-          success: true,
+          success: "Successfully created post!",
           post: newPost
         };
       } catch (error) {
@@ -76,7 +76,7 @@ export const posts = {
         }
 
         return {
-          success: true,
+          success: "Successfully updated post!",
           post: updatedPost
         };
       } catch (error) {
@@ -103,7 +103,7 @@ export const posts = {
         }
 
         return {
-          success: true,
+          success: "Successfully deleted post!",
           message: "Post deleted successfully"
         };
       } catch (error) {
