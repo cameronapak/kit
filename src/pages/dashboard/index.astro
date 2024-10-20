@@ -57,8 +57,58 @@ const result = Astro.getActionResult(actions.projects.updateProject);
     <Header activeTab="page" projectSlug={project?.slug} />
 
     <main class="py-12 flex flex-col gap-6">
-      <section class="w-full">
+      <section class="w-full flex flex-col gap-6">
+        {
+          project?.isPublished ? (
+            <div
+              x-init="setTimeout(() => $el.classList.add('-rotate-1'), 200)"
+              role="alert"
+              class="mb-6 alert text-white bg-cyan-700 flex flex-col gap-4 transition-translate duration-500 ease-in-out border-none rounded-2xl"
+            >
+              <div class="grid grid-cols-[auto_1fr_auto] items-center gap-2 w-full">
+                <Icon pack="lucide" name="check-circle" height={20} width={20} class="shrink-0" />
+                <p class="m-0 p-0 font-bold">{project?.title} is live!</p>
+                <form @submit.stop="null" action={actions.projects.unpublishProject} method="POST">
+                  <input type="hidden" name="id" value={project?.id} />
+                  <button type="submit" class="btn btn-sm btn-ghost" @click="$event.stopPropagation()">
+                    Unpublish
+                  </button>
+                </form>
+              </div>
+              <div class="grid grid-cols-[1fr_auto] items-center gap-2 w-full">
+                <input
+                  class="input border-none bg-cyan-800 shadow-inner text-cyan-50"
+                  type="text"
+                  value={Astro.url.origin + `/app/${project?.slug}`}
+                  readonly
+                  @click="$el.select()"
+                />
+                <button @click="handleCopy()" class="btn btn-md btn-ghost">
+                  <Icon pack="lucide" name="copy" height={16} width={16} class="shrink-0" />
+                </button>
+              </div>
+            </div>
+          ) : (
+            <section class="w-full bg-slate-200 p-6 rounded-2xl">
+              <h2 class="text-slate-600 flex items-center gap-2">
+                <Icon pack="lucide" name="pencil-ruler" height={24} width={24} />
+                Draft
+              </h2>
+              <p class="text-slate-500">
+                Publishing your project will make it live on the web. You can unpublish it at any time.
+              </p>
+              <form action={actions.projects.publishProject} method="POST">
+                <input type="hidden" name="id" value={project?.id} />
+                <button type="submit" class="btn btn-primary">
+                  Publish Site
+                </button>
+              </form>
+            </section>
+          )
+        }
+
         <form
+          x-ref="form"
           x-data={`{ 
             authors: '${project?.authors || ""}',
             projectId: '${project?.id || ""}',
@@ -70,8 +120,8 @@ const result = Astro.getActionResult(actions.projects.updateProject);
             },
           }`}
           x-init={`
-            toastErrorMessage = \`${result?.error?.message || ''}\`;
-            toastMessage = \`${result?.data?.success || ''}\`;
+            toastErrorMessage = \`${result?.error?.message || ""}\`;
+            toastMessage = \`${result?.data?.success || ""}\`;
           `}
           method="POST"
           action={actions.projects.updateProject}
@@ -232,6 +282,7 @@ const result = Astro.getActionResult(actions.projects.updateProject);
 
             <div class="flex gap-2">
               <button type="submit" class="btn btn-primary">Save Changes</button>
+              <button type="submit" class="btn btn-secondary bg-slate-100 hover:bg-slate-200">Publish</button>
             </div>
           </div>
         </form>
