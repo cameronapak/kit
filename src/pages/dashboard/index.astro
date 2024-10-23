@@ -4,6 +4,7 @@ import { CldUploadWidget } from "astro-cloudinary";
 import { getCldImageUrl } from "astro-cloudinary/helpers";
 import { db, Projects, eq } from "astro:db";
 import { actions } from "astro:actions";
+import { renderSVG } from "uqr";
 import Icon from "astro-iconify";
 import Header from "../../components/Header.astro";
 import Layout from "../../layouts/Layout.astro";
@@ -48,12 +49,52 @@ const bannerImageUrl = getCldImageUrl({
   format: "webp"
 });
 
+// Create QR code for the project
+const qrCode = renderSVG(Astro.url.origin + `/app/${project?.slug}`);
+
 // Handle form submission result
 const result = Astro.getActionResult(actions.projects.updateProject);
 ---
 
 <Layout title="Dashboard">
-  <div class="prose p-6 container mx-auto">
+  <div
+    x-data={`{
+      svg: \`${qrCode}\`,
+      downloadQRCode() {
+        const blob = new Blob([this.svg], { type: 'image/svg+xml' });
+        const url = URL.createObjectURL(blob);
+        
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'qr-code.svg';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        URL.revokeObjectURL(url);
+      }
+    }`}
+    class="prose p-6 container mx-auto"
+  >
+    <dialog x-ref="qrCodeModal" id="qrCodeCanvas" class="modal">
+      <div class="modal-box bg-white flex flex-col gap-6 p-6 max-w-md">
+        <div class="flex flex-col gap-2">
+          <div class="max-sm:flex-col flex items-center justify-between">
+            <h2 class="text-2xl font-bold my-0 items-center w-full">
+              <Icon pack="lucide" name="qr-code" class="max-sm:w-6 max-sm:h-6 w-8 h-8 inline-block mr-1 align-top" />
+              <span>QR Code</span>
+            </h2>
+            <button @click="downloadQRCode()" class="max-sm:w-full btn btn-sm btn-primary"> Download </button>
+          </div>
+          <p class="m-0">Use this QR code to easily share your project.</p>
+        </div>
+        <div set:html={qrCode} />
+      </div>
+      <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+      </form>
+    </dialog>
+
     <Header activeTab="page" projectSlug={project?.slug} />
 
     <main class="py-12 flex flex-col gap-6">
@@ -75,7 +116,7 @@ const result = Astro.getActionResult(actions.projects.updateProject);
                   </button>
                 </form>
               </div>
-              <div class="grid grid-cols-[1fr_auto] items-center gap-2 w-full">
+              <div class="grid grid-cols-[1fr_auto_auto] items-center gap-2 w-full">
                 <input
                   class="input border-none bg-cyan-800 shadow-inner text-cyan-50"
                   type="text"
@@ -83,6 +124,9 @@ const result = Astro.getActionResult(actions.projects.updateProject);
                   readonly
                   @click="$el.select()"
                 />
+                <button @click="$refs.qrCodeModal.showModal()" class="btn btn-md btn-ghost">
+                  <Icon pack="lucide" name="qr-code" height={16} width={16} class="shrink-0" />
+                </button>
                 <button @click="handleCopy()" class="btn btn-md btn-ghost">
                   <Icon pack="lucide" name="copy" height={16} width={16} class="shrink-0" />
                 </button>

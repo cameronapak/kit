@@ -43,7 +43,8 @@
     "lottie-web": "^5.12.2",
     "marked": "^14.1.2",
     "tinymce": "^7.3.0",
-    "trix": "^2.1.6"
+    "trix": "^2.1.6",
+    "uqr": "^0.1.2"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.15",
