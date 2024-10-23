@@ -330,28 +330,37 @@ const result = Astro.getActionResult(actions.projects.updateProject);
               <button type="submit" class="btn btn-primary">Save Changes</button>
               {
                 project?.isPublished ? (
-                  <form
-                    @submit.prevent="if (confirm('Are you sure you want to unpublish this project?')) $event.target.submit()"
-                    action={actions.projects.unpublishProject}
-                    method="POST"
+                  <button
+                    @click="confirm('Are you sure you want to unpublish this project?') ? $refs.unpublishForm.submit() : null"
+                    type="button"
+                    class="btn btn-ghost"
                   >
-                    <input type="hidden" name="id" value={project?.id} />
-                    <button type="submit" class="btn btn-ghost">
-                      Unpublish
-                    </button>
-                  </form>
+                    Unpublish
+                  </button>
                 ) : (
-                  <form action={actions.projects.publishProject} method="POST">
-                    <input type="hidden" name="id" value={project?.id} />
-                    <button type="submit" class="btn btn-secondary bg-slate-100 hover:bg-slate-200">
-                      Publish Site
-                    </button>
-                  </form>
+                  <button
+                    @click="confirm('Are you sure you want to publish this project?') ? $refs.publishForm.submit() : null"
+                    type="button"
+                    class="btn btn-secondary bg-slate-100 hover:bg-slate-200"
+                  >
+                    Publish Site
+                  </button>
                 )
               }
             </div>
           </div>
         </form>
+        {
+          project?.isPublished ? (
+            <form x-ref="unpublishForm" action={actions.projects.unpublishProject} method="POST">
+              <input type="hidden" name="id" value={project?.id} />
+            </form>
+          ) : (
+            <form x-ref="publishForm" action={actions.projects.publishProject} method="POST">
+              <input type="hidden" name="id" value={project?.id} />
+            </form>
+          )
+        }
       </section>
     </main>
 
@@ -422,4 +431,3 @@ const result = Astro.getActionResult(actions.projects.updateProject);
     }) as EventListener);
   }
 </script>
-
