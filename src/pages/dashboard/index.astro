@@ -165,6 +165,12 @@ const result = Astro.getActionResult(actions.projects.updateProject);
             get previewUrl() {
               return '/app/' + this.slug;
             },
+            showSlugInput: false,
+            handleSlugClick() {
+              if (confirm("Would you like to update your path? Do this at your own risk.")) {
+                this.showSlugInput = true;
+              }
+            }
           }`}
           x-init={`
             toastErrorMessage = \`${result?.error?.message || ""}\`;
@@ -181,24 +187,30 @@ const result = Astro.getActionResult(actions.projects.updateProject);
                 caution, as this will change the URL of your project.
               </p>
               <p class="text-sm m-0 my-4 text-slate-500 flex items-baseline gap-1">
-                kit.faith.tools/app/<span class="inline-block badge text-slate-800 line-clamp-1" x-text="slug || '-'">
+                kit.faith.tools/app/<span
+                  @click="handleSlugClick()"
+                  class="inline-block badge text-slate-800 line-clamp-1"
+                  x-text="slug || '-'"
+                >
                   {project?.slug || "-"}
                 </span>
               </p>
-              <input
-                name="slug"
-                x-model="slug"
-                value={project?.slug || ""}
-                @input="slug = $event.target.value.toLowerCase().replace(/\\s+/g, '-').replace(/[^a-z0-9-]/g, '')"
-                type="text"
-                class="input text-xl input-lg input-bordered w-full rounded-lg bg-white"
-                required
-                maxlength="100"
-                placeholder="example-project-name"
-              />
-              <p class="text-xs text-slate-500 mt-2 mb-0">
-                <span x-text="slug.length">{project?.slug?.length || 0}</span>/<span x-text="maxLength">100</span> characters
-              </p>
+              <div x-cloak x-show="showSlugInput" x-collapse>
+                <input
+                  name="slug"
+                  x-model="slug"
+                  value={project?.slug || ""}
+                  @input="slug = $event.target.value.toLowerCase().replace(/\\s+/g, '-').replace(/[^a-z0-9-]/g, '')"
+                  type="text"
+                  class="input text-xl input-lg input-bordered w-full rounded-lg bg-white"
+                  required
+                  maxlength="100"
+                  placeholder="example-project-name"
+                />
+                <p x-show="showSlugInput" class="text-xs text-slate-500 mt-2 mb-0">
+                  <span x-text="slug.length">{project?.slug?.length || 0}</span>/<span x-text="maxLength">100</span> characters
+                </p>
+              </div>
             </div>
 
             <input type="hidden" name="id" value={project?.id} />
