@@ -36,7 +36,7 @@ const addWebhookResult = Astro.getActionResult(actions.projects.addWebhook);
       name: '', 
       email: '', 
       get isFormComplete() { 
-        return emailConsent && name && email 
+        return this.emailConsent && this.name && this.email 
       },
       async copyEmailList() {
         await navigator.clipboard.writeText(${JSON.stringify(commaSeparatedEmails)});
@@ -51,7 +51,7 @@ const addWebhookResult = Astro.getActionResult(actions.projects.addWebhook);
   >
     <Header activeTab="contacts" projectSlug={project?.slug} />
 
-    <dialog x-ref="addWebhookModal" id="my_modal_2" class="modal">
+    <dialog x-ref="addWebhookModal" id="addWebhookModal" class="modal">
       <div class="modal-box bg-white flex flex-col gap-6 p-6 max-w-md">
         <h2 class="text-2xl my-0 items-center w-full">
           <Icon pack="lucide" name="mail" class="w-8 h-8 inline-block mr-1 align-top" />
@@ -86,7 +86,7 @@ const addWebhookResult = Astro.getActionResult(actions.projects.addWebhook);
       </form>
     </dialog>
 
-    <dialog x-ref="getUpdatesModal" id="my_modal_2" class="modal">
+    <dialog x-ref="getUpdatesModal" id="getUpdatesModal" class="modal">
       <div class="modal-box bg-white flex flex-col gap-6 p-6 max-w-md">
         <h2 class="text-2xl my-0 items-center w-full">
           <Icon pack="lucide" name="mail" class="w-8 h-8 inline-block mr-1 align-top" />
@@ -126,7 +126,7 @@ const addWebhookResult = Astro.getActionResult(actions.projects.addWebhook);
           <div class="form-control">
             <label class="label cursor-pointer flex gap-3 items-center justify-start">
               <input type="checkbox" x-model="emailConsent" class="checkbox p-0" />
-              <p class="block label-text p-0">
+              <p class="block label-text p-0 m-0">
                 I confirm the owner of this email has consented to receive updates on {project?.title}
               </p>
             </label>
@@ -163,7 +163,7 @@ const addWebhookResult = Astro.getActionResult(actions.projects.addWebhook);
             class="btn w-fit self-center btn-sm btn-outline border-slate-200 hover:bg-slate-200 hover:text-slate-900 hover:border-slate-300 border-2 shadow-none"
           >
             <Icon pack="lucide" name="webhook" height={20} width={20} class="shrink-0" />
-            Add Webhook
+            {project?.webhookUrl ? "Edit Webhook" : "Add Webhook"}
           </button>
         </div>
         <ul class="m-0 list-none w-full p-0 flex flex-col gap-6">
