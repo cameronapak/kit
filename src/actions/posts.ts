@@ -1,6 +1,7 @@
 import { defineAction } from "astro:actions";
 import { z } from "astro:schema";
 import { db, eq, Posts } from "astro:db";
+import { purgeCache } from "@netlify/functions";
 
 export const posts = {
   createPost: defineAction({
@@ -75,12 +76,15 @@ export const posts = {
           throw new Error("Post not found");
         }
 
+        // Invalidate Netlify cache for the updated post
+        await purgeCache({ tags: [slug] });
+
         return {
-          success: "Successfully updated post!",
+          success: "Successfully updated post and invalidated cache!",
           post: updatedPost
         };
       } catch (error) {
-        throw new Error(`Failed to update post: ${error instanceof Error ? error.message : "Unknown error"}`);
+        throw new Error(`Failed to update post or invalidate cache: ${error instanceof Error ? error.message : "Unknown error"}`);
       }
     }
   }),

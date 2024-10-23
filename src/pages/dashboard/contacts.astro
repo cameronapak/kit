@@ -44,8 +44,8 @@ const addWebhookResult = Astro.getActionResult(actions.projects.addWebhook);
       },
     }`}
     x-init={`
-      toastErrorMessage = \`${result?.error?.message || ''}\`;
-      toastMessage = \`${result?.data?.success || ''}\`;
+      toastErrorMessage = \`${result?.error?.message || addWebhookResult?.error?.message || ""}\`;
+      toastMessage = \`${result?.data?.success || addWebhookResult?.data?.success || ""}\`;
     `}
     class="prose p-6 container mx-auto"
   >

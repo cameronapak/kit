@@ -1,6 +1,7 @@
 import { defineAction } from "astro:actions";
 import { z } from "astro:schema";
 import { db, eq, Projects } from "astro:db";
+import { purgeCache } from "@netlify/functions";
 
 export const projects = {
   updateProject: defineAction({
@@ -43,6 +44,8 @@ export const projects = {
         if (!updatedProject) {
           throw new Error("Project not found");
         }
+
+        purgeCache({ tags: [slug] });
 
         return {
           success: "Project updated successfully!",
@@ -133,6 +136,8 @@ export const projects = {
         .returning()
         .get();
 
+      purgeCache({ tags: [updatedProject.slug] });
+
       return {
         success: "Project unpublished successfully!",
         project: updatedProject
@@ -150,6 +155,8 @@ export const projects = {
         .where(eq(Projects.id, id))
         .returning()
         .get();
+
+      purgeCache({ tags: [updatedProject.slug] });
 
       return {
         success: "Project unpublished successfully!",

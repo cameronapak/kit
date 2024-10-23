@@ -5,6 +5,15 @@ import Layout from "../layouts/Layout.astro";
 import Footer from "../components/Footer.astro";
 
 const message = Astro.url.searchParams.get("message") || "Whoops! This page is not available right now.";
+
+// The browser should always check freshness
+Astro.response.headers.set("cache-control", "public, max-age=0, must-revalidate");
+
+// The CDN should cache for a year, but revalidate if the cache tag changes
+Astro.response.headers.set("netlify-cdn-cache-control", "s-maxage=31536000");
+
+// Tag the page
+Astro.response.headers.set("netlify-cache-tag", "404");
 ---
 
 <Layout

@@ -53,12 +53,14 @@ const title = project?.title;
 
 const rssUrl = new URL(`/api/posts/rss.xml?projectId=${project.id}`, Astro.url);
 
-// Cache for 4 hours, revalidate once per hour, and serve stale if error for 24 hours.
-Astro.response.headers.set("Cache-Control", "public, max-age=14400, stale-if-error=86400");
-Astro.response.headers.set(
-  "CDN-Cache-Control",
-  "public, max-age=14400, stale-while-revalidate=3600, stale-if-error=86400"
-);
+// The browser should always check freshness
+Astro.response.headers.set("cache-control", "public, max-age=0, must-revalidate");
+
+// The CDN should cache for a year, but revalidate if the cache tag changes
+Astro.response.headers.set("netlify-cdn-cache-control", "s-maxage=31536000");
+
+// Tag the page with the project slug
+Astro.response.headers.set("netlify-cache-tag", slug);
 ---
 
 <Layout title={title} description={description} ogImageUrl={bannerImageUrl}>
