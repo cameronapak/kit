@@ -63,7 +63,10 @@ const projectId = project?.id;
                 </li>
               ))
             ) : (
-              <li class="m-0 text-center">No posts yet</li>
+              <li class="text-slate-500 bg-slate-100 m-0 text-center flex flex-col items-center gap-2 p-6 rounded-2xl">
+                <Icon pack="lucide" name="mail" height={32} width={32} />
+                Posts will appear here
+              </li>
             )
           }
         </ul>

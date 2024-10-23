@@ -184,7 +184,10 @@ const addWebhookResult = Astro.getActionResult(actions.projects.addWebhook);
                 </li>
               ))
             ) : (
-              <li class="text-slate-500">Emails will appear here when people show interest in your project</li>
+              <li class="text-slate-500 bg-slate-100 m-0 text-center flex flex-col items-center gap-2 p-6 rounded-2xl">
+                <Icon pack="lucide" name="at-sign" height={32} width={32} />
+                Emails will appear here
+              </li>
             )
           }
         </ul>
