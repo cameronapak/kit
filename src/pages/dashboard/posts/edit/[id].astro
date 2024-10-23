@@ -182,7 +182,19 @@ if (!post) {
               </div>
             </label>
 
-            <button type="submit" class="btn btn-md btn-primary text-white">Update Post</button>
+            <div class="flex items-center gap-2">
+              <button type="submit" class="btn btn-md btn-primary text-white">Update Post</button>
+              <button
+                type="button"
+                class="btn btn-md btn-ghost hover:text-red-700 hover:bg-slate-200"
+                @click="confirm('Are you sure you want to delete this post?') && $refs.deletePostForm.submit()"
+              >
+                Delete Post
+              </button>
+            </div>
+          </form>
+          <form x-ref="deletePostForm" action={actions.posts.deletePost} method="post">
+            <input type="hidden" name="id" value={post?.id} />
           </form>
         </div>
       </section>
