@@ -333,7 +333,7 @@ const result = Astro.getActionResult(actions.projects.updateProject);
                   <button
                     @click="confirm('Are you sure you want to unpublish this project?') ? $refs.unpublishForm.submit() : null"
                     type="button"
-                    class="btn btn-ghost"
+                    class="btn btn-ghost hover:bg-slate-200 hover:text-red-700"
                   >
                     Unpublish
                   </button>
