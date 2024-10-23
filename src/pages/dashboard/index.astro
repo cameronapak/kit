@@ -72,6 +72,14 @@ const result = Astro.getActionResult(actions.projects.updateProject);
         document.body.removeChild(link);
         
         URL.revokeObjectURL(url);
+      },
+      handleCopy() {
+        const url = \`${Astro.url.origin}/app/${project?.slug}\`;
+        navigator.clipboard.writeText(url).then(() => {
+          toastMessage = "Copied to clipboard!";
+        }).catch((err) => {
+          console.error('Failed to copy text: ', err);
+        });
       }
     }`}
     class="prose p-6 container mx-auto"
@@ -106,15 +114,9 @@ const result = Astro.getActionResult(actions.projects.updateProject);
               role="alert"
               class="mb-6 alert text-white bg-cyan-700 flex flex-col gap-4 transition-translate duration-500 ease-in-out border-none rounded-2xl"
             >
-              <div class="grid grid-cols-[auto_1fr_auto] items-center gap-2 w-full">
+              <div class="grid grid-cols-[auto_1fr] items-center gap-2 w-full">
                 <Icon pack="lucide" name="check-circle" height={20} width={20} class="shrink-0" />
-                <p class="m-0 p-0 font-bold">{project?.title} is live!</p>
-                <form @submit.stop="null" action={actions.projects.unpublishProject} method="POST">
-                  <input type="hidden" name="id" value={project?.id} />
-                  <button type="submit" class="btn btn-sm btn-ghost" @click="$event.stopPropagation()">
-                    Unpublish
-                  </button>
-                </form>
+                <p class="w-full text-left m-0 p-0 font-bold">{project?.title} is live!</p>
               </div>
               <div class="grid grid-cols-[1fr_auto_auto] items-center gap-2 w-full">
                 <input
@@ -124,11 +126,11 @@ const result = Astro.getActionResult(actions.projects.updateProject);
                   readonly
                   @click="$el.select()"
                 />
-                <button @click="$refs.qrCodeModal.showModal()" class="btn btn-md btn-ghost">
-                  <Icon pack="lucide" name="qr-code" height={16} width={16} class="shrink-0" />
-                </button>
                 <button @click="handleCopy()" class="btn btn-md btn-ghost">
                   <Icon pack="lucide" name="copy" height={16} width={16} class="shrink-0" />
+                </button>
+                <button @click="$refs.qrCodeModal.showModal()" class="btn btn-md btn-ghost">
+                  <Icon pack="lucide" name="qr-code" height={16} width={16} class="shrink-0" />
                 </button>
               </div>
             </div>
@@ -326,7 +328,27 @@ const result = Astro.getActionResult(actions.projects.updateProject);
 
             <div class="flex gap-2">
               <button type="submit" class="btn btn-primary">Save Changes</button>
-              <button type="submit" class="btn btn-secondary bg-slate-100 hover:bg-slate-200">Publish</button>
+              {
+                project?.isPublished ? (
+                  <form
+                    @submit.prevent="if (confirm('Are you sure you want to unpublish this project?')) $event.target.submit()"
+                    action={actions.projects.unpublishProject}
+                    method="POST"
+                  >
+                    <input type="hidden" name="id" value={project?.id} />
+                    <button type="submit" class="btn btn-ghost">
+                      Unpublish
+                    </button>
+                  </form>
+                ) : (
+                  <form action={actions.projects.publishProject} method="POST">
+                    <input type="hidden" name="id" value={project?.id} />
+                    <button type="submit" class="btn btn-secondary bg-slate-100 hover:bg-slate-200">
+                      Publish Site
+                    </button>
+                  </form>
+                )
+              }
             </div>
           </div>
         </form>
@@ -400,3 +422,4 @@ const result = Astro.getActionResult(actions.projects.updateProject);
     }) as EventListener);
   }
 </script>
+
