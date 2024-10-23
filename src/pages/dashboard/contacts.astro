@@ -179,7 +179,11 @@ const addWebhookResult = Astro.getActionResult(actions.projects.addWebhook);
                     <p class="m-0 text-slate-500 text-sm font-medium">{email.name}</p>
                     <blockquote class="m-0 text-slate-500 text-sm font-normal">{email.message}</blockquote>
                   </div>
-                  <form action={actions.leads.deleteLead} method="post">
+                  <form
+                    @submit.prevent="confirm('Are you sure you want to delete this contact?') && $el.submit()"
+                    action={actions.leads.deleteLead}
+                    method="post"
+                  >
                     <input type="hidden" name="id" value={email.id} />
                     <button class="btn btn-circle btn-sm btn-ghost hover:text-red-700 hover:bg-slate-100">
                       <Icon pack="lucide" name="trash" height={16} width={16} />
