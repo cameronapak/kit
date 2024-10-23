@@ -143,12 +143,13 @@ const result = Astro.getActionResult(actions.projects.updateProject);
               <p class="text-slate-500">
                 Publishing your project will make it live on the web. You can unpublish it at any time.
               </p>
-              <form action={actions.projects.publishProject} method="POST">
-                <input type="hidden" name="id" value={project?.id} />
-                <button type="submit" class="btn btn-primary">
-                  Publish Site
-                </button>
-              </form>
+              <button
+                @click="confirm('Are you sure you want to publish this project?') ? $refs.publishForm.submit() : null"
+                type="submit"
+                class="btn btn-primary"
+              >
+                Publish Site
+              </button>
             </section>
           )
         }
@@ -350,19 +351,20 @@ const result = Astro.getActionResult(actions.projects.updateProject);
             </div>
           </div>
         </form>
-        {
-          project?.isPublished ? (
-            <form x-ref="unpublishForm" action={actions.projects.unpublishProject} method="POST">
-              <input type="hidden" name="id" value={project?.id} />
-            </form>
-          ) : (
-            <form x-ref="publishForm" action={actions.projects.publishProject} method="POST">
-              <input type="hidden" name="id" value={project?.id} />
-            </form>
-          )
-        }
       </section>
     </main>
+
+    {
+      project?.isPublished ? (
+        <form x-ref="unpublishForm" action={actions.projects.unpublishProject} method="POST">
+          <input type="hidden" name="id" value={project?.id} />
+        </form>
+      ) : (
+        <form x-ref="publishForm" action={actions.projects.publishProject} method="POST">
+          <input type="hidden" name="id" value={project?.id} />
+        </form>
+      )
+    }
 
     <Footer />
   </div>
