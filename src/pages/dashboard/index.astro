@@ -80,8 +80,26 @@ const result = Astro.getActionResult(actions.projects.updateProject);
         }).catch((err) => {
           console.error('Failed to copy text: ', err);
         });
-      }
+      },
+      authors: '${project?.authors || ""}',
+      projectId: '${project?.id || ""}',
+      title: '${project?.title || ""}', 
+      slug: '${project?.slug || ""}',
+      maxLength: 100,
+      get previewUrl() {
+        return '/app/' + this.slug;
+      },
+      showSlugInput: ${!Boolean(project?.isPublished || false)},
+      handleSlugClick() {
+        if (confirm("Would you like to update your path? Do this at your own risk.")) {
+          this.showSlugInput = true;
+        }
+      },
     }`}
+    x-init={`
+      toastErrorMessage = \`${result?.error?.message || ""}\`;
+      toastMessage = \`${result?.data?.success || ""}\`;
+    `}
     class="prose p-6 container mx-auto"
   >
     <dialog x-ref="qrCodeModal" id="qrCodeCanvas" class="modal">
@@ -119,13 +137,18 @@ const result = Astro.getActionResult(actions.projects.updateProject);
                 <p class="w-full text-left m-0 p-0 font-bold">{project?.title} is live!</p>
               </div>
               <div class="grid grid-cols-[1fr_auto_auto] items-center gap-2 w-full">
-                <input
-                  class="input border-none bg-cyan-800 shadow-inner text-cyan-50"
-                  type="text"
-                  value={Astro.url.origin + `/app/${project?.slug}`}
-                  readonly
-                  @click="$el.select()"
-                />
+                <div class="grid grid-cols-[1fr_auto] items-center gap-2 w-full pr-0 input border-none bg-cyan-800 shadow-inner text-cyan-50">
+                  <input
+                    type="text"
+                    value={Astro.url.origin + `/app/${project?.slug}`}
+                    readonly
+                    class="w-full h-full outline-none bg-transparent active:outline-none border-none"
+                    @click="$el.select()"
+                  />
+                  <button @click="handleSlugClick()" class="btn btn-md btn-ghost">
+                    <Icon pack="lucide" name="pencil" height={16} width={16} class="shrink-0" />
+                  </button>
+                </div>
                 <button @click="handleCopy()" class="btn btn-md btn-ghost">
                   <Icon pack="lucide" name="copy" height={16} width={16} class="shrink-0" />
                 </button>
@@ -154,63 +177,33 @@ const result = Astro.getActionResult(actions.projects.updateProject);
           )
         }
 
-        <form
-          x-ref="form"
-          x-data={`{ 
-            authors: '${project?.authors || ""}',
-            projectId: '${project?.id || ""}',
-            title: '${project?.title || ""}', 
-            slug: '${project?.slug || ""}',
-            maxLength: 100,
-            get previewUrl() {
-              return '/app/' + this.slug;
-            },
-            showSlugInput: false,
-            handleSlugClick() {
-              if (confirm("Would you like to update your path? Do this at your own risk.")) {
-                this.showSlugInput = true;
-              }
-            }
-          }`}
-          x-init={`
-            toastErrorMessage = \`${result?.error?.message || ""}\`;
-            toastMessage = \`${result?.data?.success || ""}\`;
-          `}
-          method="POST"
-          action={actions.projects.updateProject}
-        >
+        <form x-ref="form" method="POST" action={actions.projects.updateProject}>
           <div class="p-6 rounded-2xl bg-white w-full shadow flex flex-col gap-12">
-            <div>
+            <div x-cloak x-show="showSlugInput" x-collapse>
               <h2 class="text-slate-700 !mb-0">Path</h2>
               <p class="text-slate-500 m-0">
                 This is the path that will be used to access your project. It can be changed at any time, but use
                 caution, as this will change the URL of your project.
               </p>
               <p class="text-sm m-0 my-4 text-slate-500 flex items-baseline gap-1">
-                kit.faith.tools/app/<span
-                  @click="handleSlugClick()"
-                  class="inline-block badge text-slate-800 line-clamp-1"
-                  x-text="slug || '-'"
-                >
+                kit.faith.tools/app/<span class="inline-block badge text-slate-800 line-clamp-1" x-text="slug || '-'">
                   {project?.slug || "-"}
                 </span>
               </p>
-              <div x-cloak x-show="showSlugInput" x-collapse>
-                <input
-                  name="slug"
-                  x-model="slug"
-                  value={project?.slug || ""}
-                  @input="slug = $event.target.value.toLowerCase().replace(/\\s+/g, '-').replace(/[^a-z0-9-]/g, '')"
-                  type="text"
-                  class="input text-xl input-lg input-bordered w-full rounded-lg bg-white"
-                  required
-                  maxlength="100"
-                  placeholder="example-project-name"
-                />
-                <p x-show="showSlugInput" class="text-xs text-slate-500 mt-2 mb-0">
-                  <span x-text="slug.length">{project?.slug?.length || 0}</span>/<span x-text="maxLength">100</span> characters
-                </p>
-              </div>
+              <input
+                name="slug"
+                x-model="slug"
+                value={project?.slug || ""}
+                @input="slug = $event.target.value.toLowerCase().replace(/\\s+/g, '-').replace(/[^a-z0-9-]/g, '')"
+                type="text"
+                class="input text-xl input-lg input-bordered w-full rounded-lg bg-white"
+                required
+                maxlength="100"
+                placeholder="example-project-name"
+              />
+              <p x-show="showSlugInput" class="text-xs text-slate-500 mt-2 mb-0">
+                <span x-text="slug.length">{project?.slug?.length || 0}</span>/<span x-text="maxLength">100</span> characters
+              </p>
             </div>
 
             <input type="hidden" name="id" value={project?.id} />
