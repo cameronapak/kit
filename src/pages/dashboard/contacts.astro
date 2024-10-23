@@ -145,30 +145,28 @@ const addWebhookResult = Astro.getActionResult(actions.projects.addWebhook);
     </dialog>
 
     <main class="py-12 flex flex-col gap-6">
-      <section class="w-full m-0">
-        <ul class="m-0 list-none p-6 rounded-2xl bg-white w-full shadow flex flex-col gap-2">
-          <li class="">
-            <button @click="copyEmailList()" class="btn btn-md w-full btn-primary text-white">
-              <Icon pack="lucide" name="clipboard" height={24} width={24} class="shrink-0" />
-              Copy Email List
-            </button>
-          </li>
-          <li class="justify-self-end w-full flex gap-3 items-center">
-            <button
-              @click="$refs.getUpdatesModal.showModal()"
-              class="btn w-fit self-center btn-sm btn-outline border-slate-200 hover:bg-slate-200 hover:text-slate-900 hover:border-slate-300 border-2 shadow-none"
-            >
-              <Icon pack="lucide" name="plus" height={20} width={20} class="shrink-0" />
-              Import Contact
-            </button>
-            <button
-              @click="$refs.addWebhookModal.showModal()"
-              class="btn w-fit self-center btn-sm btn-outline border-slate-200 hover:bg-slate-200 hover:text-slate-900 hover:border-slate-300 border-2 shadow-none"
-            >
-              <Icon pack="lucide" name="webhook" height={20} width={20} class="shrink-0" />
-              Add Webhook
-            </button>
-          </li>
+      <section class="flex flex-col gap-6 w-full m-0 p-6 rounded-2xl bg-white shadow">
+        <button @click="copyEmailList()" class="btn btn-md w-full btn-primary text-white">
+          <Icon pack="lucide" name="clipboard" height={24} width={24} class="shrink-0" />
+          Copy Email List
+        </button>
+        <div class="justify-self-end w-full flex gap-3 items-center">
+          <button
+            @click="$refs.getUpdatesModal.showModal()"
+            class="btn w-fit self-center btn-sm btn-outline border-slate-200 hover:bg-slate-200 hover:text-slate-900 hover:border-slate-300 border-2 shadow-none"
+          >
+            <Icon pack="lucide" name="plus" height={20} width={20} class="shrink-0" />
+            Import Contact
+          </button>
+          <button
+            @click="$refs.addWebhookModal.showModal()"
+            class="btn w-fit self-center btn-sm btn-outline border-slate-200 hover:bg-slate-200 hover:text-slate-900 hover:border-slate-300 border-2 shadow-none"
+          >
+            <Icon pack="lucide" name="webhook" height={20} width={20} class="shrink-0" />
+            Add Webhook
+          </button>
+        </div>
+        <ul class="m-0 list-none w-full p-0 flex flex-col gap-6">
           {
             allEmails.length > 0 ? (
               allEmails.map((email) => (
@@ -187,7 +185,7 @@ const addWebhookResult = Astro.getActionResult(actions.projects.addWebhook);
                       <Icon pack="lucide" name="trash" height={16} width={16} />
                     </button>
                   </form>
-                </li> 
+                </li>
               ))
             ) : (
               <li class="text-slate-500 bg-slate-100 m-0 text-center flex flex-col items-center gap-2 p-6 rounded-2xl">
@@ -201,10 +199,10 @@ const addWebhookResult = Astro.getActionResult(actions.projects.addWebhook);
     </main>
     <Footer />
   </div>
+
+  <script>
+    import { setupKeyboardNavigation } from "../../libs/utils";
+
+    setupKeyboardNavigation();
+  </script>
 </Layout>
-
-<script>
-  import { setupKeyboardNavigation } from "../../libs/utils";
-
-  setupKeyboardNavigation();
-</script>
