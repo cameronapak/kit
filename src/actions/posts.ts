@@ -76,15 +76,18 @@ export const posts = {
           throw new Error("Post not found");
         }
 
-        // Invalidate Netlify cache for the updated post
-        await purgeCache({ tags: [slug] });
+        if (import.meta.env.PROD) {
+          await purgeCache({ tags: [slug] });
+        }
 
         return {
           success: "Successfully updated post and invalidated cache!",
           post: updatedPost
         };
       } catch (error) {
-        throw new Error(`Failed to update post or invalidate cache: ${error instanceof Error ? error.message : "Unknown error"}`);
+        throw new Error(
+          `Failed to update post or invalidate cache: ${error instanceof Error ? error.message : "Unknown error"}`
+        );
       }
     }
   }),

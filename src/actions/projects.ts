@@ -45,7 +45,9 @@ export const projects = {
           throw new Error("Project not found");
         }
 
-        purgeCache({ tags: [slug] });
+        if (import.meta.env.PROD) {
+          purgeCache({ tags: [slug] });
+        }
 
         return {
           success: "Project updated successfully!",
@@ -136,7 +138,9 @@ export const projects = {
         .returning()
         .get();
 
-      purgeCache({ tags: [updatedProject.slug] });
+      if (import.meta.env.PROD) {
+        purgeCache({ tags: [updatedProject.slug] });
+      }
 
       return {
         success: "Project unpublished successfully!",
@@ -156,7 +160,9 @@ export const projects = {
         .returning()
         .get();
 
-      purgeCache({ tags: [updatedProject.slug] });
+      if (import.meta.env.PROD) {
+        purgeCache({ tags: [updatedProject.slug] });
+      }
 
       return {
         success: "Project unpublished successfully!",
