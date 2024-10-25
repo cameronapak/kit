@@ -256,7 +256,9 @@ const result = Astro.getActionResult(actions.projects.updateProject);
                   return false;
                 },
                 get youtubeVideoId() {
-                  return this.youtubeVideoUrl.split("v=")[1];
+                  const url = new URL(this.youtubeVideoUrl);
+                  
+                  return url.searchParams.get("v");
                 }
               }`}
             >
