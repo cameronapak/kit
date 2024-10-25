@@ -81,12 +81,12 @@ const result = Astro.getActionResult(actions.projects.updateProject);
           console.error('Failed to copy text: ', err);
         });
       },
-      authors: '${project?.authors || ""}',
-      projectId: '${project?.id || ""}',
-      title: '${project?.title || ""}', 
-      slug: '${project?.slug || ""}',
-      callToActionText: '${project?.callToActionText || ""}',
-      callToActionUrl: '${project?.callToActionUrl || ""}',
+      authors: \`${project?.authors || ""}\`,
+      projectId: \`${project?.id || ""}\`,
+      title: \`${project?.title || ""}\`, 
+      slug: \`${project?.slug || ""}\`,
+      callToActionText: \`${project?.callToActionText || ""}\`,
+      callToActionUrl: \`${project?.callToActionUrl || ""}\`,
       maxLength: 100,
       get previewUrl() {
         return '/app/' + this.slug;

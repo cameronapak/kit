@@ -31,7 +31,7 @@ const addWebhookResult = Astro.getActionResult(actions.projects.addWebhook);
 <Layout title="Contacts">
   <div
     x-data={`{ 
-      webhookUrl: '${project?.webhookUrl || ""}',
+      webhookUrl: \`${project?.webhookUrl || ""}\`,
       emailConsent: false, 
       name: '', 
       email: '', 
