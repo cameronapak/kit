@@ -85,6 +85,8 @@ const result = Astro.getActionResult(actions.projects.updateProject);
       projectId: '${project?.id || ""}',
       title: '${project?.title || ""}', 
       slug: '${project?.slug || ""}',
+      callToActionText: '${project?.callToActionText || ""}',
+      callToActionUrl: '${project?.callToActionUrl || ""}',
       maxLength: 100,
       get previewUrl() {
         return '/app/' + this.slug;
@@ -104,7 +106,9 @@ const result = Astro.getActionResult(actions.projects.updateProject);
           authors: this.authors,
           content: $refs.contentInputEl?.value || '',
           bannerImageId: $refs.bannerImageIdInputEl?.value || '',
-          youtubeVideoUrl: this.youtubeVideoUrl
+          youtubeVideoUrl: this.youtubeVideoUrl,
+          callToActionUrl: this.callToActionUrl,
+          callToActionText: this.callToActionText
         };
         this.formChanged = JSON.stringify(currentFormData) !== JSON.stringify(this.initialFormData);
       },
@@ -115,7 +119,9 @@ const result = Astro.getActionResult(actions.projects.updateProject);
           authors: this.authors,
           content: $refs.contentInputEl?.value || '',
           bannerImageId: $refs.bannerImageIdInputEl?.value || '',
-          youtubeVideoUrl: this.youtubeVideoUrl
+          youtubeVideoUrl: this.youtubeVideoUrl,
+          callToActionUrl: this.callToActionUrl,
+          callToActionText: this.callToActionText
         };
 
         // This allows the path input to animate in.
@@ -194,17 +200,17 @@ const result = Astro.getActionResult(actions.projects.updateProject);
                 Draft
               </h2>
               <p class="text-slate-500 max-w-md m-0">
-                Publishing your project will make it live on the web.
-                But, before you do, make sure you save any changes.
+                Publishing your project will make it live on the web. But, before you do, make sure you save any
+                changes.
               </p>
             </section>
           )
         }
 
-        <form 
+        <form
           x-ref="form"
           method="POST"
-          action={actions.projects.updateProject} 
+          action={actions.projects.updateProject}
           @submit="formChanged = false"
           @change.debounce.500ms="checkFormChanges()"
         >
@@ -286,7 +292,13 @@ const result = Astro.getActionResult(actions.projects.updateProject);
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowfullscreen></iframe>
               </div>
-              <input x-ref="bannerImageIdInputEl" type="hidden" name="bannerImageId" id="bannerImageId" value={project?.bannerImageId || ""} />
+              <input
+                x-ref="bannerImageIdInputEl"
+                type="hidden"
+                name="bannerImageId"
+                id="bannerImageId"
+                value={project?.bannerImageId || ""}
+              />
 
               <div x-collapse x-cloak x-show="shouldShowYouTubeVideoInput" class="mt-4 flex flex-col gap-2">
                 <div class="grid grid-cols-[1fr_auto] gap-2 items-center">
@@ -362,6 +374,42 @@ const result = Astro.getActionResult(actions.projects.updateProject);
               <trix-editor @input.debounce.500ms="checkFormChanges()" class="text-xl px-6 py-4" input="x"></trix-editor>
             </div>
 
+            <div>
+              <h2 class="text-slate-700 !mb-0">Call to Action</h2>
+              <p class="text-slate-500 m-0">Set up a call-to-action button for your project page.</p>
+              <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <label class="form-control w-full max-w-xs">
+                  <div class="label">
+                    <span class="label-text">Button Text</span>
+                  </div>
+                  <input
+                    type="text"
+                    id="callToActionText"
+                    name="callToActionText"
+                    x-model="callToActionText"
+                    class="input text-xl input-lg input-bordered w-full rounded-lg bg-white"
+                    placeholder="Learn More"
+                    value={project?.callToActionText || ""}
+                  />
+                </label>
+
+                <label class="form-control w-full max-w-xs">
+                  <div class="label">
+                    <span class="label-text">Button URL</span>
+                  </div>
+                  <input
+                    type="url"
+                    id="callToActionUrl"
+                    name="callToActionUrl"
+                    x-model="callToActionUrl"
+                    class="input text-xl input-lg input-bordered w-full rounded-lg bg-white"
+                    placeholder="https://example.com"
+                    value={project?.callToActionUrl || ""}
+                  />
+                </label>
+              </div>
+            </div>
+
             <div class="flex gap-2">
               <button x-bind:disabled="!formChanged" type="submit" class="btn btn-primary">Save Changes</button>
               {
@@ -405,68 +453,68 @@ const result = Astro.getActionResult(actions.projects.updateProject);
 
     <Footer />
   </div>
+
+  <script>
+    // @ts-ignore - no types available
+    import Trix from "trix";
+    import { setupKeyboardNavigation } from "../../libs/utils";
+
+    setupKeyboardNavigation();
+
+    type UploadInfo = {
+      id: string;
+      batchId: string;
+      asset_id: string;
+      public_id: string;
+      version: number;
+      version_id: string;
+      signature: string;
+      width: number;
+      height: number;
+      format: string;
+      resource_type: string;
+      created_at: string;
+      tags: string[];
+      bytes: number;
+      type: string;
+      etag: string;
+      placeholder: boolean;
+      url: string;
+      secure_url: string;
+      asset_folder: string;
+      display_name: string;
+      existing: boolean;
+      original_filename: string;
+      path: string;
+      thumbnail_url: string;
+    };
+
+    type UploadEvent = {
+      event: string;
+      info: UploadInfo;
+      UploadWidget: Record<string, unknown>;
+    };
+
+    document.addEventListener("trix-file-accept", function (event) {
+      event.preventDefault();
+    });
+
+    const widget = document.querySelector("#upload-banner");
+    const bannerImageIdInput = document.querySelector("#bannerImageId") as HTMLInputElement;
+    const bannerImageEl = document.querySelector("#bannerImageEl") as HTMLImageElement;
+    if (widget) {
+      widget.addEventListener("clduploadwidget:success", ((e: CustomEvent<UploadEvent>) => {
+        // Save the public_id to the hidden input
+        const publicId = e.detail.info.public_id;
+        if (bannerImageIdInput) {
+          bannerImageIdInput.value = publicId;
+        }
+
+        // Update the banner image
+        if (bannerImageEl) {
+          bannerImageEl.src = e.detail.info.url;
+        }
+      }) as EventListener);
+    }
+  </script>
 </Layout>
-
-<script>
-  // @ts-ignore - no types available
-  import Trix from "trix";
-  import { setupKeyboardNavigation } from "../../libs/utils";
-
-  setupKeyboardNavigation();
-
-  type UploadInfo = {
-    id: string;
-    batchId: string;
-    asset_id: string;
-    public_id: string;
-    version: number;
-    version_id: string;
-    signature: string;
-    width: number;
-    height: number;
-    format: string;
-    resource_type: string;
-    created_at: string;
-    tags: string[];
-    bytes: number;
-    type: string;
-    etag: string;
-    placeholder: boolean;
-    url: string;
-    secure_url: string;
-    asset_folder: string;
-    display_name: string;
-    existing: boolean;
-    original_filename: string;
-    path: string;
-    thumbnail_url: string;
-  };
-
-  type UploadEvent = {
-    event: string;
-    info: UploadInfo;
-    UploadWidget: Record<string, unknown>;
-  };
-
-  document.addEventListener("trix-file-accept", function (event) {
-    event.preventDefault();
-  });
-
-  const widget = document.querySelector("#upload-banner");
-  const bannerImageIdInput = document.querySelector("#bannerImageId") as HTMLInputElement;
-  const bannerImageEl = document.querySelector("#bannerImageEl") as HTMLImageElement;
-  if (widget) {
-    widget.addEventListener("clduploadwidget:success", ((e: CustomEvent<UploadEvent>) => {
-      // Save the public_id to the hidden input
-      const publicId = e.detail.info.public_id;
-      if (bannerImageIdInput) {
-        bannerImageIdInput.value = publicId;
-      }
-
-      // Update the banner image
-      if (bannerImageEl) {
-        bannerImageEl.src = e.detail.info.url;
-      }
-    }) as EventListener);
-  }
-</script>

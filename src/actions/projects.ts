@@ -20,10 +20,23 @@ export const projects = {
         .transform((v) => (v === "" ? null : v)),
       authors: z.string(),
       slug: z.string(),
-      webhookUrl: z.string().url().optional().nullable()
+      webhookUrl: z.string().url().optional().nullable(),
+      callToActionUrl: z.string().url().optional().nullable(),
+      callToActionText: z.string().optional().nullable()
     }),
     // Handler function
-    handler: async ({ id, title, content, bannerImageId, youtubeVideoUrl, authors, webhookUrl, slug }) => {
+    handler: async ({
+      id,
+      title,
+      content,
+      bannerImageId,
+      youtubeVideoUrl,
+      authors,
+      webhookUrl,
+      slug,
+      callToActionUrl,
+      callToActionText
+    }) => {
       try {
         // Update the project in the database
         const updatedProject = await db
@@ -35,7 +48,9 @@ export const projects = {
             youtubeVideoUrl: youtubeVideoUrl || null,
             authors: authors || "",
             slug,
-            webhookUrl: webhookUrl || null
+            webhookUrl: webhookUrl || null,
+            callToActionUrl: callToActionUrl || null,
+            callToActionText: callToActionText || null
           })
           .where(eq(Projects.id, id))
           .returning()
@@ -95,10 +110,23 @@ export const projects = {
         .transform((v) => (v === "" ? null : v)),
       authors: z.string(),
       slug: z.string().optional(),
-      webhookUrl: z.string().url().optional().nullable()
+      webhookUrl: z.string().url().optional().nullable(),
+      callToActionUrl: z.string().url().optional().nullable(),
+      callToActionText: z.string().optional().nullable()
     }),
     // Handler function
-    handler: async ({ title, content, userId, bannerImageId, youtubeVideoUrl, authors, webhookUrl, slug }) => {
+    handler: async ({
+      title,
+      content,
+      userId,
+      bannerImageId,
+      youtubeVideoUrl,
+      authors,
+      webhookUrl,
+      slug,
+      callToActionUrl,
+      callToActionText
+    }) => {
       try {
         // Create the project in the database
         const newProject = await db
@@ -112,6 +140,8 @@ export const projects = {
             authors: authors || "",
             slug: slug || "",
             webhookUrl: webhookUrl || null,
+            callToActionUrl: callToActionUrl || null,
+            callToActionText: callToActionText || null,
             createdAt: new Date()
           })
           .returning()

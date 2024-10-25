@@ -110,13 +110,28 @@ Astro.response.headers.set("netlify-cache-tag", slug);
             <h1 class="pt-2 line-clamp-2 ellipsis my-0">{project?.title}</h1>
             <p class="text-lg text-slate-500 my-0">By {project?.authors}</p>
           </div>
-          <!-- Button to sign up -->
-          <button @click="$refs.getUpdatesModal.showModal()" class="max-sm:w-full btn btn-primary text-white"
-            >Get Updates</button
-          >
         </section>
 
         <div class="text-xl" slot="content">
+          <div class="flex gap-3 max-sm:flex-col items-center mb-6">
+            <!-- Button to sign up -->
+            <button
+              @click="$refs.getUpdatesModal.showModal()"
+              class={project?.callToActionText && project?.callToActionUrl
+                ? "max-sm:w-full btn btn-secondary bg-slate-200 hover:bg-slate-300 text-slate-900 hover:text-slate-900 shadow-none border-2 border-slate-200 hover:border-slate-300"
+                : "max-sm:w-full btn btn-primary text-white"}
+            >
+              Get Updates
+            </button>
+            {
+              project?.callToActionText && project?.callToActionUrl ? (
+                <a href={project?.callToActionUrl} class="max-sm:w-full btn btn-primary text-white">
+                  {project?.callToActionText}
+                  <Icon pack="lucide" name="square-arrow-out-up-right" class="w-4 h-4" />
+                </a>
+              ) : null
+            }
+          </div>
           <Fragment set:html={project?.content} />
         </div>
 

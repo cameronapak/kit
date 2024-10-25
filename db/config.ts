@@ -12,6 +12,8 @@ const Projects = defineTable({
     youtubeVideoUrl: column.text({ optional: true }),
     slug: column.text({ default: "233a7b01-ee6e-47fa-a5ec-91edd503b807" }),
     webhookUrl: column.text({ optional: true }),
+    callToActionUrl: column.text({ optional: true }),
+    callToActionText: column.text({ optional: true }),
     isPublished: column.boolean({ default: false })
   }
 });
