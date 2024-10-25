@@ -49,7 +49,7 @@ const addWebhookResult = Astro.getActionResult(actions.projects.addWebhook);
     `}
     class="prose p-6 container mx-auto"
   >
-    <Header activeTab="contacts" projectSlug={project?.slug} />
+    <Header activeTab="contacts" isProjectPublished={project?.isPublished} projectSlug={project?.slug} />
 
     <dialog x-ref="addWebhookModal" id="addWebhookModal" class="modal">
       <div class="modal-box bg-white flex flex-col gap-6 p-6 max-w-md">

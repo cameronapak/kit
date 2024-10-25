@@ -51,7 +51,7 @@ if (!post) {
 
 <Layout title="Dashboard">
   <div class="prose p-6 container mx-auto">
-    <Header activeTab="posts" projectSlug={project?.slug} />
+    <Header activeTab="posts" isProjectPublished={project?.isPublished} projectSlug={project?.slug} />
 
     <main
       x-data={`{ 

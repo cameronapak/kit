@@ -6,9 +6,10 @@ import Logo from "./Logo.astro";
 interface Props {
   activeTab: "page" | "posts" | "contacts";
   projectSlug?: string;
+  isProjectPublished?: boolean;
 }
 
-const { activeTab, projectSlug }: Props = Astro.props;
+const { activeTab, projectSlug, isProjectPublished }: Props = Astro.props;
 ---
 
 <header class="not-prose flex flex-col gap-6 w-full">
@@ -27,7 +28,7 @@ const { activeTab, projectSlug }: Props = Astro.props;
 
     <div class="flex justify-self-end self-center gap-2 items-center">
       {
-        projectSlug ? (
+        projectSlug && isProjectPublished ? (
           <a
             class="flex btn btn-sm shrink-0 btn-outline border-slate-200 hover:bg-slate-200 hover:text-slate-900 hover:border-slate-300 border-2 shadow-none"
             href={`/app/${projectSlug}`}
