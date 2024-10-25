@@ -22,7 +22,7 @@ Astro.response.headers.set("netlify-cache-tag", "404");
 >
   <main class="min-h-screen h-full relative overflow-hidden not-prose">
     <h1
-      x-init={`toastErrorMessage = \`${message || ''}\``}
+      x-init={`toastErrorMessage = \`${message || ""}\``}
       class="pointer-events-none absolute m-0 p-0 opacity-10 top-0 left-0 right-0 bottom-0 flex justify-center align-items text-[256px] font-bold"
     >
       404
@@ -33,7 +33,7 @@ Astro.response.headers.set("netlify-cache-tag", "404");
       <div class="flex flex-col gap-4 items-center">
         <Logo showAnimatedLogo={true} />
         <p class="max-w-sm text-center text-balance">
-          kit makes it easier to keep in touch with what's new in faith & tech.
+          With <strong>kit</strong> <em>(Keep in Touch)</em>, staying engaged with your users and promoting your product has never been easier.
         </p>
         <div class="flex items-center gap-3">
           <SignInButton mode="modal" asChild forceRedirectUrl="/dashboard">
