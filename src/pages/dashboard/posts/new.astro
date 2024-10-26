@@ -27,6 +27,10 @@ if (!project) {
 // Handle form submission result
 const result = Astro.getActionResult(actions.posts.createPost);
 
+if (result?.data?.success) {
+  return Astro.redirect(`/dashboard/posts/${result.data.post.slug}`);
+}
+
 Astro.response.headers.set("CDN-Cache-Control", "public, max-age=45, must-revalidate");
 ---
 
