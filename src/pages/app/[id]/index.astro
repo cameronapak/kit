@@ -53,6 +53,8 @@ const title = project?.title;
 
 const rssUrl = new URL(`/api/posts/rss.xml?projectId=${project.id}`, Astro.url);
 
+const ogImageUrl = `https://api.faith.tools/og?title=${encodeURIComponent(title)}&id=${encodeURIComponent(project.slug)}`;
+
 // The browser should always check freshness
 Astro.response.headers.set("cache-control", "public, max-age=0, must-revalidate");
 
@@ -63,7 +65,7 @@ Astro.response.headers.set("netlify-cdn-cache-control", "s-maxage=31536000");
 Astro.response.headers.set("netlify-cache-tag", slug);
 ---
 
-<Layout title={title} description={description} ogImageUrl={bannerImageUrl}>
+<Layout title={title} description={description} ogImageUrl={ogImageUrl}>
   <link
     slot="head"
     rel="alternate"

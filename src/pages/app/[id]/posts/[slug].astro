@@ -27,13 +27,6 @@ if (!project.isPublished) {
   return Astro.redirect("/404");
 }
 
-const bannerImageUrl = getCldImageUrl({
-  src: project?.bannerImageId || "",
-  width: 1200,
-  crop: "fill",
-  format: "webp"
-});
-
 const youtubeVideoId = project?.youtubeVideoUrl?.split("v=")[1] as string | undefined;
 const youtubeVideoUrl = new URL(`https://www.youtube.com/embed/${youtubeVideoId}`);
 youtubeVideoUrl.searchParams.set("rel", "0");
@@ -61,6 +54,8 @@ const description = contentText.length > 150 ? contentText.slice(0, 150) + "..."
 
 const title = post?.title;
 
+const ogImageUrl = `https://api.faith.tools/og?title=${encodeURIComponent(title)}&id=${encodeURIComponent(post?.slug)}`;
+
 const result = Astro.getActionResult(actions.leads.createLead);
 
 const rssUrl = new URL(`/api/posts/rss.xml?projectId=${project?.id}`, Astro.url);
@@ -75,7 +70,7 @@ Astro.response.headers.set("netlify-cdn-cache-control", "s-maxage=31536000");
 Astro.response.headers.set("netlify-cache-tag", slug);
 ---
 
-<Layout title={title} description={description} ogImageUrl={bannerImageUrl}>
+<Layout title={title} description={description} ogImageUrl={ogImageUrl}>
   <link
     slot="head"
     rel="alternate"
