@@ -53,7 +53,7 @@ const title = project?.title;
 
 const rssUrl = new URL(`/api/posts/rss.xml?projectId=${project.id}`, Astro.url);
 
-const ogImageUrl = `https://api.faith.tools/og?title=${encodeURIComponent(title)}&id=${encodeURIComponent(project.slug)}`;
+const ogImageUrl = `https://api.faith.tools/og?title=${encodeURIComponent(title)}&id=${encodeURIComponent(project.id + "-" + project.slug)}`;
 
 // The browser should always check freshness
 Astro.response.headers.set("cache-control", "public, max-age=0, must-revalidate");
