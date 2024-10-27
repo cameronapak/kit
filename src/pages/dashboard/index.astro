@@ -81,6 +81,16 @@ const result = Astro.getActionResult(actions.projects.updateProject);
           console.error('Failed to copy text: ', err);
         });
       },
+      async handleShare() {
+        try {
+          await navigator.share({
+            title: this.title,
+            url: window.location.origin + \`/app/${project?.slug}\`
+          });
+        } catch (error) {
+          console.error("Error sharing post:", error);
+        }
+      },
       authors: \`${project?.authors || ""}\`,
       projectId: \`${project?.id || ""}\`,
       title: \`${project?.title || ""}\`, 
@@ -185,9 +195,14 @@ const result = Astro.getActionResult(actions.projects.updateProject);
                     <Icon pack="lucide" name="pencil" height={16} width={16} class="shrink-0" />
                   </button>
                 </div>
-                <button @click="handleCopy()" class="btn btn-md btn-ghost">
-                  <Icon pack="lucide" name="copy" height={16} width={16} class="shrink-0" />
-                </button>
+                <div>
+                  <button @click="handleShare()" class="btn btn-md btn-secondary">
+                    <Icon pack="lucide" name="share" height={16} width={16} class="shrink-0" />
+                  </button>
+                  <button @click="handleCopy()" class="btn btn-md btn-ghost">
+                    <Icon pack="lucide" name="copy" height={16} width={16} class="shrink-0" />
+                  </button>
+                </div>
                 <button @click="$refs.qrCodeModal.showModal()" class="btn btn-md btn-ghost">
                   <Icon pack="lucide" name="qr-code" height={16} width={16} class="shrink-0" />
                 </button>
@@ -257,7 +272,7 @@ const result = Astro.getActionResult(actions.projects.updateProject);
                 },
                 get youtubeVideoId() {
                   const url = new URL(this.youtubeVideoUrl);
-                  
+
                   return url.searchParams.get("v");
                 }
               }`}
