@@ -28,7 +28,7 @@ if (!project) {
 const result = Astro.getActionResult(actions.posts.createPost);
 
 if (result?.data?.success) {
-  return Astro.redirect(`/dashboard/posts/${result.data.post.slug}`);
+  return Astro.redirect(`/dashboard/posts/edit/${result.data.post.id}`);
 }
 
 Astro.response.headers.set("CDN-Cache-Control", "public, max-age=45, must-revalidate");
