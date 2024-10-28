@@ -42,5 +42,8 @@ export default defineConfig({
     "/app/1/posts/introducing-kit": "/app/kit/posts/introducing-kit"
   },
   output: "server",
-  adapter: netlify()
+  adapter: netlify(),
+  experimental: {
+    serverIslands: true
+  }
 });

@@ -1,5 +1,6 @@
 ---
-const user = await Astro.locals.currentUser();
+import SignInOrOpenDashboard from "./server-islands/SignInOrOpenDashboard.astro";
+
 const isDashboard = Astro.url.pathname.startsWith("/dashboard");
 ---
 
@@ -13,24 +14,6 @@ const isDashboard = Astro.url.pathname.startsWith("/dashboard");
     </li>
     <li><a class="text-inherit font-normal" href="https://go.faith.tools/contact" target="_blank">Feedback</a></li>
 
-    {
-      user && !isDashboard ? (
-        <li>
-          <a class="text-inherit font-normal" href="/dashboard" target="_blank">
-            Open Dashboard
-          </a>
-        </li>
-      ) : null
-    }
-
-    {
-      !user ? (
-        <li>
-          <a class="text-inherit font-normal" href="/" target="_blank">
-            Sign In
-          </a>
-        </li>
-      ) : null
-    }
+    <SignInOrOpenDashboard isDashboard={isDashboard} server:defer />
   </ul>
 </footer>

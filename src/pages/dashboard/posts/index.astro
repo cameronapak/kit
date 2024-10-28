@@ -10,11 +10,6 @@ if (!Astro.locals.auth().userId) {
 }
 
 const user = await Astro.locals.currentUser();
-const allPosts = await db
-  .select()
-  .from(Posts)
-  .where(eq(Posts.userId, user?.id || ""))
-  .orderBy(desc(Posts.createdAt));
 
 const projects = await db
   .select()
@@ -24,6 +19,12 @@ const projects = await db
 
 const project = projects?.[0];
 const projectId = project?.id;
+
+const allPosts = await db
+  .select()
+  .from(Posts)
+  .where(eq(Posts.projectId, projectId || 0))
+  .orderBy(desc(Posts.createdAt));
 ---
 
 <Layout title="Posts">

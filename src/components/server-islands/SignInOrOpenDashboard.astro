@@ -1,0 +1,24 @@
+---
+interface Props {
+  isDashboard: boolean;
+}
+
+const { isDashboard } = Astro.props;
+const isSignedIn = Astro.locals.auth().userId;
+---
+
+{
+  !isSignedIn ? (
+    <li>
+      <a class="text-inherit font-normal" href="/" target="_blank">
+        Sign In
+      </a>
+    </li>
+  ) : !isDashboard ? (
+    <li>
+      <a class="text-inherit font-normal" href="/dashboard" target="_blank">
+        Open Dashboard
+      </a>
+    </li>
+  ) : null
+}
