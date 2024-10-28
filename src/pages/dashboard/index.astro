@@ -56,8 +56,6 @@ const logoImageUrl = getCldImageUrl({
   format: "webp"
 });
 
-console.log(project?.logoImageId)
-
 // Create QR code for the project
 const qrCode = renderSVG(Astro.url.origin + `/app/${project?.slug}`);
 
