@@ -14,7 +14,7 @@ const { projectUserId, postId } = Astro.props;
   userId === projectUserId ? (
     <a
       href={`/dashboard/posts/edit/${postId}`}
-      class="btn btn-sm btn-ghost btn-circle border-none"
+      class="btn btn-sm btn-ghost btn-circle hover:bg-slate-100 border-none"
     >
       <Icon pack="lucide" name="pencil" height={20} width={20} class="shrink-0 text-slate-500" />
     </a>
