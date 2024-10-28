@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
-import rss from "@astrojs/rss";
+import rss, { type RSSFeedItem } from "@astrojs/rss";
 import { db, eq, Posts, Projects, desc } from "astro:db";
+import { getCldImageUrl } from "astro-cloudinary/helpers";
 
 export const GET: APIRoute = async ({ params, request }) => {
   const searchParams = new URL(request.url).searchParams;
@@ -18,15 +19,34 @@ export const GET: APIRoute = async ({ params, request }) => {
     return new Response("Project not found", { status: 404 });
   }
 
+  const logoImageUrl = await getCldImageUrl({
+    src: project?.logoImageId || "",
+    width: 256,
+    crop: "fill",
+    format: "webp"
+  });
+
   return rss({
     title: project.title,
     description: project.content,
     site: request.url,
-    items: posts.map((post) => ({
-      title: post.title,
-      description: post.content,
-      pubDate: post.createdAt,
-      link: `/app/${project.slug}/posts/${post.slug}`,
-    })),
+    items: posts.map((post) => {
+      const item = {
+        title: post.title,
+        description: post.content,
+        pubDate: post.createdAt,
+        link: `/app/${project.slug}/posts/${post.slug}`
+      } as RSSFeedItem;
+
+      if (logoImageUrl) {
+        item.enclosure = {
+          url: logoImageUrl,
+          length: 0,
+          type: "image/png"
+        };
+      }
+
+      return item;
+    })
   });
 };
