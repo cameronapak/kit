@@ -23,13 +23,23 @@ export default async function seed() {
   await db.insert(Projects).values([
     {
       id: 1,
+      title: "My Project",
+      authors: "Me",
+      content: "<p>Hello, World</p>",
+      createdAt: new Date(),
+      userId: "user_1",
+      slug: "xyz",
+      isPublished: true
+    },
+    {
+      id: 2,
       title: "Wisephone II • Demo",
       authors: "Techless",
       content: SEED_PROJECT_CONTENT,
       createdAt: new Date(),
       bannerImageId: "user_2hHFZTOTzVEGWVy8gpbKyB6JXPu/Slide_16_9_-_1_iyuklo",
       userId: CAMS_CLERK_USER_ID,
-      slug: "kit",
+      slug: "wpii",
       isPublished: true
     }
   ]);
@@ -44,6 +54,15 @@ export default async function seed() {
       userId: CAMS_CLERK_USER_ID,
       projectId: 1,
       isFeatured: true
+    },
+    {
+      id: 2,
+      title: "My Second Post",
+      createdAt: new Date("2024-10-15"),
+      slug: "my-second-post",
+      content,
+      userId: "user_1",
+      projectId: 1
     }
   ]);
 
