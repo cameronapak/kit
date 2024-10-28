@@ -131,8 +131,8 @@ Astro.response.headers.set("netlify-cache-tag", slug);
             <button
               @click="$refs.getUpdatesModal.showModal()"
               class={project?.callToActionText && project?.callToActionUrl
-                ? "max-sm:w-full btn btn-secondary bg-slate-200 hover:bg-slate-300 text-slate-900 hover:text-slate-900 shadow-none border-2 border-slate-200 hover:border-slate-300"
-                : "max-sm:w-full btn btn-primary text-white"}
+                ? "shadow-none max-sm:w-full btn btn-secondary bg-slate-200 hover:bg-slate-300 text-slate-900 hover:text-slate-900 shadow-none border-2 border-slate-200 hover:border-slate-300"
+                : "shadow-none max-sm:w-full btn btn-primary text-white"}
             >
               Get Updates
             </button>
