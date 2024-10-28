@@ -55,8 +55,8 @@ if (!post) {
 
     <main
       x-data={`{ 
-        title: \`${post?.title || ""}\`, 
-        content: \`${post?.content || ""}\`,
+        title: \`${(post?.title || "").replace(/`/g, "\\`")}\`, 
+        content: \`${(post?.content || "").replace(/`/g, "\\`")}\`,
         slug: \`${post?.slug || ""}\`,
         maxLength: 100,
         async handleCopy() {
