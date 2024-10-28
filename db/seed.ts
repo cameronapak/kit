@@ -28,6 +28,7 @@ export default async function seed() {
       content: SEED_PROJECT_CONTENT,
       createdAt: new Date(),
       bannerImageId: "user_2hHFZTOTzVEGWVy8gpbKyB6JXPu/Slide_16_9_-_1_iyuklo",
+      logoImageId: "user_2hHFZTOTzVEGWVy8gpbKyB6JXPu/Techless_Avatar_tq8cjo",
       userId: CAMS_CLERK_USER_ID,
       slug: "wpii",
       isPublished: true
@@ -38,6 +39,7 @@ export default async function seed() {
       authors: "Me",
       content: "<p>Hello, World</p>",
       createdAt: new Date(),
+      logoImageId: "user_2hHFZTOTzVEGWVy8gpbKyB6JXPu/kit-transparent_hfiukx",
       userId: "user_1",
       slug: "xyz",
       isPublished: true

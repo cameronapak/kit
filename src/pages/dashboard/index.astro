@@ -49,6 +49,15 @@ const bannerImageUrl = getCldImageUrl({
   format: "webp"
 });
 
+const logoImageUrl = getCldImageUrl({
+  src: project?.logoImageId || "",
+  width: 1200,
+  crop: "fill",
+  format: "webp"
+});
+
+console.log(project?.logoImageId)
+
 // Create QR code for the project
 const qrCode = renderSVG(Astro.url.origin + `/app/${project?.slug}`);
 
@@ -259,6 +268,42 @@ const result = Astro.getActionResult(actions.projects.updateProject);
 
             <input type="hidden" name="id" value={project?.id} />
 
+            <div>
+              <h2 class="text-slate-700">Logo</h2>
+              <p class="text-slate-500">Logo or app icon at 1:1 aspect ratio.</p>
+              <CldUploadWidget
+                id="upload-logo"
+                uploadPreset="ml_default"
+                options={{
+                  sources: ["local"],
+                  multiple: false,
+                  maxFiles: 1,
+                  cropping: true,
+                  croppingAspectRatio: 1 / 1,
+                  folder: user?.id || "default"
+                }}
+              >
+                <button type="button" class="w-full">
+                  <img
+                    id="logoImageEl"
+                    src={logoImageUrl || "/assets/square-placeholder.svg"}
+                    alt=""
+                    class="max-h-xs max-w-xs my-0 rounded-xl border-2 border-slate-200 aspect-square object-cover object-center w-full"
+                  />
+                </button>
+              </CldUploadWidget>
+
+              <input
+                x-model="logoImageId"
+                x-ref="logoImageIdInputEl"
+                type="hidden"
+                name="logoImageId"
+                id="logoImageId"
+                @input="formChanged = true"
+                value={project?.logoImageId || ""}
+              />
+            </div>
+
             <div
               x-data={`{
                 youtubeVideoUrl: '${project?.youtubeVideoUrl || ""}',
@@ -271,6 +316,10 @@ const result = Astro.getActionResult(actions.projects.updateProject);
                   return false;
                 },
                 get youtubeVideoId() {
+                  if (!this.youtubeVideoUrl) {
+                    return '';
+                  }
+
                   const url = new URL(this.youtubeVideoUrl);
 
                   return url.searchParams.get("v");
@@ -285,6 +334,7 @@ const result = Astro.getActionResult(actions.projects.updateProject);
                   sources: ["local"],
                   multiple: false,
                   maxFiles: 1,
+                  cropping: true,
                   croppingAspectRatio: 16 / 9,
                   folder: user?.id || "default"
                 }}
@@ -313,6 +363,7 @@ const result = Astro.getActionResult(actions.projects.updateProject);
                 x-ref="bannerImageIdInputEl"
                 type="hidden"
                 name="bannerImageId"
+                @input="formChanged = true"
                 id="bannerImageId"
                 value={project?.bannerImageId || ""}
               />
@@ -525,11 +576,30 @@ const result = Astro.getActionResult(actions.projects.updateProject);
         const publicId = e.detail.info.public_id;
         if (bannerImageIdInput) {
           bannerImageIdInput.value = publicId;
+          bannerImageIdInput.dispatchEvent(new Event('input', { bubbles: true }));
         }
 
         // Update the banner image
         if (bannerImageEl) {
           bannerImageEl.src = e.detail.info.url;
+        }
+      }) as EventListener);
+    }
+
+    const logoWidget = document.querySelector("#upload-logo");
+    const logoImageIdInput = document.querySelector("#logoImageId") as HTMLInputElement;
+    const logoImageEl = document.querySelector("#logoImageEl") as HTMLImageElement;
+    if (logoWidget) {
+      logoWidget.addEventListener("clduploadwidget:success", ((e: CustomEvent<UploadEvent>) => {
+        const publicId = e.detail.info.public_id;
+        if (logoImageIdInput) {
+          logoImageIdInput.value = publicId;
+          logoImageIdInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+
+        // Update the logo image
+        if (logoImageEl) {
+          logoImageEl.src = e.detail.info.url;
         }
       }) as EventListener);
     }

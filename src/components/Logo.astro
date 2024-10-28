@@ -3,16 +3,19 @@ import LottieAnimation from "astro-integration-lottie/Lottie.astro";
 
 interface Props {
   showAnimatedLogo?: boolean;
+  classList?: string;
+  autoplay?: boolean;
 }
 
-const { showAnimatedLogo = false } = Astro.props as Props;
+const { showAnimatedLogo = false, classList, autoplay = true } = Astro.props as Props;
 ---
 
 {
   showAnimatedLogo ? (
     <LottieAnimation
+      class={classList}
       src="/assets/lottie/ft-kit.json"
-      autoplay="visible"
+      autoplay={autoplay ? "visible" : false}
       loop={false}
       class="!h-12 sm:translate-y-1 m-0 p-0 w-full flex justify-center [&>svg]:h-12 w-full"
     />
@@ -23,6 +26,7 @@ const { showAnimatedLogo = false } = Astro.props as Props;
         height="32"
         viewBox="0 0 646 181"
         fill="none"
+        class={classList}
         xmlns="http://www.w3.org/2000/svg"
       >
         <g clip-path="url(#clip0_1089_220)">

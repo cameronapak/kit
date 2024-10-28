@@ -13,6 +13,7 @@ export const projects = {
       title: z.string().min(1, "Title is required"),
       content: z.string(),
       bannerImageId: z.string().optional(),
+      logoImageId: z.string().optional(),
       youtubeVideoUrl: z
         .string()
         .optional()
@@ -30,6 +31,7 @@ export const projects = {
       title,
       content,
       bannerImageId,
+      logoImageId,
       youtubeVideoUrl,
       authors,
       webhookUrl,
@@ -45,6 +47,7 @@ export const projects = {
             title,
             content,
             bannerImageId,
+            logoImageId,
             youtubeVideoUrl: youtubeVideoUrl || null,
             authors: authors || "",
             slug,
@@ -103,6 +106,7 @@ export const projects = {
       content: z.string(),
       userId: z.string(),
       bannerImageId: z.string().optional(),
+      logoImageId: z.string().optional(),
       youtubeVideoUrl: z
         .string()
         .optional()
@@ -120,6 +124,7 @@ export const projects = {
       content,
       userId,
       bannerImageId,
+      logoImageId,
       youtubeVideoUrl,
       authors,
       webhookUrl,
@@ -136,6 +141,7 @@ export const projects = {
             content,
             userId,
             bannerImageId,
+            logoImageId,
             youtubeVideoUrl: youtubeVideoUrl || null,
             authors: authors || "",
             slug: slug || "",

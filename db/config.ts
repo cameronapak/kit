@@ -14,7 +14,8 @@ const Projects = defineTable({
     webhookUrl: column.text({ optional: true }),
     callToActionUrl: column.text({ optional: true }),
     callToActionText: column.text({ optional: true }),
-    isPublished: column.boolean({ default: false })
+    isPublished: column.boolean({ default: false }),
+    logoImageId: column.text({ optional: true })
   }
 });
 

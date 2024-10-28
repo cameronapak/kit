@@ -6,7 +6,6 @@ import { actions } from "astro:actions";
 import DOMPurify from "isomorphic-dompurify";
 import Layout from "../../../layouts/Layout.astro";
 import Footer from "../../../components/Footer.astro";
-import Logo from "../../../components/Logo.astro";
 
 // Get the project ID from the URL
 const slug = Astro.params.id;
@@ -30,6 +29,13 @@ if (!project.isPublished) {
 const bannerImageUrl = getCldImageUrl({
   src: project?.bannerImageId || "",
   width: 1200,
+  crop: "fill",
+  format: "webp"
+});
+
+const logoImageUrl = getCldImageUrl({
+  src: project?.logoImageId || "",
+  width: 512,
   crop: "fill",
   format: "webp"
 });
@@ -79,14 +85,18 @@ Astro.response.headers.set("netlify-cache-tag", slug);
       toastErrorMessage = \`${result?.error?.message || ""}\`;
       toastMessage = \`${result?.data?.success ? "Successfully signed up for updates!" : ""}\`;
     `}
-    class="prose p-6 pb-12 container mx-auto flex flex-col gap-12"
+    class="prose p-6 py-12 container mx-auto flex flex-col gap-12"
   >
-    <header class="flex justify-center">
-      <Logo />
-    </header>
-
     <main class="flex flex-col gap-6 w-full">
       <div class="p-6 rounded-2xl bg-white w-full shadow flex flex-col gap-6">
+        <section class="flex gap-4 max-sm:flex-col items-center">
+          {logoImageUrl ? <img src={logoImageUrl} alt="" class="m-0 mb-4 max-w-32 max-h-32 rounded-2xl shadow" /> : null}
+          <div class="flex flex-col gap-1">
+            <h1 class="line-clamp-2 ellipsis my-0 line-clamp-2">{project?.title}</h1>
+            <p class="text-lg text-slate-500 my-0">By {project?.authors}</p>
+          </div>
+        </section>
+
         {
           youtubeVideoId ? (
             <iframe
@@ -106,13 +116,6 @@ Astro.response.headers.set("netlify-cache-tag", slug);
             />
           ) : null
         }
-
-        <section class="flex gap-3 max-sm:flex-col justify-between items-start">
-          <div class="flex flex-col gap-1">
-            <h1 class="pt-2 line-clamp-2 ellipsis my-0">{project?.title}</h1>
-            <p class="text-lg text-slate-500 my-0">By {project?.authors}</p>
-          </div>
-        </section>
 
         <div class="text-xl" slot="content">
           <div class="flex gap-3 max-sm:flex-col items-center mb-6">
