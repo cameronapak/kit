@@ -1,0 +1,22 @@
+---
+// Adapted from https://www.thomasledoux.be/blog/using-server-islands-actions-view-counter
+import { PageView, count, db, eq } from "astro:db";
+import { Icon } from "astro-iconify";
+
+interface Props {
+  url: string;
+  className?: string;
+}
+
+const { url, className = '' } = Astro.props as Props;
+
+const viewCount = await db
+  .select({ value: count() })
+  .from(PageView)
+  .where(eq(PageView.url, url));
+---
+
+<div class={`badge badge-ghost bg-slate-100 border-none flex items-center gap-1 ${className}`}>
+  <Icon pack="lucide" name="eye" height={16} width={16} class="opacity-50" />
+  <span>{viewCount[0]?.value}</span>
+</div>

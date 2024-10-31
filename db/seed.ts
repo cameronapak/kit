@@ -1,4 +1,4 @@
-import { db, Posts, Leads, Projects } from "astro:db";
+import { db, Posts, Leads, Projects, PageView } from "astro:db";
 
 const content = `
 Never gonna give you up, never gonna let you down.
@@ -86,5 +86,10 @@ export default async function seed() {
       createdAt: new Date(),
       projectId: 1
     }
+  ]);
+
+  await db.insert(PageView).values([
+    { date: new Date(), url: "/" },
+    { date: new Date(), url: "/app/wpii" },
   ]);
 }

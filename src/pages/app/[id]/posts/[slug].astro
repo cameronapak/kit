@@ -7,6 +7,7 @@ import { actions } from "astro:actions";
 import Layout from "../../../../layouts/Layout.astro";
 import Footer from "../../../../components/Footer.astro";
 import EditPostIfMine from "../../../../components/server-islands/EditPostIfMine.astro";
+import PageViewCounter from "../../../../components/server-islands/PageViewCounter.astro";
 
 // Get the project ID from the URL
 const projectSlug = Astro.params.id;
@@ -179,8 +180,9 @@ Astro.response.headers.set("netlify-cache-tag", slug);
           </div>
         </div>
         <div
-          class="text-xl w-full relative translate-y-12 z-20 m-0 list-none p-6 rounded-2xl bg-white w-full shadow-[0_4px_20px_rgb(0,0,0,0.08)] flex flex-col gap-2"
+          class="relative text-xl w-full relative translate-y-12 z-20 m-0 list-none p-6 rounded-2xl bg-white w-full shadow-[0_4px_20px_rgb(0,0,0,0.08)] flex flex-col gap-2"
         >
+          <PageViewCounter url={Astro.url.pathname} server:defer className="absolute top-6 right-6" />
           <div class="flex items-baseline gap-3">
             <h1 class="text-2xl font-bold">
               {post?.title}
@@ -211,3 +213,8 @@ Astro.response.headers.set("netlify-cache-tag", slug);
     <Footer />
   </div>
 </Layout>
+
+<script>
+  import { actions } from "astro:actions";
+  actions.pageView.updatePageView({ url: window.location.pathname });
+</script>

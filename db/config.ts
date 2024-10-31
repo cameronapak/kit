@@ -32,6 +32,17 @@ const Posts = defineTable({
   }
 });
 
+export const PageView = defineTable({
+  columns: {
+    url: column.text(),
+    date: column.date(),
+  },
+  indexes: {
+    url_idx: { on: ["url"], unique: false },
+    date_idx: { on: ["date"], unique: false },
+  }
+});
+
 const Leads = defineTable({
   columns: {
     id: column.number({ primaryKey: true }),
@@ -47,6 +58,7 @@ export default defineDb({
   tables: {
     Posts,
     Leads,
-    Projects
+    Projects,
+    PageView
   }
 });

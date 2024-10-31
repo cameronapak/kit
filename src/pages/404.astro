@@ -41,7 +41,7 @@ Astro.response.headers.set("netlify-cache-tag", "404");
           </SignInButton>
           <a
             class="btn btn-outline border-2 border-slate-200 hover:border-slate-300 bg-transparent text-slate-800 hover:bg-transparent hover:text-slate-900"
-            href="/app/kit">See a demo</a
+            href={import.meta.env.DEV ? "/app/wpii" : "/app/kit"}>See a demo</a
           >
         </div>
       </div>

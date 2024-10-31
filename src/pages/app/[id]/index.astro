@@ -5,6 +5,7 @@ import Icon from "astro-iconify";
 import { actions } from "astro:actions";
 import DOMPurify from "isomorphic-dompurify";
 import Layout from "../../../layouts/Layout.astro";
+import PageViewCounter from "../../../components/server-islands/PageViewCounter.astro";
 import Footer from "../../../components/Footer.astro";
 
 // Get the project ID from the URL
@@ -88,7 +89,7 @@ Astro.response.headers.set("netlify-cache-tag", slug);
     class="prose p-6 py-12 container mx-auto flex flex-col gap-12"
   >
     <main class="flex flex-col gap-6 w-full">
-      <div class="p-6 rounded-2xl bg-white w-full shadow flex flex-col gap-6">
+      <div class="relative p-6 rounded-2xl bg-white w-full shadow flex flex-col gap-6">
         <section class="flex gap-4 max-sm:flex-col items-center w-full">
           {
             logoImageUrl ? (
@@ -104,6 +105,8 @@ Astro.response.headers.set("netlify-cache-tag", slug);
             <p class="text-lg text-slate-500 my-0">By {project?.authors}</p>
           </div>
         </section>
+        
+        <PageViewCounter url={Astro.url.pathname} server:defer className="absolute top-6 right-6" />
 
         {
           youtubeVideoId ? (
@@ -238,3 +241,8 @@ Astro.response.headers.set("netlify-cache-tag", slug);
     <Footer />
   </div>
 </Layout>
+
+<script>
+  import { actions } from "astro:actions";
+  actions.pageView.updatePageView({ url: window.location.pathname });
+</script>
