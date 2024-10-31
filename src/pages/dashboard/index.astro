@@ -42,6 +42,13 @@ if (!project && user) {
   }
 }
 
+// Handle form submission result
+const result = Astro.getActionResult(actions.projects.updateProject);
+
+if (result?.data?.project && result?.data?.success) {
+  project = result.data.project;
+}
+
 const bannerImageUrl = getCldImageUrl({
   src: project?.bannerImageId || "",
   width: 1200,
@@ -58,9 +65,6 @@ const logoImageUrl = getCldImageUrl({
 
 // Create QR code for the project
 const qrCode = renderSVG(Astro.url.origin + `/app/${project?.slug}`);
-
-// Handle form submission result
-const result = Astro.getActionResult(actions.projects.updateProject);
 ---
 
 <Layout title="Dashboard">
@@ -123,6 +127,7 @@ const result = Astro.getActionResult(actions.projects.updateProject);
           authors: this.authors,
           content: $refs.contentInputEl?.value || '',
           bannerImageId: $refs.bannerImageIdInputEl?.value || '',
+          logoImageId: $refs.logoImageIdInputEl?.value || '',
           youtubeVideoUrl: this.youtubeVideoUrl,
           callToActionUrl: this.callToActionUrl,
           callToActionText: this.callToActionText
@@ -136,6 +141,7 @@ const result = Astro.getActionResult(actions.projects.updateProject);
           authors: this.authors,
           content: $refs.contentInputEl?.value || '',
           bannerImageId: $refs.bannerImageIdInputEl?.value || '',
+          logoImageId: $refs.logoImageIdInputEl?.value || '',
           youtubeVideoUrl: this.youtubeVideoUrl,
           callToActionUrl: this.callToActionUrl,
           callToActionText: this.callToActionText
@@ -290,16 +296,6 @@ const result = Astro.getActionResult(actions.projects.updateProject);
                   />
                 </button>
               </CldUploadWidget>
-
-              <input
-                x-model="logoImageId"
-                x-ref="logoImageIdInputEl"
-                type="hidden"
-                name="logoImageId"
-                id="logoImageId"
-                @input="formChanged = true"
-                value={project?.logoImageId || ""}
-              />
             </div>
 
             <div
@@ -364,6 +360,14 @@ const result = Astro.getActionResult(actions.projects.updateProject);
                 @input="formChanged = true"
                 id="bannerImageId"
                 value={project?.bannerImageId || ""}
+              />
+              <input
+                x-ref="logoImageIdInputEl"
+                type="hidden"
+                name="logoImageId"
+                id="logoImageId"
+                @input="formChanged = true"
+                value={project?.logoImageId || ""}
               />
 
               <div x-collapse x-cloak x-show="shouldShowYouTubeVideoInput" class="mt-4 flex flex-col gap-2">
