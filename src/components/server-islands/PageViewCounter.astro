@@ -10,10 +10,13 @@ interface Props {
 
 const { url, className = '' } = Astro.props as Props;
 
+// Remove trailing slash if it exists...
+const urlWithoutTrailingSlash = url.endsWith("/") ? url.slice(0, -1) : url;
+
 const viewCount = await db
   .select({ value: count() })
   .from(PageView)
-  .where(eq(PageView.url, url));
+  .where(eq(PageView.url, urlWithoutTrailingSlash));
 ---
 
 <div class={`badge badge-ghost bg-slate-100 border-none flex items-center gap-1 ${className}`}>
