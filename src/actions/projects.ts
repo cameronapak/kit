@@ -53,7 +53,8 @@ export const projects = {
             slug,
             webhookUrl: webhookUrl || null,
             callToActionUrl: callToActionUrl || null,
-            callToActionText: callToActionText || null
+            callToActionText: callToActionText || null,
+            updatedAt: new Date()
           })
           .where(eq(Projects.id, id))
           .returning()
@@ -148,7 +149,8 @@ export const projects = {
             webhookUrl: webhookUrl || null,
             callToActionUrl: callToActionUrl || null,
             callToActionText: callToActionText || null,
-            createdAt: new Date()
+            createdAt: new Date(),
+            updatedAt: new Date()
           })
           .returning()
           .get();
@@ -191,7 +193,7 @@ export const projects = {
     handler: async ({ id }) => {
       const updatedProject = await db
         .update(Projects)
-        .set({ isPublished: true })
+        .set({ isPublished: true, updatedAt: new Date() })
         .where(eq(Projects.id, id))
         .returning()
         .get();

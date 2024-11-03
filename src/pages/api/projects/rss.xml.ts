@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 import rss, { type RSSFeedItem } from "@astrojs/rss";
 import DOMPurify from "isomorphic-dompurify";
-import { db, eq, Projects, desc } from "astro:db";
+import { db, eq, Projects, desc, and } from "astro:db";
 import { getCldImageUrl } from "astro-cloudinary/helpers";
 
 function getDescription(content: string) {
@@ -23,8 +23,8 @@ export const GET: APIRoute = async ({ request }) => {
   const projects = await db
     .select()
     .from(Projects)
-    .where(eq(Projects.isPublished, true))
-    .orderBy(desc(Projects.createdAt));
+    .where(and(eq(Projects.isPublished, true), eq(Projects.isFeatured, true)))
+    .orderBy(desc(Projects.updatedAt));
 
   const items: RSSFeedItem[] = await Promise.all(
     projects.map(async (project) => {

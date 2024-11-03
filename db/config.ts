@@ -15,7 +15,9 @@ const Projects = defineTable({
     callToActionUrl: column.text({ optional: true }),
     callToActionText: column.text({ optional: true }),
     isPublished: column.boolean({ default: false }),
-    logoImageId: column.text({ optional: true })
+    logoImageId: column.text({ optional: true }),
+    isFeatured: column.boolean({ default: false }),
+    updatedAt: column.date({ default: new Date() })
   }
 });
 

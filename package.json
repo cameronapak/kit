@@ -1,7 +1,7 @@
 {
   "name": "freedom-stack",
   "type": "module",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "scripts": {
     "dev": "astro dev",
     "dev:remote": "astro dev --remote",
@@ -10,9 +10,7 @@
     "start": "astro dev",
     "build": "astro check && astro build --remote",
     "preview": "astro preview",
-    "db-update-schemas": "astro db push --remote",
-    "db-login": "astro login",
-    "db-push": "astro db push",
+    "db:update": "astro db push --remote",
     "format": "prettier -w ."
   },
   "dependencies": {
