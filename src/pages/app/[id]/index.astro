@@ -41,7 +41,7 @@ const logoImageUrl = getCldImageUrl({
   format: "webp"
 });
 
-const youtubeVideoId = project?.youtubeVideoUrl?.split("v=")[1] as string | undefined;
+const youtubeVideoId = new URL(project?.youtubeVideoUrl || '').searchParams.get("v");
 const youtubeVideoUrl = new URL(`https://www.youtube.com/embed/${youtubeVideoId}`);
 youtubeVideoUrl.searchParams.set("rel", "0");
 
