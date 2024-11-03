@@ -61,7 +61,7 @@ if (!post) {
         maxLength: 100,
         async handleCopy() {
           await navigator.clipboard.writeText(window.location.origin + \`/app/${project?.slug}/posts/${post?.slug}\`);
-          alert("Copied to clipboard!");
+          alert("Copied to clipboard! Make sure to use BCC for the emails for privacy's sake.");
         },
         async handleShare() {
           try {
