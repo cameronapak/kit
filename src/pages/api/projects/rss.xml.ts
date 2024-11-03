@@ -40,6 +40,7 @@ export const GET: APIRoute = async ({ request }) => {
           <projectRssFeed>/api/posts/rss.xml?projectId=${project.id}</projectRssFeed>
           ${bannerImageUrl ? `<bannerImageUrl>${bannerImageUrl}</bannerImageUrl>` : ""}
           ${logoImageUrl ? `<logoImageUrl>${logoImageUrl}</logoImageUrl>` : ""}
+          ${project.youtubeVideoUrl ? `<youtubeVideoUrl>${project.youtubeVideoUrl}</youtubeVideoUrl>` : ""}
         `.trim()
       };
 
@@ -47,7 +48,7 @@ export const GET: APIRoute = async ({ request }) => {
         item.enclosure = {
           url: logoImageUrl,
           length: 0,
-          type: "image/png"
+          type: "image/webp"
         };
       }
 
