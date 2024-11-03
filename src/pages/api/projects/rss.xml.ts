@@ -1,7 +1,23 @@
 import type { APIRoute } from "astro";
 import rss, { type RSSFeedItem } from "@astrojs/rss";
+import DOMPurify from "isomorphic-dompurify";
 import { db, eq, Projects, desc } from "astro:db";
 import { getCldImageUrl } from "astro-cloudinary/helpers";
+
+function getDescription(content: string) {
+  if (!content) {
+    return "";
+  }
+
+  const contentText = DOMPurify.sanitize(content, {
+    ALLOWED_TAGS: ["br"],
+  }).replace(/<br>/g, "\n");
+
+  const description =
+    contentText.length > 150 ? contentText.slice(0, 150) + "..." : contentText;
+
+  return decodeURIComponent(description);
+}
 
 export const GET: APIRoute = async ({ request }) => {
   const projects = await db
@@ -32,7 +48,7 @@ export const GET: APIRoute = async ({ request }) => {
 
       const item: RSSFeedItem = {
         title: project.title,
-        description: project.content,
+        description: getDescription(project.content) || '',
         pubDate: project.createdAt,
         link: `/app/${project.slug}`,
         // Add a link to the project's own RSS feed
