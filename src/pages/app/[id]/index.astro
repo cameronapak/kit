@@ -41,9 +41,14 @@ const logoImageUrl = getCldImageUrl({
   format: "webp"
 });
 
-const youtubeVideoId = new URL(project?.youtubeVideoUrl || '').searchParams.get("v");
-const youtubeVideoUrl = new URL(`https://www.youtube.com/embed/${youtubeVideoId}`);
-youtubeVideoUrl.searchParams.set("rel", "0");
+let youtubeVideoUrl: URL | string = "";
+try {
+  const youtubeVideoId = new URL(project?.youtubeVideoUrl || "").searchParams.get("v");
+  youtubeVideoUrl = new URL(`https://www.youtube.com/embed/${youtubeVideoId}`);
+  youtubeVideoUrl.searchParams.set("rel", "0");
+} catch (error) {
+  // Do nothing. Not all projects have a YouTube video.
+}
 
 const posts = await db.select().from(Posts).where(eq(Posts.projectId, project.id)).orderBy(desc(Posts.createdAt));
 
@@ -105,11 +110,11 @@ Astro.response.headers.set("netlify-cache-tag", slug);
             <p class="text-lg text-slate-500 my-0">By {project?.authors}</p>
           </div>
         </section>
-        
+
         <PageViewCounter url={Astro.url.pathname} server:defer className="absolute top-6 right-6" />
 
         {
-          youtubeVideoId ? (
+          youtubeVideoUrl ? (
             <iframe
               class="my-0 rounded-xl border-2 border-slate-200 aspect-video object-cover object-center w-full"
               width="100%"
