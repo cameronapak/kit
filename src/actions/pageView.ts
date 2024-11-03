@@ -24,8 +24,10 @@ export const pageView = {
         });
       }
       try {
+        // Remove trailing slash if it exists...
+        const urlWithoutTrailingSlash = url.endsWith("/") ? url.slice(0, -1) : url;
         await db.insert(PageView).values({
-          url: url,
+          url: urlWithoutTrailingSlash,
           date: new Date()
         });
         return {};
