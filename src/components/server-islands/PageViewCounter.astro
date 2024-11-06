@@ -8,18 +8,18 @@ interface Props {
   className?: string;
 }
 
-const { url, className = '' } = Astro.props as Props;
+const { url, className = "" } = Astro.props as Props;
 
 // Remove trailing slash if it exists...
 const urlWithoutTrailingSlash = url.endsWith("/") ? url.slice(0, -1) : url;
 
-const viewCount = await db
-  .select({ value: count() })
-  .from(PageView)
-  .where(eq(PageView.url, urlWithoutTrailingSlash));
+const viewCount = await db.select({ value: count() }).from(PageView).where(eq(PageView.url, urlWithoutTrailingSlash));
 ---
 
-<div class={`badge badge-ghost bg-slate-100 border-none flex items-center gap-1 ${className}`}>
+<div
+  class={`tooltip tooltip-bottom badge badge-ghost bg-slate-100 border-none flex items-center gap-1 ${className}`}
+  data-tip="Page Views"
+>
   <Icon pack="lucide" name="eye" height={16} width={16} class="opacity-50" />
   <span>{viewCount[0]?.value}</span>
 </div>
