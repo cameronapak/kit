@@ -2,7 +2,7 @@
 import "trix/dist/trix.css";
 import { Icon } from "astro-iconify";
 import { actions } from "astro:actions";
-import { db, Posts, Projects, eq } from "astro:db";
+import { db, Posts, Projects, Leads, eq } from "astro:db";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
@@ -25,6 +25,12 @@ const projects = await db
   .limit(1);
 
 let project = projects[0];
+let allEmails: any[] = [];
+if (project?.id) {
+  allEmails = await db.select().from(Leads).where(eq(Leads.projectId, project.id)).orderBy(Leads.email);
+}
+
+const commaSeparatedEmails = allEmails.map((email) => email.email).join(",");
 
 // Handle form submission result
 const result = Astro.getActionResult(actions.posts.updatePost);
@@ -54,14 +60,17 @@ if (!post) {
     <Header activeTab="posts" isProjectPublished={project?.isPublished} projectSlug={project?.slug} />
 
     <main
-      x-data={`{ 
-        title: \`${(post?.title || "").replace(/`/g, "\\`")}\`, 
+      x-data={`{
+        title: \`${(post?.title || "").replace(/`/g, "\\`")}\`,
         content: \`${(post?.content || "").replace(/`/g, "\\`")}\`,
         slug: \`${post?.slug || ""}\`,
         maxLength: 100,
         async handleCopy() {
           await navigator.clipboard.writeText(window.location.origin + \`/app/${project?.slug}/posts/${post?.slug}\`);
           alert("Copied to clipboard! Make sure to use BCC for the emails for privacy's sake.");
+        },
+        get postUrl() {
+          return window.location.origin + \`/app/${project?.slug}/posts/${post?.slug}\`;
         },
         async handleShare() {
           try {
@@ -72,6 +81,14 @@ if (!post) {
           } catch (error) {
             console.error("Error sharing post:", error);
           }
+        },
+        userEmailAddress: \`${user?.primaryEmailAddress?.emailAddress || ""}\`,
+        get mailToLinkForPost() {
+          if (this.userEmailAddress) {
+            return \`mailto:\${this.userEmailAddress}?bcc=${commaSeparatedEmails}&subject=${encodeURIComponent(post?.title)}&body=${encodeURIComponent("New post available at ")}\` + this.postUrl;
+          }
+
+          return "";
         }
       }`}
       x-init={`
@@ -199,12 +216,23 @@ if (!post) {
 
             <div class="flex items-center gap-2">
               <button type="submit" class="btn btn-md btn-primary text-white">Update Post</button>
+              <div
+                x-cloak
+                x-show="mailToLinkForPost"
+                x-transition
+                class="tooltip tooltip-top"
+                data-tip="Email post to contacts"
+              >
+                <a x-bind:href="mailToLinkForPost" class="btn btn-md btn-ghost btn-circle hover:bg-slate-200">
+                  <Icon pack="lucide" name="mail" height={20} width={20} class="shrink-0" />
+                </a>
+              </div>
               <button
                 type="button"
-                class="btn btn-md btn-ghost hover:text-red-700 hover:bg-slate-200"
+                class="btn btn-md btn-ghost btn-circle hover:text-red-700 hover:bg-slate-200"
                 @click="confirm('Are you sure you want to delete this post?') && $refs.deletePostForm.submit()"
               >
-                Delete Post
+                <Icon pack="lucide" name="trash" height={20} width={20} class="shrink-0" />
               </button>
             </div>
           </form>
