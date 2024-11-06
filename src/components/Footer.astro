@@ -33,9 +33,16 @@ const isDashboard = Astro.url.pathname.startsWith("/dashboard");
       <a class="text-inherit font-normal" href="https://faith.tools/posts/privacy-policy" target="_blank">Privacy</a>
     </li>
     <li><a class="text-inherit font-normal" href="https://go.faith.tools/contact" target="_blank">Feedback</a></li>
+    <li>
+      <a class="text-inherit font-normal" href="https://github.com/cameronapak/kit" target="_blank">Open Source</a>
+    </li>
     {
       showHireCam ? (
-        <li><a class="text-inherit font-normal" href="https://cameronpak.com/freelance" target="_blank">Hire Cam</a></li>
+        <li>
+          <a class="text-inherit font-normal" href="https://cameronpak.com/freelance" target="_blank">
+            Hire Cam
+          </a>
+        </li>
       ) : null
     }
     <SignInOrOpenDashboard isDashboard={isDashboard} server:defer />
