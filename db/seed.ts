@@ -16,8 +16,6 @@ const SEED_PROJECT_CONTENT = `
 <div>What if it were easier to live a holy life digitally?<br><br>We're building a healthy smartphone for the modern age, with no browser, no social media, no porn, and no games. It has all the essential tools, like a camera, texting, phone calls, calendar, etc. And, our curated app store only has safe apps to be used as tools to get a job done.</div>
 `.trim();
 
-const CAMS_CLERK_USER_ID = "user_2hHFZTOTzVEGWVy8gpbKyB6JXPu";
-
 // https://astro.build/db/seed
 export default async function seed() {
   await db.insert(Projects).values([
@@ -29,7 +27,7 @@ export default async function seed() {
       createdAt: new Date(),
       bannerImageId: "user_2hHFZTOTzVEGWVy8gpbKyB6JXPu/Slide_16_9_-_1_iyuklo",
       logoImageId: "user_2hHFZTOTzVEGWVy8gpbKyB6JXPu/Techless_Avatar_tq8cjo",
-      userId: CAMS_CLERK_USER_ID,
+      userId: "user_2hHFZTOTzVEGWVy8gpbKyB6JXPu",
       slug: "wpii",
       isPublished: true
     },
@@ -53,7 +51,7 @@ export default async function seed() {
       createdAt: new Date("2024-10-14"),
       slug: "wisephone-ii-is-shipping",
       content,
-      userId: CAMS_CLERK_USER_ID,
+      userId: "user_2hHFZTOTzVEGWVy8gpbKyB6JXPu",
       projectId: 1,
       isFeatured: true
     },
