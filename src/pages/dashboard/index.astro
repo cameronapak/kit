@@ -6,9 +6,9 @@ import { db, Projects, eq } from "astro:db";
 import { actions } from "astro:actions";
 import { renderSVG } from "uqr";
 import Icon from "astro-iconify";
-import Header from "../../components/Header.astro";
-import Layout from "../../layouts/Layout.astro";
-import Footer from "../../components/Footer.astro";
+import Header from "@/components/Header.astro";
+import Layout from "@/layouts/Layout.astro";
+import Footer from "@/components/Footer.astro";
 
 if (!Astro.locals.auth().userId) {
   return Astro.redirect("/");

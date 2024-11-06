@@ -1,9 +1,9 @@
 ---
 import { db, Posts, Projects, eq, desc } from "astro:db";
 import { Icon } from "astro-iconify";
-import Layout from "../../../layouts/Layout.astro";
-import Header from "../../../components/Header.astro";
-import Footer from "../../../components/Footer.astro";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
 
 if (!Astro.locals.auth().userId) {
   return Astro.redirect("/");

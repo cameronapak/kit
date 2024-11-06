@@ -4,10 +4,10 @@ import { getCldImageUrl } from "astro-cloudinary/helpers";
 import Icon from "astro-iconify";
 import DOMPurify from "isomorphic-dompurify";
 import { actions } from "astro:actions";
-import Layout from "../../../../layouts/Layout.astro";
-import Footer from "../../../../components/Footer.astro";
-import EditPostIfMine from "../../../../components/server-islands/EditPostIfMine.astro";
-import PageViewCounter from "../../../../components/server-islands/PageViewCounter.astro";
+import Layout from "@/layouts/Layout.astro";
+import Footer from "@/components/Footer.astro";
+import EditPostIfMine from "@/components/server-islands/EditPostIfMine.astro";
+import PageViewCounter from "@/components/server-islands/PageViewCounter.astro";
 
 // Get the project ID from the URL
 const projectSlug = Astro.params.id;

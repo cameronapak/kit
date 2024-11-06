@@ -4,9 +4,9 @@ import { db, eq, Projects, Posts, desc } from "astro:db";
 import Icon from "astro-iconify";
 import { actions } from "astro:actions";
 import DOMPurify from "isomorphic-dompurify";
-import Layout from "../../../layouts/Layout.astro";
-import PageViewCounter from "../../../components/server-islands/PageViewCounter.astro";
-import Footer from "../../../components/Footer.astro";
+import Layout from "@/layouts/Layout.astro";
+import PageViewCounter from "@/components/server-islands/PageViewCounter.astro";
+import Footer from "@/components/Footer.astro";
 
 // Get the project ID from the URL
 const slug = Astro.params.id;
