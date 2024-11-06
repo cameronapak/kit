@@ -8,7 +8,7 @@ With kit (Keep in Touch), staying engaged with your users and promoting your pro
 
 - Blog with RSS feed
 - Email lead capture
-- Landing page builder
+- Simple no-code landing page for your project
 - Integration with faith.tools
 - HTMX + Alpine.js for interactivity
 - Astro DB (Turso) for data storage
