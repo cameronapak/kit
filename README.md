@@ -3,66 +3,89 @@
 With kit (Keep in Touch), staying engaged with your users and promoting your product has never been easier.
 [Open kit](https://kit.faith.tools)
 
-![og-image](./public/og-image.png)
+## Features
 
-## Things to know
+- Blog with RSS feed
+- Email lead capture
+- Landing page builder
+- Integration with faith.tools
+- Self-hosted TinyMCE editor
+- HTMX + Alpine.js for interactivity
+- Astro DB (Turso) for data storage
+- Clerk authentication
+- Cloudinary image management
 
-- Created via the Astro-based [Freedom Stack](https://github.com/cameronapak/freedom-stack) boilerplate. Visit that boilerplate for more information on how to use it and how to use this project.
-- This project is deployed to Netlify.
+## Prerequisites
 
-What you get:
+- Node.js v20.3.0 or higher
+- NPM v10.0.0 or higher
+- Clerk account
+- Turso account
+- Cloudinary account
+- Netlify account (recommended for deployment)
 
-- Your own blog with an RSS feed
-- A simple way to capture email leads
-- A simple landing page/overview of the tool you're creating
-- Products with a kit page are promoted on [faith.tools](https://faith.tools) to help showcase movement of Christians in tech
+## Quick Start
 
-## Local Development
-
-### Prerequisites
-
-You'll need the following:
-
-- Clerk API key (for authentication)
-- Turso API key (for the database)
-- Cloudinary API key (for image uploads)
-
-### 1. Clone the repository
+1. Clone the repository
 
 ```bash
 git clone https://github.com/cameronapak/kit.git
 ```
 
-### 2. Install dependencies
-
-Must be using Node.js v20.3.0 or higher.
+2. Install dependencies
 
 ```bash
 npm install
 ```
 
-### 3. Set environment variables
-
-Copy the `.env.example` file to `.env` and populate the variables.
+3. Set up environment variables
 
 ```bash
 cp .env.example .env
 ```
 
-### 5. Run the development server
+4. Start development server
 
 ```bash
 npm run dev
 ```
 
-## Attribution License
+## Available Scripts
 
-See [LICENSE.md](./LICENSE.md) for more information.
+- `npm run dev` - Start development server
+- `npm run dev:remote` - Start with remote database
+- `npm run dev:host` - Start with network access
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run db:update` - Update database schema
+- `npm run format` - Format code with Prettier
+- `npm run update-packages` - Update all packages
+
+## Tech Stack
+
+For a deeper dive into this tech stack, see the [Freedom Stack](https://github.com/cameronapak/freedom-stack).
+
+- [Astro](https://astro.build)
+- [Alpine.js](https://alpinejs.dev)
+- [HTMX](https://htmx.org)
+- [TailwindCSS](https://tailwindcss.com)
+- [DaisyUI](https://daisyui.com)
+- [Clerk](https://clerk.com)
+- [Turso](https://turso.tech)
+- [Cloudinary](https://cloudinary.com)
+
+## Deployment
+
+This project is optimized for deployment on Netlify.
 
 ## Contributing
 
-Create a fork of this repository, make your changes, and submit a pull request.
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 
-## Questions?
+## Support
 
-Feel free to reach out to me on [X](https://x.com/cameronpak) if you have any questions!
+Feel free to reach out on [X/Twitter](https://x.com/cameronpak) or [open an issue](https://github.com/cameronapak/kit/issues).
+
+## License
+
+This project is licensed under a custom Attribution License - see [LICENSE.md](./LICENSE.md)
