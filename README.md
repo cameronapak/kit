@@ -1,6 +1,7 @@
 # kit (Keep in Touch)
 
 With kit (Keep in Touch), staying engaged with your users and promoting your product has never been easier.
+
 [Open kit](https://kit.faith.tools)
 
 ## Features
@@ -9,7 +10,6 @@ With kit (Keep in Touch), staying engaged with your users and promoting your pro
 - Email lead capture
 - Landing page builder
 - Integration with faith.tools
-- Self-hosted TinyMCE editor
 - HTMX + Alpine.js for interactivity
 - Astro DB (Turso) for data storage
 - Clerk authentication

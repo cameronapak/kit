@@ -22,6 +22,3 @@ pnpm-debug.log*
 
 # Netlify build
 .netlify/
-
-# TinyMCE self-hosted gets copied on build, so no need to commit.
-public/tinymce/
