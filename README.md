@@ -88,4 +88,6 @@ Feel free to reach out on [X/Twitter](https://x.com/cameronpak) or [open an issu
 
 ## License
 
-This project is licensed under a custom Attribution License - see [LICENSE.md](./LICENSE.md)
+While this project was initially licensed under the Attribution License, it has since been relicensed under the MIT License and is freely available for anyone to use.
+
+This project is licensed under the MIT License - see [LICENSE.md](./LICENSE.md)
