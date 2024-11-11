@@ -1,6 +1,7 @@
 import { defineAction } from "astro:actions";
 import { z } from "astro:schema";
 import { db, eq, Leads, Projects } from "astro:db";
+import { isContentPG13Appropriate } from "@/libs/ai";
 
 async function sendWebhook(webhookUrl: string, data: any) {
   try {
@@ -31,6 +32,17 @@ export const leads = {
     }),
     handler: async ({ name, email, message = "", projectId }) => {
       try {
+        const emailIsAppropriate = await isContentPG13Appropriate(
+          `A user submitted this email <email>${email}</email> to a project. Is it appropriate?`
+        );
+        const isNameAndMessageAppropriate = await isContentPG13Appropriate(
+          `Is this name and message PG-13 appropriate? Name is <name>${name}</name> and message is <message>${message}</message>`
+        );
+
+        if (!emailIsAppropriate || !isNameAndMessageAppropriate) {
+          throw new Error("Detected inappropriate content");
+        }
+
         const newLead = await db
           .insert(Leads)
           .values({
@@ -57,8 +69,12 @@ export const leads = {
           success: "Contact created successfully!",
           lead: newLead
         };
-      } catch (error) {
-        throw new Error(`Failed to create lead: ${error instanceof Error ? error.message : "Unknown error"}`);
+      } catch (error: any) {
+        if (error.validation && error.validation.includes("email")) {
+          throw new Error("Invalid email");
+        }
+
+        throw new Error(`Failed to submit: ${error instanceof Error ? error.message : "Unknown error"}`);
       }
     }
   }),
@@ -72,8 +88,19 @@ export const leads = {
       message: z.string().optional(),
       projectId: z.number()
     }),
-    handler: async ({ id, name, email, message = '', projectId }) => {
+    handler: async ({ id, name, email, message = "", projectId }) => {
       try {
+        const emailIsAppropriate = await isContentPG13Appropriate(
+          `A user submitted this email <email>${email}</email> to a project. Is it appropriate?`
+        );
+        const isNameAndMessageAppropriate = await isContentPG13Appropriate(
+          `Is this name and message PG-13 appropriate? Name is <name>${name}</name> and message is <message>${message}</message>`
+        );
+
+        if (!emailIsAppropriate || !isNameAndMessageAppropriate) {
+          throw new Error("Detected inappropriate content");
+        }
+
         const updatedLead = await db
           .update(Leads)
           .set({ name, email, message, projectId })
@@ -90,7 +117,7 @@ export const leads = {
           lead: updatedLead
         };
       } catch (error) {
-        throw new Error(`Failed to update lead: ${error instanceof Error ? error.message : "Unknown error"}`);
+        throw new Error(`Failed to update: ${error instanceof Error ? error.message : "Unknown error"}`);
       }
     }
   }),
@@ -113,7 +140,7 @@ export const leads = {
           message: "Contact deleted successfully"
         };
       } catch (error) {
-        throw new Error(`Failed to delete lead: ${error instanceof Error ? error.message : "Unknown error"}`);
+        throw new Error(`Failed to delete: ${error instanceof Error ? error.message : "Unknown error"}`);
       }
     }
   })
