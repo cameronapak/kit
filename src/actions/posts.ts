@@ -2,6 +2,7 @@ import { defineAction } from "astro:actions";
 import { z } from "astro:schema";
 import { db, eq, Posts } from "astro:db";
 import { purgeCache } from "@netlify/functions";
+import { isContentPG13Appropriate } from "@/libs/ai";
 
 export const posts = {
   createPost: defineAction({
@@ -19,6 +20,14 @@ export const posts = {
     // Handler function
     handler: async ({ title, createdAt, slug, content, userId, projectId }) => {
       try {
+        const isContentAppropriate = await isContentPG13Appropriate(content);
+
+        if (!isContentAppropriate) {
+          throw new Error(
+            "AI detected inappropriate content. Please contact support if you believe this was a mistake."
+          );
+        }
+
         // Create the post in the database
         const newPost = await db
           .insert(Posts)
@@ -58,6 +67,14 @@ export const posts = {
     // Handler function
     handler: async ({ id, title, slug, content, userId, projectId }) => {
       try {
+        const isContentAppropriate = await isContentPG13Appropriate(content);
+
+        if (!isContentAppropriate) {
+          throw new Error(
+            "AI detected inappropriate content. Please contact support if you believe this was a mistake."
+          );
+        }
+
         // Update the post in the database
         const updatedPost = await db
           .update(Posts)

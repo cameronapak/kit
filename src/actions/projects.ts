@@ -2,7 +2,7 @@ import { defineAction } from "astro:actions";
 import { z } from "astro:schema";
 import { db, eq, Projects } from "astro:db";
 import { purgeCache } from "@netlify/functions";
-
+import { isContentPG13Appropriate } from "@/libs/ai";
 export const projects = {
   updateProject: defineAction({
     // Accept form data
@@ -39,6 +39,12 @@ export const projects = {
       callToActionUrl,
       callToActionText
     }) => {
+      const isContentAppropriate = await isContentPG13Appropriate(content);
+
+      if (!isContentAppropriate) {
+        throw new Error("AI detected inappropriate content. Please contact support if you believe this was a mistake.");
+      }
+
       try {
         // Update the project in the database
         const updatedProject = await db
@@ -133,6 +139,12 @@ export const projects = {
       callToActionUrl,
       callToActionText
     }) => {
+      const isContentAppropriate = await isContentPG13Appropriate(content);
+
+      if (!isContentAppropriate) {
+        throw new Error("AI detected inappropriate content. Please contact support if you believe this was a mistake.");
+      }
+
       try {
         // Create the project in the database
         const newProject = await db
