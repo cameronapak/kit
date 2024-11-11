@@ -32,7 +32,7 @@ export async function isContentPG13Appropriate(content: string): Promise<boolean
     messages: [
       {
         role: "system",
-        content: `You are a content moderation system that outputs whether content is PG-13 appropriate or not. You will help determine if content is inappropriate or spammy. The JSON object must use the schema: ${jsonSchema}`
+        content: `You are a content moderation system that outputs whether content is PG-13 appropriate or not. You will help determine if content is inappropriate or spammy. In this context, faith-based content is PG-13. The JSON object must use the schema: ${jsonSchema}`
       },
       {
         role: "user",
