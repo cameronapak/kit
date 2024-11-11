@@ -74,14 +74,14 @@ const qrCode = renderSVG(Astro.url.origin + `/app/${project?.slug}`);
       downloadQRCode() {
         const blob = new Blob([this.svg], { type: 'image/svg+xml' });
         const url = URL.createObjectURL(blob);
-        
+
         const link = document.createElement('a');
         link.href = url;
         link.download = 'qr-code.svg';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        
+
         URL.revokeObjectURL(url);
       },
       handleCopy() {
@@ -104,7 +104,7 @@ const qrCode = renderSVG(Astro.url.origin + `/app/${project?.slug}`);
       },
       authors: \`${project?.authors || ""}\`,
       projectId: \`${project?.id || ""}\`,
-      title: \`${project?.title || ""}\`, 
+      title: \`${project?.title || ""}\`,
       slug: \`${project?.slug || ""}\`,
       callToActionText: \`${project?.callToActionText || ""}\`,
       callToActionUrl: \`${project?.callToActionUrl || ""}\`,
@@ -271,6 +271,7 @@ const qrCode = renderSVG(Astro.url.origin + `/app/${project?.slug}`);
             </div>
 
             <input type="hidden" name="id" value={project?.id} />
+            <input type="hidden" name="webhookUrl" value={project?.webhookUrl || ""} />
 
             <div>
               <h2 class="text-slate-700">Logo</h2>
@@ -578,7 +579,7 @@ const qrCode = renderSVG(Astro.url.origin + `/app/${project?.slug}`);
         const publicId = e.detail.info.public_id;
         if (bannerImageIdInput) {
           bannerImageIdInput.value = publicId;
-          bannerImageIdInput.dispatchEvent(new Event('input', { bubbles: true }));
+          bannerImageIdInput.dispatchEvent(new Event("input", { bubbles: true }));
         }
 
         // Update the banner image
@@ -596,7 +597,7 @@ const qrCode = renderSVG(Astro.url.origin + `/app/${project?.slug}`);
         const publicId = e.detail.info.public_id;
         if (logoImageIdInput) {
           logoImageIdInput.value = publicId;
-          logoImageIdInput.dispatchEvent(new Event('input', { bubbles: true }));
+          logoImageIdInput.dispatchEvent(new Event("input", { bubbles: true }));
         }
 
         // Update the logo image

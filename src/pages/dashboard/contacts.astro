@@ -30,13 +30,13 @@ const addWebhookResult = Astro.getActionResult(actions.projects.addWebhook);
 
 <Layout title="Contacts">
   <div
-    x-data={`{ 
+    x-data={`{
       webhookUrl: \`${project?.webhookUrl || ""}\`,
-      emailConsent: false, 
-      name: '', 
-      email: '', 
-      get isFormComplete() { 
-        return this.emailConsent && this.name && this.email 
+      emailConsent: false,
+      name: '',
+      email: '',
+      get isFormComplete() {
+        return this.emailConsent && this.name && this.email
       },
       async copyEmailList() {
         await navigator.clipboard.writeText(${JSON.stringify(commaSeparatedEmails)});
@@ -57,6 +57,27 @@ const addWebhookResult = Astro.getActionResult(actions.projects.addWebhook);
           <Icon pack="lucide" name="mail" class="w-8 h-8 inline-block mr-1 align-top" />
           <span>Get notified of new contacts</span>
         </h2>
+        <details class="not-prose">
+          <summary>
+            <span>See Example Payload</span>
+          </summary>
+          <div class="bg-slate-100 p-4 rounded-lg whitespace-pre-wrap">
+            {
+              JSON.stringify(
+                {
+                  event: "contact_added",
+                  lead: {
+                    name: "John Doe",
+                    email: "john.doe@example.com",
+                    message: `Contact imported on ${new Date().toLocaleDateString()}`
+                  }
+                },
+                null,
+                2
+              ).trim()
+            }
+          </div>
+        </details>
         <form method="POST" class="flex flex-col gap-4 w-full" action={actions.projects.addWebhook}>
           <label class="form-control w-full">
             <div class="label">
@@ -66,6 +87,7 @@ const addWebhookResult = Astro.getActionResult(actions.projects.addWebhook);
             <input
               type="text"
               name="webhookUrl"
+              value={`${project?.webhookUrl || ""}`}
               x-model="webhookUrl"
               class="input input-lg text-base bg-white rounded-lg input-bordered w-full"
               placeholder="https://example.com/webhook"

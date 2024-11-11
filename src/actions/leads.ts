@@ -3,7 +3,10 @@ import { z } from "astro:schema";
 import { db, eq, Leads, Projects } from "astro:db";
 import { isContentPG13Appropriate } from "@/libs/ai";
 
-async function sendWebhook(webhookUrl: string, data: any) {
+async function sendWebhook(
+  webhookUrl: string,
+  data: { event: string; lead: { name: string; email: string; message: string } }
+) {
   try {
     const response = await fetch(webhookUrl, {
       method: "POST",
@@ -61,7 +64,11 @@ export const leads = {
         if (project && project.webhookUrl) {
           await sendWebhook(project.webhookUrl, {
             event: "lead_created",
-            lead: newLead
+            lead: {
+              name,
+              email,
+              message
+            }
           });
         }
 
