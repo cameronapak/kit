@@ -45,6 +45,8 @@ interface ImportMetaEnv {
   readonly CLOUDINARY_API_SECRET: string;
   /** https://astro.cloudinary.dev */
   readonly PUBLIC_ASSETS_DIRECTORY: string;
+  /** https://groq.com/ */
+  readonly GROQ_API_KEY: string;
 }
 
 interface ImportMeta {
