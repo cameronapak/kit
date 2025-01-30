@@ -2,7 +2,7 @@
 import "trix/dist/trix.css";
 import { Icon } from "astro-iconify";
 import { actions } from "astro:actions";
-import { db, Posts, Projects, Leads, eq } from "astro:db";
+import { db, Posts, Projects, Leads, eq, and } from "astro:db";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
@@ -45,12 +45,12 @@ if (result?.data?.success) {
 const posts = await db
   .select()
   .from(Posts)
-  .where(eq(Posts.id, Number(postId)))
+  .where(and(eq(Posts.id, Number(postId)), eq(Posts.userId, user?.id || "")))
   .limit(1);
 
 post = posts[0];
 
-if (!post) {
+if (!post || post.userId !== user?.id) {
   return Astro.redirect("/dashboard/posts");
 }
 ---
@@ -238,6 +238,7 @@ if (!post) {
           </form>
           <form x-ref="deletePostForm" action={actions.posts.deletePost} method="post">
             <input type="hidden" name="id" value={post?.id} />
+            <input type="hidden" name="userId" value={user?.id} />
           </form>
         </div>
       </section>
