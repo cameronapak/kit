@@ -200,6 +200,12 @@ Astro.response.headers.set("netlify-cache-tag", slug);
                   class="textarea textarea-lg text-base bg-white rounded-lg textarea-bordered w-full"
                   placeholder="Optional"></textarea>
               </label>
+              <div class="absolute left-[-9999px] opacity-0 height-0 width-0">
+                <label>
+                  Don't fill this out if you're human:
+                  <input type="text" name="website" autocomplete="off" />
+                </label>
+              </div>
               <div class="flex flex-col gap-4">
                 <button class="btn btn-primary mt-4 w-full">Submit</button>
                 <p class="text-center text-slate-500 text-sm py-0 my-0">

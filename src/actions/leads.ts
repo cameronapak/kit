@@ -31,9 +31,14 @@ export const leads = {
       name: z.string().min(1, "Name is required"),
       email: z.string().email("Valid email is required"),
       message: z.string().optional(),
-      projectId: z.number()
+      projectId: z.number(),
+      website: z.string().optional().default("")
     }),
-    handler: async ({ name, email, message = "", projectId }) => {
+    handler: async ({ name, email, message = "", projectId, website }) => {
+      if (website) {
+        throw new Error("Bot detected");
+      }
+
       try {
         const emailIsAppropriate = await isContentPG13Appropriate(
           `A user submitted this email <email>${email}</email> to a project. Is it appropriate?`
