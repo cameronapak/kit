@@ -1,6 +1,6 @@
 import { defineAction } from "astro:actions";
 import { z } from "astro:schema";
-import { db, eq, Posts } from "astro:db";
+import { db, eq, Posts, and } from "astro:db";
 import { purgeCache } from "@netlify/functions";
 import { isContentPG13Appropriate } from "@/libs/ai";
 
@@ -85,7 +85,7 @@ export const posts = {
             userId,
             projectId
           })
-          .where(eq(Posts.id, id))
+          .where(and(eq(Posts.id, id), eq(Posts.userId, userId)))
           .returning()
           .get();
 
@@ -114,13 +114,18 @@ export const posts = {
     accept: "form",
     // Define input schema for validation
     input: z.object({
-      id: z.number()
+      id: z.number(),
+      userId: z.string()
     }),
     // Handler function
-    handler: async ({ id }) => {
+    handler: async ({ id, userId }) => {
       try {
         // Delete the post from the database
-        const deletedPost = await db.delete(Posts).where(eq(Posts.id, id)).returning().get();
+        const deletedPost = await db
+          .delete(Posts)
+          .where(and(eq(Posts.id, id), eq(Posts.userId, userId)))
+          .returning()
+          .get();
 
         if (!deletedPost) {
           throw new Error("Post not found");
