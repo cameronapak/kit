@@ -32,9 +32,9 @@ export const leads = {
       email: z.string().email("Valid email is required"),
       message: z.string().optional(),
       projectId: z.number(),
-      website: z.string().optional().default("")
+      website: z.string().nullable()
     }),
-    handler: async ({ name, email, message = "", projectId, website }) => {
+    handler: async ({ name, email, message = "", projectId, website = "" }) => {
       if (website) {
         throw new Error("Bot detected");
       }
