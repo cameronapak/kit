@@ -40,8 +40,8 @@ Astro.response.headers.set("CDN-Cache-Control", "public, max-age=45, must-revali
 
     <main
       x-init={`
-        toastErrorMessage = \`${result?.error?.message || ''}\`;
-        toastMessage = \`${result?.data?.success || ''}\`;
+        toastErrorMessage = \`${result?.error?.message || ""}\`;
+        toastMessage = \`${result?.data?.success || ""}\`;
       `}
       class="mb-12 py-12 flex flex-col gap-6"
     >
@@ -66,9 +66,9 @@ Astro.response.headers.set("CDN-Cache-Control", "public, max-age=45, must-revali
           class="relative translate-y-10 z-20 m-0 list-none p-6 rounded-2xl bg-white w-full shadow-[0_4px_20px_rgb(0,0,0,0.08)] flex flex-col gap-2"
         >
           <form
-            x-data={`{ 
-              title: '', 
-              maxLength: 100, 
+            x-data={`{
+              title: '',
+              maxLength: 100,
               slug: "",
             }`}
             action={actions.posts.createPost}
@@ -107,7 +107,7 @@ Astro.response.headers.set("CDN-Cache-Control", "public, max-age=45, must-revali
                 </p>
                 <span class="inline-block badge text-slate-800 line-clamp-1" x-text="slug || '-'"></span>
               </div>
-              <input 
+              <input
                 name="slug"
                 x-model="slug"
                 @input="slug = $el.value.toLowerCase().replace(/\\s+/g, '-').replace(/[^a-z0-9-]/g, '')"
@@ -130,7 +130,7 @@ Astro.response.headers.set("CDN-Cache-Control", "public, max-age=45, must-revali
         </div>
       </section>
     </main>
-    <Footer showHireCam={true} />
+    <Footer />
   </div>
 </Layout>
 
