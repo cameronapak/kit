@@ -9,7 +9,7 @@ const isSignedIn = Astro.locals.auth().userId;
 
 {
   !isSignedIn ? (
-    <li>
+    <li x-cloak x-show="window.location.pathname !== '/'">
       <a class="text-inherit font-normal" href="/" target="_blank">
         Sign In
       </a>
