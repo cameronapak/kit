@@ -23,18 +23,11 @@ export async function isContentAppropriate(content: string): Promise<boolean> {
 }
 
 export async function isContentPG13Appropriate(content: string): Promise<boolean> {
-  const jsonSchema = JSON.stringify({
-    type: "object",
-    properties: {
-      isAppropriate: { type: "boolean" }
-    }
-  });
-
   const response = await groq.chat.completions.create({
     messages: [
       {
         role: "system",
-        content: `You are a content moderation system that outputs whether content is PG-13 appropriate or not. You will help determine if content is inappropriate or spammy. In this context, faith-based content is PG-13. The JSON object must use the schema: ${jsonSchema}`
+        content: `You are a content moderation system that outputs whether content is PG-13 appropriate or not. You will help determine if content is inappropriate or spammy. In this context, faith-based content is PG-13.`
       },
       {
         role: "user",
@@ -42,9 +35,6 @@ export async function isContentPG13Appropriate(content: string): Promise<boolean
       }
     ],
     model: GROQ_GUARD_MODEL,
-    temperature: 0,
-    stream: false,
-    response_format: { type: "json_object" }
   });
 
   const message = response.choices[0].message.content;
@@ -53,5 +43,5 @@ export async function isContentPG13Appropriate(content: string): Promise<boolean
     throw new Error("No content returned");
   }
 
-  return JSON.parse(message).isAppropriate;
+  return !message.toLowerCase().includes("unsafe");
 }
