@@ -6,6 +6,7 @@ import { db, Posts, Projects, Leads, eq, and } from "astro:db";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
+import SetToastMessage from "@/components/SetToastMessage.astro";
 
 if (!Astro.locals.auth().userId) {
   return Astro.redirect("/");
@@ -91,12 +92,9 @@ if (!post || post.userId !== user?.id) {
           return "";
         }
       }`}
-      x-init={`
-        toastErrorMessage = \`${result?.error?.message || ""}\`;
-        toastMessage = \`${result?.data?.success || ""}\`;
-      `}
       class="mb-12 py-12 flex flex-col gap-6"
     >
+      <SetToastMessage toastErrorMessage={result?.error?.message || ""} toastMessage={result?.data?.success || ""} />
       <section class="relative w-full m-0">
         <div
           class="absolute z-10 top-0 left-0 right-0 scale-[95%] m-0 list-none p-4 py-1 pb-12 rounded-xl bg-slate-200 w-full shadow-sm flex flex-col gap-2"

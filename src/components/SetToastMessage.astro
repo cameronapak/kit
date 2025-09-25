@@ -1,0 +1,28 @@
+---
+interface Props {
+  toastErrorMessage?: string;
+  toastMessage?: string;
+}
+
+const { toastErrorMessage = "", toastMessage = "" } = Astro.props;
+---
+
+{toastErrorMessage || toastMessage ? (
+  <script
+    is:inline
+    define:vars={{
+      toastErrorMessage: toastErrorMessage || "",
+      toastMessage: toastMessage || ""
+    }}
+  >
+    window.addEventListener("alpine:init", () => {
+      window.Alpine.nextTick(() => {
+        const parentAlpineState = window.Alpine.$data(document.querySelector(`[x-data="toast"]`));
+        if (parentAlpineState) {
+          parentAlpineState.toastErrorMessage = toastErrorMessage || "";
+          parentAlpineState.toastMessage = toastMessage || "";
+        }
+      });
+    });
+  </script>
+) : null}

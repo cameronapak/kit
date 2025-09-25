@@ -5,6 +5,7 @@ import { actions } from "astro:actions";
 import Header from "@/components/Header.astro";
 import Layout from "@/layouts/Layout.astro";
 import Footer from "@/components/Footer.astro";
+import SetToastMessage from "@/components/SetToastMessage.astro";
 
 if (!Astro.locals.auth().userId) {
   return Astro.redirect("/");
@@ -43,12 +44,12 @@ const addWebhookResult = Astro.getActionResult(actions.projects.addWebhook);
         alert("Comma separated list of emails copied to clipboard");
       },
     }`}
-    x-init={`
-      toastErrorMessage = \`${result?.error?.message || addWebhookResult?.error?.message || ""}\`;
-      toastMessage = \`${result?.data?.success || addWebhookResult?.data?.success || ""}\`;
-    `}
     class="prose p-6 container mx-auto"
   >
+    <SetToastMessage
+      toastErrorMessage={result?.error?.message || addWebhookResult?.error?.message || ""}
+      toastMessage={result?.data?.success || addWebhookResult?.data?.success || ""}
+    />
     <Header activeTab="contacts" isProjectPublished={project?.isPublished} projectSlug={project?.slug} />
 
     <dialog x-ref="addWebhookModal" id="addWebhookModal" class="modal">

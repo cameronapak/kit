@@ -8,6 +8,7 @@ import Layout from "@/layouts/Layout.astro";
 import Footer from "@/components/Footer.astro";
 import EditPostIfMine from "@/components/server-islands/EditPostIfMine.astro";
 import PageViewCounter from "@/components/server-islands/PageViewCounter.astro";
+import SetToastMessage from "@/components/SetToastMessage.astro";
 
 // Get the project ID from the URL
 const projectSlug = Astro.params.id;
@@ -87,14 +88,12 @@ Astro.response.headers.set("netlify-cache-tag", slug);
     href={rssUrl.toString()}
   />
 
-  <div
-    x-init={`
-      toastErrorMessage = \`${result?.error?.message || ""}\`;
-      toastMessage = \`${result?.data?.success ? "Successfully signed up for updates!" : ""}\`;
-    `}
-    x-data
-    class="prose p-6 py-12 container mx-auto flex flex-col gap-12"
-  >
+  <SetToastMessage
+    toastErrorMessage={result?.error?.message || ""}
+    toastMessage={result?.data?.success ? "Successfully signed up for updates!" : ""}
+  />
+
+  <div x-data class="prose p-6 py-12 container mx-auto flex flex-col gap-12">
     <dialog x-ref="getUpdatesModal" id="my_modal_2" class="modal">
       <div class="modal-box bg-white flex flex-col gap-6 p-6 max-w-md">
         <h2 class="text-2xl my-0 items-center w-full">

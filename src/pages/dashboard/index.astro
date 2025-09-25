@@ -9,6 +9,7 @@ import Icon from "astro-iconify";
 import Header from "@/components/Header.astro";
 import Layout from "@/layouts/Layout.astro";
 import Footer from "@/components/Footer.astro";
+import SetToastMessage from "@/components/SetToastMessage.astro";
 
 if (!Astro.locals.auth().userId) {
   return Astro.redirect("/");
@@ -155,12 +156,9 @@ const qrCode = renderSVG(Astro.url.origin + `/app/${project?.slug}`);
         $el.removeAttribute('x-data');
       }
     }`}
-    x-init={`
-      toastErrorMessage = \`${result?.error?.message || ""}\`;
-      toastMessage = \`${result?.data?.success || ""}\`;
-    `}
     class="prose p-6 container mx-auto"
   >
+    <SetToastMessage toastErrorMessage={result?.error?.message || ""} toastMessage={result?.data?.success || ""} />
     <dialog x-ref="qrCodeModal" id="qrCodeCanvas" class="modal">
       <div class="modal-box bg-white flex flex-col gap-6 p-6 max-w-md">
         <div class="flex flex-col gap-2">

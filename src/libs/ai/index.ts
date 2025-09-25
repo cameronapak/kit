@@ -4,11 +4,13 @@ const groq = new Groq({
   apiKey: import.meta.env.GROQ_API_KEY
 });
 
+const GROQ_GUARD_MODEL = "meta-llama/llama-guard-4-12b";
+
 // https://console.groq.com/docs/content-moderation
 export async function isContentAppropriate(content: string): Promise<boolean> {
   const response = await groq.chat.completions.create({
     messages: [{ role: "user", content }],
-    model: "llama-guard-3-8b"
+    model: GROQ_GUARD_MODEL
   });
 
   const message = response.choices[0].message.content?.trim();
@@ -39,7 +41,7 @@ export async function isContentPG13Appropriate(content: string): Promise<boolean
         content: `Is this content PG-13 appropriate? <content>${content}</content>`
       }
     ],
-    model: "llama3-8b-8192",
+    model: GROQ_GUARD_MODEL,
     temperature: 0,
     stream: false,
     response_format: { type: "json_object" }

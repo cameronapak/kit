@@ -7,6 +7,7 @@ import DOMPurify from "isomorphic-dompurify";
 import Layout from "@/layouts/Layout.astro";
 import PageViewCounter from "@/components/server-islands/PageViewCounter.astro";
 import Footer from "@/components/Footer.astro";
+import SetToastMessage from "@/components/SetToastMessage.astro";
 
 // Get the project ID from the URL
 const slug = Astro.params.id;
@@ -86,13 +87,12 @@ Astro.response.headers.set("netlify-cache-tag", slug);
     href={rssUrl.toString()}
   />
 
-  <div
-    x-init={`
-      toastErrorMessage = \`${result?.error?.message || ""}\`;
-      toastMessage = \`${result?.data?.success ? "Successfully signed up for updates!" : ""}\`;
-    `}
-    class="prose p-6 py-12 container mx-auto flex flex-col gap-12"
-  >
+  <SetToastMessage
+    toastErrorMessage={result?.error?.message || ""}
+    toastMessage={result?.data?.success ? "Successfully signed up for updates!" : ""}
+  />
+
+  <div class="prose p-6 py-12 container mx-auto flex flex-col gap-12">
     <main class="flex flex-col gap-6 w-full">
       <div class="relative p-6 rounded-2xl bg-white w-full shadow flex flex-col gap-6">
         <section class="flex gap-4 max-sm:flex-col items-center w-full">

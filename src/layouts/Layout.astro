@@ -23,14 +23,7 @@ const {
 ---
 
 <!doctype html>
-<html
-  x-data={`{ 
-    toastMessage: '',
-    toastErrorMessage: ''
-  }`}
-  lang="en"
-  class="bg-slate-50"
->
+<html x-data="toast" lang="en" class="bg-slate-50">
   <!-- "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life." John 3:16 NIV -->
   <head>
     <meta charset="UTF-8" />
@@ -88,9 +81,9 @@ const {
 
   <body class={`!max-w-[100vw] w-full ${bodyClasses}`}>
     <div
-      x-data={`{ 
-        backupOfToastMessage: '', 
-        init() { 
+      x-data={`{
+        backupOfToastMessage: '',
+        init() {
           $watch('toastMessage', () => {
             if (toastMessage) {
               this.backupOfToastMessage = toastMessage
@@ -116,15 +109,15 @@ const {
     </div>
 
     <div
-      x-data={`{ 
-        backupOfToastErrorMessage: '', 
-        init() { 
+      x-data={`{
+        backupOfToastErrorMessage: '',
+        init() {
           $watch('toastErrorMessage', () => {
             if (toastErrorMessage) {
               this.backupOfToastErrorMessage = toastErrorMessage
             }
           })
-        } 
+        }
       }`}
       x-cloak
       x-show="toastErrorMessage"
@@ -146,7 +139,16 @@ const {
     </div>
 
     <slot />
-  </body>
+  </body><script is:inline>
+    window.addEventListener("alpine:init", () => {
+      window.Alpine.data("toast", () => {
+        return {
+          toastMessage: "",
+          toastErrorMessage: ""
+        };
+      });
+    });
+  </script>
 </html>
 
 <script>
