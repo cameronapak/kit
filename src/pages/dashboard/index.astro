@@ -1,52 +1,109 @@
 ---
-import "trix/dist/trix.css";
 import { CldUploadWidget } from "astro-cloudinary";
 import { getCldImageUrl } from "astro-cloudinary/helpers";
 import { db, Projects, eq } from "astro:db";
 import { actions } from "astro:actions";
 import { renderSVG } from "uqr";
 import Icon from "astro-iconify";
+import * as errore from "errore";
+import type { UserResource } from "@clerk/types";
 import Header from "@/components/Header.astro";
 import Layout from "@/layouts/Layout.astro";
 import Footer from "@/components/Footer.astro";
 import SetToastMessage from "@/components/SetToastMessage.astro";
+import { ActionError } from "astro:actions";
 
 if (!Astro.locals.auth().userId) {
   return Astro.redirect("/");
 }
 
-const user = await Astro.locals.currentUser();
-const projects = await db
-  .select()
-  .from(Projects)
-  .where(eq(Projects.userId, user?.id || ""))
-  .limit(1);
+// Define typed errors with $variable interpolation
+class NotFoundError extends errore.createTaggedError({
+  name: "NotFoundError",
+  message: "$entity not found"
+}) {}
 
-let project = projects[0];
+class DbError extends errore.createTaggedError({
+  name: "DbError",
+  message: "Database query failed: $reason"
+}) {}
 
-// If no project exists, create one
-if (!project && user) {
+async function getUser(): Promise<NotFoundError | DbError | UserResource> {
+  const result = await errore.tryAsync({
+    try: Astro.locals.currentUser,
+    catch: (e) => new DbError({ reason: e.message, cause: e })
+  });
+
+  if (result instanceof Error) return result;
+  if (!result) return new NotFoundError({ entity: "User" });
+
+  return result;
+}
+
+async function getProjectForUser(userId: string): Promise<NotFoundError | DbError | typeof Projects.$inferSelect> {
+  const result = await errore.tryAsync({
+    try: () =>
+      db
+        .select()
+        .from(Projects)
+        .where(eq(Projects.userId, userId || ""))
+        .limit(1),
+    catch: (e) => new DbError({ reason: e.message, cause: e })
+  });
+
+  if (result instanceof Error) return result;
+  if (!result) return new NotFoundError({ entity: "Project" });
+
+  return result[0];
+}
+
+async function createDummyScaffoldedProject(
+  userId: string,
+  name?: string
+): Promise<typeof Projects.$inferSelect | ActionError> {
   const uuid = crypto.randomUUID();
   const formData = new FormData();
   formData.append("title", "My Project");
   formData.append("content", "Write about your project...");
-  formData.append("userId", user.id);
-  formData.append("authors", user?.fullName || user?.firstName || "John Doe");
+  formData.append("userId", userId);
+  formData.append("authors", name || "John Doe");
   formData.append("slug", uuid);
 
   const { data, error } = await Astro.callAction(actions.projects.createProject, formData);
 
   if (error) {
-    console.error("Failed to create project:", error);
-  } else {
-    project = data.project;
+    return error;
   }
+
+  return data.project;
+}
+
+const user = await getUser();
+if (user instanceof DbError || user instanceof NotFoundError) {
+  return Astro.redirect("/");
+}
+
+let project = await getProjectForUser(user.id);
+
+if (project instanceof NotFoundError) {
+  const scaffoldedProject = await createDummyScaffoldedProject(user.id, user?.fullName || user?.firstName || "");
+  if (scaffoldedProject instanceof ActionError) {
+    // This means the scaffoldedProject didn't get set up properly.
+    // Therefore we cannot show anything on the page.
+    return Astro.redirect("/");
+  }
+  project = scaffoldedProject;
+} else if (project instanceof DbError) {
+  return Astro.redirect("/");
 }
 
 // Handle form submission result
 const result = Astro.getActionResult(actions.projects.updateProject);
 
-if (result?.data?.project && result?.data?.success) {
+if (result?.error) {
+  // I don't think anything needs to be done if there's
+  // an error here.
+} else if (result?.data?.project && result?.data?.success) {
   project = result.data.project;
 }
 
@@ -86,7 +143,7 @@ const qrCode = renderSVG(Astro.url.origin + `/app/${project?.slug}`);
         URL.revokeObjectURL(url);
       },
       handleCopy() {
-        const url = \`${Astro.url.origin}/app/${project?.slug}\`;
+        const url = \`${Astro.url.origin}/app/${project.slug}\`;
         navigator.clipboard.writeText(url).then(() => {
           toastMessage = "Copied to clipboard!";
         }).catch((err) => {
@@ -97,18 +154,18 @@ const qrCode = renderSVG(Astro.url.origin + `/app/${project?.slug}`);
         try {
           await navigator.share({
             title: this.title,
-            url: window.location.origin + \`/app/${project?.slug}\`
+            url: window.location.origin + \`/app/${project.slug}\`
           });
         } catch (error) {
           console.error("Error sharing post:", error);
         }
       },
-      authors: \`${project?.authors || ""}\`,
-      projectId: \`${project?.id || ""}\`,
-      title: \`${project?.title || ""}\`,
-      slug: \`${project?.slug || ""}\`,
-      callToActionText: \`${project?.callToActionText || ""}\`,
-      callToActionUrl: \`${project?.callToActionUrl || ""}\`,
+      authors: \`${project.authors || ""}\`,
+      projectId: \`${project.id || ""}\`,
+      title: \`${project.title || ""}\`,
+      slug: \`${project.slug || ""}\`,
+      callToActionText: \`${project.callToActionText || ""}\`,
+      callToActionUrl: \`${project.callToActionUrl || ""}\`,
       maxLength: 100,
       get previewUrl() {
         return '/app/' + this.slug;
@@ -150,7 +207,7 @@ const qrCode = renderSVG(Astro.url.origin + `/app/${project?.slug}`);
 
         // This allows the path input to animate in.
         setTimeout(() => {
-          this.showSlugInput = ${!Boolean(project?.isPublished || false)};
+          this.showSlugInput = ${!project.isPublished};
         }, 500);
 
         $el.removeAttribute('x-data');
@@ -524,6 +581,7 @@ const qrCode = renderSVG(Astro.url.origin + `/app/${project?.slug}`);
   </div>
 
   <script>
+    import "trix/dist/trix.css";
     // @ts-ignore - no types available
     import Trix from "trix";
     import { setupKeyboardNavigation } from "../../libs/utils";

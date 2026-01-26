@@ -27,6 +27,7 @@
         "astro-integration-lottie": "^0.3.1",
         "astro-seo": "^0.8.4",
         "better-sqlite3": "^11.3.0",
+        "errore": "^0.9.0",
         "groq-sdk": "^0.32.0",
         "htmx.org": "2.0.1",
         "isbot": "^5.1.17",
@@ -1066,6 +1067,8 @@
     "entities": ["entities@6.0.1", "", {}, "sha512-aN97NXWF6AWBTahfVOIrB/NShkzi5H7F9r1s9mD3cDj4Ko5f2qhhVoYMibXF7GlLveb/D2ioWay8lxI97Ven3g=="],
 
     "env-paths": ["env-paths@3.0.0", "", {}, "sha512-dtJUTepzMW3Lm/NPxRf3wP4642UWhjL2sQxc+ym2YMj1m/H2zDNQOlezafzkHwn6sMstjHTwG6iQQsctDW/b1A=="],
+
+    "errore": ["errore@0.9.0", "", {}, "sha512-yQjR5dgPywm5uYQhxbmalryaetDZzZv32/QsZ6vOoo6jePdwXA0IOzFpNbugQMP+Ss2ihn6sEiW1dPuStKsvGA=="],
 
     "es-module-lexer": ["es-module-lexer@1.7.0", "", {}, "sha512-jEQoCwk8hyb2AZziIOLhDqpm5+2ww5uIE6lkO/6jcOCusfk6LhMHpXXfBLXTZ7Ydyt0j4VoUQv6uGNYbdW+kBA=="],
 
