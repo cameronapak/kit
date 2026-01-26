@@ -1,53 +1,98 @@
 ---
-import LottieAnimation from "astro-integration-lottie/Lottie.astro";
-
 interface Props {
-  showAnimatedLogo?: boolean;
   classList?: string;
-  autoplay?: boolean;
 }
 
-const { showAnimatedLogo = false, classList, autoplay = true } = Astro.props as Props;
+const { classList } = Astro.props as Props;
 ---
 
-{
-  showAnimatedLogo ? (
-    <LottieAnimation
-      class={classList}
-      src="/assets/lottie/ft-kit.json"
-      autoplay={autoplay ? "visible" : false}
-      loop={false}
-      class="!h-12 sm:translate-y-1 m-0 p-0 w-full flex justify-center [&>svg]:h-12 w-full"
-    />
-  ) : (
-    <div class="tooltip tooltip-bottom w-fit sm:translate-y-1" data-tip="kit = keep in touch">
-      <svg height="32" class={classList} viewBox="0 0 444 132" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M274.186 101.191L274.299 68.0295H278.167L302.74 36.745H334.252L297.734 81.5671H290.397L274.186 101.191ZM249.101 124.114V7.62204H276.916V124.114H249.101ZM303.365 124.114L280.499 87.824L298.815 68.0864L335.503 124.114H303.365Z"
-          fill="black"
-        />
-        <path
-          d="M344.206 124.114V36.745H372.021V124.114H344.206ZM358.142 26.5634C354.236 26.5634 350.88 25.2741 348.074 22.6955C345.268 20.0789 343.865 16.9315 343.865 13.2532C343.865 9.61286 345.268 6.50338 348.074 3.92478C350.88 1.30826 354.236 0 358.142 0C362.085 0 365.441 1.30826 368.21 3.92478C371.016 6.50338 372.419 9.61286 372.419 13.2532C372.419 16.9315 371.016 20.0789 368.21 22.6955C365.441 25.2741 362.085 26.5634 358.142 26.5634Z"
-          fill="black"
-        />
-        <path
-          d="M439.04 36.745V57.2221H383.923V36.745H439.04ZM395.47 15.8129H423.284V96.6405C423.284 98.347 423.55 99.7311 424.081 100.793C424.65 101.817 425.465 102.556 426.527 103.011C427.588 103.428 428.859 103.637 430.338 103.637C431.399 103.637 432.518 103.542 433.694 103.352C434.907 103.125 435.817 102.935 436.424 102.784L440.633 122.863C439.306 123.242 437.429 123.716 435.002 124.285C432.613 124.853 429.75 125.214 426.413 125.365C419.891 125.669 414.297 124.91 409.633 123.09C405.007 121.232 401.461 118.35 398.996 114.444C396.569 110.538 395.394 105.628 395.47 99.7121V15.8129Z"
-          fill="black"
-        />
-        <path
-          d="M15.5264 81.6326C73.9837 20.8651 154.346 46.5271 212.804 114.224"
-          stroke="black"
-          stroke-opacity="0.4"
-          stroke-width="19.9286"
-          stroke-linecap="round"
-        />
-        <path
-          d="M15.1108 81.1366C73.5682 141.905 154.346 112.587 212.803 44.8894"
-          stroke="black"
-          stroke-width="19.9286"
-          stroke-linecap="round"
-        />
-      </svg>
-    </div>
-  )
-}
+<div class="tooltip tooltip-bottom w-fit sm:translate-y-1" data-tip="kit = keep in touch">
+  <svg height="32" class={classList} viewBox="0 0 550 183" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g filter="url(#filter0_di_2105_1025)">
+      <path
+        d="M17.156 117.11C75.8821 29.9815 156.614 66.7757 215.34 163.84"
+        stroke="black"
+        stroke-opacity="0.36"
+        stroke-width="28.5738"
+        stroke-linecap="round"
+        shape-rendering="crispEdges"></path>
+    </g>
+    <g filter="url(#filter1_di_2105_1025)">
+      <path
+        d="M17.2451 117.118C75.9712 204.247 156.613 161.492 215.34 64.4274"
+        stroke="black"
+        stroke-width="28.5738"
+        stroke-linecap="round"
+        shape-rendering="crispEdges"></path>
+    </g>
+    <path
+      d="M307.521 141.282L307.603 99.3814H312.687L353.029 51.5766H393.126L338.926 114.879H330.644L307.521 141.282ZM275.87 177.525V9.59377H310.801V177.525H275.87ZM354.587 177.525L317.524 122.669L340.812 97.9874L395.504 177.525H354.587ZM410.264 177.525V51.5766H445.195V177.525H410.264ZM427.811 35.3411C422.618 35.3411 418.163 33.6191 414.446 30.1752C410.783 26.6766 408.952 22.4948 408.952 17.6295C408.952 12.819 410.783 8.69179 414.446 5.24789C418.163 1.74931 422.618 2.07243e-05 427.811 2.07243e-05C433.005 2.07243e-05 437.433 1.74931 441.095 5.24789C444.812 8.69179 446.671 12.819 446.671 17.6295C446.671 22.4948 444.812 26.6766 441.095 30.1752C437.433 33.6191 433.005 35.3411 427.811 35.3411ZM540.169 51.5766V77.8159H464.321V51.5766H540.169ZM481.54 21.4015H516.472V138.822C516.472 142.048 516.964 144.562 517.948 146.366C518.931 148.115 520.298 149.345 522.047 150.056C523.851 150.767 525.929 151.122 528.279 151.122C529.919 151.122 531.559 150.985 533.199 150.712C534.839 150.384 536.096 150.138 536.971 149.974L542.465 175.967C540.716 176.514 538.256 177.143 535.085 177.853C531.914 178.619 528.061 179.083 523.523 179.247C515.105 179.575 507.725 178.455 501.384 175.885C495.097 173.316 490.205 169.325 486.706 163.914C483.208 158.502 481.486 151.669 481.54 143.414V21.4015Z"
+      fill="#2B2B2B"></path>
+    <defs>
+      <filter
+        id="filter0_di_2105_1025"
+        x="6.67572e-05"
+        y="52.2193"
+        width="232.497"
+        height="130.211"
+        filterUnits="userSpaceOnUse"
+        color-interpolation-filters="sRGB"
+      >
+        <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+        <feColorMatrix
+          in="SourceAlpha"
+          type="matrix"
+          values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+          result="hardAlpha"></feColorMatrix>
+        <feOffset dy="1.4338"></feOffset>
+        <feGaussianBlur stdDeviation="1.4338"></feGaussianBlur>
+        <feComposite in2="hardAlpha" operator="out"></feComposite>
+        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"></feColorMatrix>
+        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_2105_1025"></feBlend>
+        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_2105_1025" result="shape"></feBlend>
+        <feColorMatrix
+          in="SourceAlpha"
+          type="matrix"
+          values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+          result="hardAlpha"></feColorMatrix>
+        <feOffset dy="5.73522"></feOffset>
+        <feGaussianBlur stdDeviation="1.4338"></feGaussianBlur>
+        <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></feComposite>
+        <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.25 0"></feColorMatrix>
+        <feBlend mode="normal" in2="shape" result="effect2_innerShadow_2105_1025"></feBlend>
+      </filter>
+      <filter
+        id="filter1_di_2105_1025"
+        x="0.0891781"
+        y="48.7046"
+        width="232.407"
+        height="134.213"
+        filterUnits="userSpaceOnUse"
+        color-interpolation-filters="sRGB"
+      >
+        <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+        <feColorMatrix
+          in="SourceAlpha"
+          type="matrix"
+          values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+          result="hardAlpha"></feColorMatrix>
+        <feOffset dy="1.4338"></feOffset>
+        <feGaussianBlur stdDeviation="1.4338"></feGaussianBlur>
+        <feComposite in2="hardAlpha" operator="out"></feComposite>
+        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"></feColorMatrix>
+        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_2105_1025"></feBlend>
+        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_2105_1025" result="shape"></feBlend>
+        <feColorMatrix
+          in="SourceAlpha"
+          type="matrix"
+          values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+          result="hardAlpha"></feColorMatrix>
+        <feOffset dy="5.73522"></feOffset>
+        <feGaussianBlur stdDeviation="1.4338"></feGaussianBlur>
+        <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></feComposite>
+        <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.25 0"></feColorMatrix>
+        <feBlend mode="normal" in2="shape" result="effect2_innerShadow_2105_1025"></feBlend>
+      </filter>
+    </defs>
+  </svg>
+</div>

@@ -5,7 +5,6 @@ import alpinejs from "@astrojs/alpinejs";
 import netlify from "@astrojs/netlify";
 import db from "@astrojs/db";
 import clerk from "@clerk/astro";
-import lottie from "astro-integration-lottie";
 
 // https://astro.build/config
 export default defineConfig({
@@ -15,8 +14,7 @@ export default defineConfig({
     alpinejs({
       entrypoint: "/src/entrypoint"
     }),
-    clerk(),
-    lottie()
+    clerk()
   ],
   vite: {
     optimizeDeps: {
