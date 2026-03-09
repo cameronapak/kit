@@ -4,7 +4,7 @@ const groq = new Groq({
   apiKey: import.meta.env.GROQ_API_KEY
 });
 
-const GROQ_GUARD_MODEL = "meta-llama/llama-guard-4-12b";
+const GROQ_GUARD_MODEL = "openai/gpt-oss-safeguard-20b";
 
 // https://console.groq.com/docs/content-moderation
 export async function isContentAppropriate(content: string): Promise<boolean> {
@@ -34,7 +34,7 @@ export async function isContentPG13Appropriate(content: string): Promise<boolean
         content: `Is this content PG-13 appropriate? <content>${content}</content>`
       }
     ],
-    model: GROQ_GUARD_MODEL,
+    model: GROQ_GUARD_MODEL
   });
 
   const message = response.choices[0].message.content;
