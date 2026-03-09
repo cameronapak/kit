@@ -24,7 +24,6 @@
         "astro": "5.16.15",
         "astro-cloudinary": "^1.1.0",
         "astro-iconify": "^1.2.0",
-        "astro-integration-lottie": "^0.3.1",
         "astro-seo": "^0.8.4",
         "better-sqlite3": "^11.3.0",
         "errore": "^0.9.0",
@@ -32,7 +31,6 @@
         "htmx.org": "2.0.1",
         "isbot": "^5.1.17",
         "isomorphic-dompurify": "^2.15.0",
-        "lottie-web": "^5.12.2",
         "marked": "^14.1.2",
         "trix": "^2.1.6",
         "uqr": "^0.1.2",
@@ -788,8 +786,6 @@
 
     "astro-iconify": ["astro-iconify@1.2.0", "", { "dependencies": { "@iconify/tools": "latest", "node-fetch": "^3.1.0", "resolve-pkg": "^2.0.0", "svgo": "^3.0.1" } }, "sha512-arLDiSop3DAHHS30raZysspkz5MO9moJJZ4rJk1Ty+4W1jZDa00Jme0LrnRJRDB6BB2EDTxC553fo20yz3MeYw=="],
 
-    "astro-integration-lottie": ["astro-integration-lottie@0.3.2", "", { "peerDependencies": { "lottie-web": "^5.10.0" } }, "sha512-YPE5XjWNbu+kKTlNm4+buvL6oZDwaECiS4Mo4m3kZnykZjHOJPNoStsIN2wLgJmryRUqPZxeKiIA+tIrT6HD1Q=="],
-
     "astro-seo": ["astro-seo@0.8.4", "", { "dependencies": { "@astrojs/check": "^0.5.4" } }, "sha512-Ou1vzQSXAxa0K8rtNtXNvSpYqOGEgMhh0immMxJeXmbVZac3UKCNWAoXWyOQDFYsZvBugCRSg0N1phBqPMVgCw=="],
 
     "async": ["async@3.2.6", "", {}, "sha512-htCUDlxyyCLMgaM3xXg0C0LW2xqfuQ6p05pCEIsXuyQ+a1koYKTuBMzRNwmybfLgvJDMd0r1LTn4+E0Ti6C2AA=="],
@@ -1421,8 +1417,6 @@
     "longest-streak": ["longest-streak@3.1.0", "", {}, "sha512-9Ri+o0JYgehTaVBBDoMqIl8GXtbWg711O3srftcHhZ0dqnETqLaoIK0x17fUw9rFSlK/0NlsKe0Ahhyl5pXE2g=="],
 
     "loose-envify": ["loose-envify@1.4.0", "", { "dependencies": { "js-tokens": "^3.0.0 || ^4.0.0" }, "bin": "cli.js" }, "sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q=="],
-
-    "lottie-web": ["lottie-web@5.13.0", "", {}, "sha512-+gfBXl6sxXMPe8tKQm7qzLnUy5DUPJPKIyRHwtpCpyUEYjHYRJC/5gjUvdkuO2c3JllrPtHXH5UJJK8LRYl5yQ=="],
 
     "lower-case": ["lower-case@2.0.2", "", { "dependencies": { "tslib": "^2.0.3" } }, "sha512-7fm3l3NAF9WfN6W3JOmf5drwpVqX78JtoGJ3A6W0a6ZnldM41w2fV5D490psKFTpMds8TJse/eHLFFsNHHjHgg=="],
 

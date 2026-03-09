@@ -26,7 +26,7 @@ const isDashboard = Astro.url.pathname.startsWith("/dashboard");
       target="_blank">faith.tools</a
     > experiment
   </p>
-  <ul class="list-none p-0 m-0 flex gap-3 justify-center">
+  <ul class="list-none p-0 m-0 flex flex-wrap gap-3 justify-center">
     <li><a class="text-inherit font-normal" href="https://faith.tools/posts/terms" target="_blank">Terms</a></li>
     <li>
       <a class="text-inherit font-normal" href="https://faith.tools/posts/privacy-policy" target="_blank">Privacy</a>
@@ -34,6 +34,9 @@ const isDashboard = Astro.url.pathname.startsWith("/dashboard");
     <li><a class="text-inherit font-normal" href="https://go.faith.tools/contact" target="_blank">Feedback</a></li>
     <li>
       <a class="text-inherit font-normal" href="https://github.com/cameronapak/kit" target="_blank">Open Source</a>
+    </li>
+    <li>
+      <a class="text-inherit font-normal" href="https://faith.tools" target="_blank">faith.tools</a>
     </li>
     <SignInOrOpenDashboard isDashboard={isDashboard} server:defer />
   </ul>
