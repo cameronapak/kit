@@ -1,8 +1,8 @@
 import type { APIRoute } from "astro";
 import rss, { type RSSFeedItem } from "@astrojs/rss";
 import DOMPurify from "isomorphic-dompurify";
-import { db, eq, Projects, desc, and } from "astro:db";
-import { getCldImageUrl } from "astro-cloudinary/helpers";
+import { getDb, eq, Projects, desc, and } from "@/libs/db";
+import { getCldImageUrl } from "@/libs/cloudinary";
 
 function getDescription(content: string) {
   if (!content) {
@@ -20,7 +20,7 @@ function getDescription(content: string) {
 }
 
 export const GET: APIRoute = async ({ request }) => {
-  const projects = await db
+  const projects = await getDb()
     .select()
     .from(Projects)
     .where(and(eq(Projects.isPublished, true), eq(Projects.isFeatured, true)))

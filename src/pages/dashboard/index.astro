@@ -1,12 +1,12 @@
 ---
-import { CldUploadWidget } from "astro-cloudinary";
-import { getCldImageUrl } from "astro-cloudinary/helpers";
-import { db, Projects, eq } from "astro:db";
+import CldUploadWidget from "@/components/CldUploadWidget.astro";
+import { getCldImageUrl } from "@/libs/cloudinary";
+import { getDb, Projects, eq } from "@/libs/db";
 import { actions } from "astro:actions";
 import { renderSVG } from "uqr";
 import Icon from "astro-iconify";
 import * as errore from "errore";
-import type { UserResource } from "@clerk/types";
+import type { User } from "@clerk/astro/server";
 import Header from "@/components/Header.astro";
 import Layout from "@/layouts/Layout.astro";
 import Footer from "@/components/Footer.astro";
@@ -28,7 +28,7 @@ class DbError extends errore.createTaggedError({
   message: "Database query failed: $reason"
 }) {}
 
-async function getUser(): Promise<NotFoundError | DbError | UserResource> {
+async function getUser(): Promise<NotFoundError | DbError | User> {
   const result = await errore.tryAsync({
     try: Astro.locals.currentUser,
     catch: (e) => new DbError({ reason: e.message, cause: e })
@@ -43,7 +43,7 @@ async function getUser(): Promise<NotFoundError | DbError | UserResource> {
 async function getProjectForUser(userId: string): Promise<NotFoundError | DbError | typeof Projects.$inferSelect> {
   const result = await errore.tryAsync({
     try: () =>
-      db
+      getDb()
         .select()
         .from(Projects)
         .where(eq(Projects.userId, userId || ""))
@@ -580,6 +580,7 @@ const qrCode = renderSVG(Astro.url.origin + `/app/${project?.slug}`);
     <Footer />
   </div>
 
+  <script is:inline defer src="https://upload-widget.cloudinary.com/latest/global/all.js"></script>
   <script>
     import "trix/dist/trix.css";
     // @ts-ignore - no types available
@@ -588,39 +589,7 @@ const qrCode = renderSVG(Astro.url.origin + `/app/${project?.slug}`);
 
     setupKeyboardNavigation();
 
-    type UploadInfo = {
-      id: string;
-      batchId: string;
-      asset_id: string;
-      public_id: string;
-      version: number;
-      version_id: string;
-      signature: string;
-      width: number;
-      height: number;
-      format: string;
-      resource_type: string;
-      created_at: string;
-      tags: string[];
-      bytes: number;
-      type: string;
-      etag: string;
-      placeholder: boolean;
-      url: string;
-      secure_url: string;
-      asset_folder: string;
-      display_name: string;
-      existing: boolean;
-      original_filename: string;
-      path: string;
-      thumbnail_url: string;
-    };
-
-    type UploadEvent = {
-      event: string;
-      info: UploadInfo;
-      UploadWidget: Record<string, unknown>;
-    };
+    type UploadEvent = { info: { public_id: string; secure_url: string } };
 
     document.addEventListener("trix-file-accept", function (event) {
       event.preventDefault();
@@ -640,7 +609,7 @@ const qrCode = renderSVG(Astro.url.origin + `/app/${project?.slug}`);
 
         // Update the banner image
         if (bannerImageEl) {
-          bannerImageEl.src = e.detail.info.url;
+          bannerImageEl.src = e.detail.info.secure_url;
         }
       }) as EventListener);
     }
@@ -658,7 +627,7 @@ const qrCode = renderSVG(Astro.url.origin + `/app/${project?.slug}`);
 
         // Update the logo image
         if (logoImageEl) {
-          logoImageEl.src = e.detail.info.url;
+          logoImageEl.src = e.detail.info.secure_url;
         }
       }) as EventListener);
     }

@@ -1,6 +1,6 @@
 import { defineAction } from "astro:actions";
-import { z } from "astro:schema";
-import { db, eq, Leads, Projects } from "astro:db";
+import { z } from "astro/zod";
+import { getDb, eq, Leads, Projects } from "@/libs/db";
 import { isContentPG13Appropriate } from "@/libs/ai";
 
 async function sendWebhook(
@@ -29,7 +29,7 @@ export const leads = {
     accept: "form",
     input: z.object({
       name: z.string().min(1, "Name is required"),
-      email: z.string().email("Valid email is required"),
+      email: z.email("Valid email is required"),
       message: z.string().optional(),
       projectId: z.number(),
       website: z.string().nullable()
@@ -51,7 +51,7 @@ export const leads = {
           throw new Error("Detected inappropriate content");
         }
 
-        const newLead = await db
+        const newLead = await getDb()
           .insert(Leads)
           .values({
             name,
@@ -64,7 +64,7 @@ export const leads = {
           .get();
 
         // Fetch the project to get the webhookUrl
-        const project = await db.select().from(Projects).where(eq(Projects.id, projectId)).get();
+        const project = await getDb().select().from(Projects).where(eq(Projects.id, projectId)).get();
 
         if (project && project.webhookUrl) {
           await sendWebhook(project.webhookUrl, {
@@ -96,7 +96,7 @@ export const leads = {
     input: z.object({
       id: z.number(),
       name: z.string().min(1, "Name is required"),
-      email: z.string().email("Valid email is required"),
+      email: z.email("Valid email is required"),
       message: z.string().optional(),
       projectId: z.number()
     }),
@@ -113,7 +113,7 @@ export const leads = {
           throw new Error("Detected inappropriate content");
         }
 
-        const updatedLead = await db
+        const updatedLead = await getDb()
           .update(Leads)
           .set({ name, email, message, projectId })
           .where(eq(Leads.id, id))
@@ -141,7 +141,7 @@ export const leads = {
     }),
     handler: async ({ id }) => {
       try {
-        const deletedLead = await db.delete(Leads).where(eq(Leads.id, id)).returning().get();
+        const deletedLead = await getDb().delete(Leads).where(eq(Leads.id, id)).returning().get();
 
         if (!deletedLead) {
           throw new Error("Lead not found");

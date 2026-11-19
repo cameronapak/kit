@@ -1,5 +1,5 @@
 ---
-import { db, Posts, Projects, eq, desc } from "astro:db";
+import { getDb, Posts, Projects, eq, desc } from "@/libs/db";
 import { Icon } from "astro-iconify";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
@@ -11,7 +11,7 @@ if (!Astro.locals.auth().userId) {
 
 const user = await Astro.locals.currentUser();
 
-const projects = await db
+const projects = await getDb()
   .select()
   .from(Projects)
   .where(eq(Projects.userId, user?.id || ""))
@@ -20,7 +20,7 @@ const projects = await db
 const project = projects?.[0];
 const projectId = project?.id;
 
-const allPosts = await db
+const allPosts = await getDb()
   .select()
   .from(Posts)
   .where(eq(Posts.projectId, projectId || 0))

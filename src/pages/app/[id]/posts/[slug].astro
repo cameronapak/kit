@@ -1,6 +1,6 @@
 ---
-import { db, eq, Projects, Posts } from "astro:db";
-import { getCldImageUrl } from "astro-cloudinary/helpers";
+import { getDb, eq, Projects, Posts } from "@/libs/db";
+import { getCldImageUrl } from "@/libs/cloudinary";
 import Icon from "astro-iconify";
 import DOMPurify from "isomorphic-dompurify";
 import { actions } from "astro:actions";
@@ -17,7 +17,7 @@ if (!projectSlug) {
   return Astro.redirect("/");
 }
 
-const projects = await db.select().from(Projects).where(eq(Projects.slug, projectSlug)).limit(1);
+const projects = await getDb().select().from(Projects).where(eq(Projects.slug, projectSlug)).limit(1);
 
 if (!projects.length) {
   return Astro.redirect("/404");
@@ -46,7 +46,7 @@ if (!slug) {
   return Astro.redirect(`/app/${projectSlug}`);
 }
 
-const posts = await db
+const posts = await getDb()
   .select()
   .from(Posts)
   .where(eq(Posts.slug, slug || ""))

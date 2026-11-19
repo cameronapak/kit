@@ -1,7 +1,7 @@
 import { defineAction } from "astro:actions";
-import { z } from "astro:schema";
-import { db, eq, Projects } from "astro:db";
-import { purgeCache } from "@netlify/functions";
+import { z } from "astro/zod";
+import { getDb, eq, Projects } from "@/libs/db";
+import { purgeCache } from "@netlify/cache";
 import { isContentPG13Appropriate } from "@/libs/ai";
 export const projects = {
   updateProject: defineAction({
@@ -21,8 +21,8 @@ export const projects = {
         .transform((v) => (v === "" ? null : v)),
       authors: z.string(),
       slug: z.string(),
-      webhookUrl: z.string().url().optional().nullable(),
-      callToActionUrl: z.string().url().optional().nullable(),
+      webhookUrl: z.url().optional().nullable(),
+      callToActionUrl: z.url().optional().nullable(),
       callToActionText: z.string().optional().nullable()
     }),
     // Handler function
@@ -47,7 +47,7 @@ export const projects = {
 
       try {
         // Update the project in the database
-        const updatedProject = await db
+        const updatedProject = await getDb()
           .update(Projects)
           .set({
             title,
@@ -88,10 +88,10 @@ export const projects = {
     accept: "form",
     input: z.object({
       projectId: z.number(),
-      webhookUrl: z.string().url().optional().nullable()
+      webhookUrl: z.url().optional().nullable()
     }),
     handler: async ({ projectId, webhookUrl }) => {
-      const updatedProject = await db
+      const updatedProject = await getDb()
         .update(Projects)
         .set({ webhookUrl })
         .where(eq(Projects.id, projectId))
@@ -121,8 +121,8 @@ export const projects = {
         .transform((v) => (v === "" ? null : v)),
       authors: z.string(),
       slug: z.string().optional(),
-      webhookUrl: z.string().url().optional().nullable(),
-      callToActionUrl: z.string().url().optional().nullable(),
+      webhookUrl: z.url().optional().nullable(),
+      callToActionUrl: z.url().optional().nullable(),
       callToActionText: z.string().optional().nullable()
     }),
     // Handler function
@@ -147,7 +147,7 @@ export const projects = {
 
       try {
         // Create the project in the database
-        const newProject = await db
+        const newProject = await getDb()
           .insert(Projects)
           .values({
             title,
@@ -181,7 +181,7 @@ export const projects = {
     accept: "form",
     input: z.object({ id: z.number() }),
     handler: async ({ id }) => {
-      const updatedProject = await db
+      const updatedProject = await getDb()
         .update(Projects)
         .set({ isPublished: false })
         .where(eq(Projects.id, id))
@@ -203,7 +203,7 @@ export const projects = {
     accept: "form",
     input: z.object({ id: z.number() }),
     handler: async ({ id }) => {
-      const updatedProject = await db
+      const updatedProject = await getDb()
         .update(Projects)
         .set({ isPublished: true, updatedAt: new Date() })
         .where(eq(Projects.id, id))

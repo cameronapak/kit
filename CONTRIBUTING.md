@@ -34,8 +34,9 @@ Enhancement suggestions are tracked as GitHub issues. When creating an enhanceme
 3. Make your changes
 4. Run tests and formatting:
    ```bash
-   npm run format
-   npm run build
+   bun run format
+   bun run test
+   bun run build
    ```
 5. Commit your changes using conventional commits:
    ```bash
@@ -48,8 +49,8 @@ Enhancement suggestions are tracked as GitHub issues. When creating an enhanceme
 
 1. Ensure you have:
 
-   - Node.js >=20.3.0
-   - NPM >=10.0.0
+   - Node.js 24 (see `.nvmrc`)
+   - Bun
 
 2. Clone your fork:
 
@@ -60,7 +61,7 @@ Enhancement suggestions are tracked as GitHub issues. When creating an enhanceme
 3. Install dependencies:
 
    ```bash
-   npm install
+   bun install --frozen-lockfile
    ```
 
 4. Copy environment variables:
@@ -69,9 +70,10 @@ Enhancement suggestions are tracked as GitHub issues. When creating an enhanceme
    cp .env.example .env
    ```
 
-5. Start development server:
+5. Seed the local database and start the development server:
    ```bash
-   npm run dev
+   bun run db:seed
+   bun run dev
    ```
 
 ## Style Guide
@@ -80,7 +82,7 @@ Enhancement suggestions are tracked as GitHub issues. When creating an enhanceme
 
 - Use 2 spaces for indentation
 - Maximum line length: 120 characters
-- Format with Prettier (run `npm run format`)
+- Format with Prettier (run `bun run format`)
 - Follow existing code patterns
 
 ### Commit Messages

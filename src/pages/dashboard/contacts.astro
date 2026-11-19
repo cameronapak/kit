@@ -1,5 +1,5 @@
 ---
-import { db, Leads, Projects, eq } from "astro:db";
+import { getDb, Leads, Projects, eq } from "@/libs/db";
 import { Icon } from "astro-iconify";
 import { actions } from "astro:actions";
 import Header from "@/components/Header.astro";
@@ -12,7 +12,7 @@ if (!Astro.locals.auth().userId) {
 }
 
 const user = await Astro.locals.currentUser();
-const allProjects = await db
+const allProjects = await getDb()
   .select()
   .from(Projects)
   .where(eq(Projects.userId, user?.id ?? ""));
@@ -20,7 +20,7 @@ const project = allProjects[0];
 const firstProjectId = project?.id;
 let allEmails: any[] = [];
 if (firstProjectId) {
-  allEmails = await db.select().from(Leads).where(eq(Leads.projectId, firstProjectId)).orderBy(Leads.email);
+  allEmails = await getDb().select().from(Leads).where(eq(Leads.projectId, firstProjectId)).orderBy(Leads.email);
 }
 
 const commaSeparatedEmails = allEmails.map((email) => email.email).join(",");

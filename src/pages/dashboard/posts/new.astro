@@ -1,6 +1,6 @@
 ---
 import "trix/dist/trix.css";
-import { db, Projects, eq } from "astro:db";
+import { getDb, Projects, eq } from "@/libs/db";
 import { Icon } from "astro-iconify";
 import { actions } from "astro:actions";
 import Layout from "@/layouts/Layout.astro";
@@ -13,7 +13,7 @@ if (!Astro.locals.auth().userId) {
 }
 
 const user = await Astro.locals.currentUser();
-const projects = await db
+const projects = await getDb()
   .select()
   .from(Projects)
   .where(eq(Projects.userId, user?.id || ""))
