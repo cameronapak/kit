@@ -2,6 +2,7 @@ import { defineAction } from "astro:actions";
 import { z } from "astro/zod";
 import { getDb, eq, Leads, Projects } from "@/libs/db";
 import { isContentPG13Appropriate } from "@/libs/ai";
+import { requireUser, requireProjectOwner, requireLeadOwner } from "./ownership";
 
 async function sendWebhook(
   webhookUrl: string,
@@ -100,7 +101,10 @@ export const leads = {
       message: z.string().optional(),
       projectId: z.number()
     }),
-    handler: async ({ id, name, email, message = "", projectId }) => {
+    handler: async ({ id, name, email, message = "", projectId }, { locals }) => {
+      const userId = requireUser(locals);
+      await requireLeadOwner(id, userId);
+      await requireProjectOwner(projectId, userId);
       try {
         const emailIsAppropriate = await isContentPG13Appropriate(
           `A user submitted this email <email>${email}</email> to a project. Is it appropriate?`
@@ -139,7 +143,8 @@ export const leads = {
     input: z.object({
       id: z.number()
     }),
-    handler: async ({ id }) => {
+    handler: async ({ id }, { locals }) => {
+      await requireLeadOwner(id, requireUser(locals));
       try {
         const deletedLead = await getDb().delete(Leads).where(eq(Leads.id, id)).returning().get();
 

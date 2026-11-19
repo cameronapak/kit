@@ -11,7 +11,7 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "db:seed": "node db/seed.ts",
-    "test": "node --test db/*.test.ts src/libs/*.test.ts",
+    "test": "node --test db/*.test.ts src/libs/*.test.ts && bun test tests/ownership.test.mjs",
     "format": "prettier -w ."
   },
   "dependencies": {
