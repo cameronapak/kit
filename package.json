@@ -11,7 +11,7 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "db:seed": "node db/seed.ts",
-    "test": "node --test db/*.test.ts",
+    "test": "node --test db/*.test.ts src/libs/*.test.ts",
     "format": "prettier -w ."
   },
   "dependencies": {
@@ -38,13 +38,14 @@
     "groq-sdk": "^1.6.0",
     "htmx.org": "2.0.11",
     "isbot": "^5.2.3",
-    "isomorphic-dompurify": "^4.8.0",
+    "sanitize-html": "^2.18.2",
     "trix": "^2.1.19",
     "uqr": "^0.1.2"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.15",
     "@types/alpinejs": "^3.13.10",
+    "@types/sanitize-html": "^2.16.2",
     "autoprefixer": "^10.6.2",
     "daisyui": "^4.12.10",
     "prettier": "^3.3.3",
