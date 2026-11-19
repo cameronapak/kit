@@ -3,6 +3,7 @@ import { z } from "astro:schema";
 import { db, eq, Projects } from "astro:db";
 import { purgeCache } from "@netlify/functions";
 import { isContentPG13Appropriate } from "@/libs/ai";
+import { requireUser, requireProjectOwner } from "./ownership";
 export const projects = {
   updateProject: defineAction({
     // Accept form data
@@ -38,7 +39,8 @@ export const projects = {
       slug,
       callToActionUrl,
       callToActionText
-    }) => {
+    }, { locals }) => {
+      await requireProjectOwner(id, requireUser(locals));
       const isContentAppropriate = await isContentPG13Appropriate(content);
 
       if (!isContentAppropriate) {
@@ -90,7 +92,8 @@ export const projects = {
       projectId: z.number(),
       webhookUrl: z.string().url().optional().nullable()
     }),
-    handler: async ({ projectId, webhookUrl }) => {
+    handler: async ({ projectId, webhookUrl }, { locals }) => {
+      await requireProjectOwner(projectId, requireUser(locals));
       const updatedProject = await db
         .update(Projects)
         .set({ webhookUrl })
@@ -129,7 +132,7 @@ export const projects = {
     handler: async ({
       title,
       content,
-      userId,
+      userId: _userId,
       bannerImageId,
       logoImageId,
       youtubeVideoUrl,
@@ -138,7 +141,8 @@ export const projects = {
       slug,
       callToActionUrl,
       callToActionText
-    }) => {
+    }, { locals }) => {
+      const userId = requireUser(locals);
       const isContentAppropriate = await isContentPG13Appropriate(content);
 
       if (!isContentAppropriate) {
@@ -180,7 +184,8 @@ export const projects = {
   unpublishProject: defineAction({
     accept: "form",
     input: z.object({ id: z.number() }),
-    handler: async ({ id }) => {
+    handler: async ({ id }, { locals }) => {
+      await requireProjectOwner(id, requireUser(locals));
       const updatedProject = await db
         .update(Projects)
         .set({ isPublished: false })
@@ -202,7 +207,8 @@ export const projects = {
   publishProject: defineAction({
     accept: "form",
     input: z.object({ id: z.number() }),
-    handler: async ({ id }) => {
+    handler: async ({ id }, { locals }) => {
+      await requireProjectOwner(id, requireUser(locals));
       const updatedProject = await db
         .update(Projects)
         .set({ isPublished: true, updatedAt: new Date() })

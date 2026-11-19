@@ -3,6 +3,7 @@ import { z } from "astro:schema";
 import { db, eq, Posts, and } from "astro:db";
 import { purgeCache } from "@netlify/functions";
 import { isContentPG13Appropriate } from "@/libs/ai";
+import { requireUser, requireProjectOwner, requirePostOwner } from "./ownership";
 
 export const posts = {
   createPost: defineAction({
@@ -18,7 +19,9 @@ export const posts = {
       projectId: z.number()
     }),
     // Handler function
-    handler: async ({ title, createdAt, slug, content, userId, projectId }) => {
+    handler: async ({ title, createdAt, slug, content, projectId }, { locals }) => {
+      const userId = requireUser(locals);
+      await requireProjectOwner(projectId, userId);
       try {
         const isContentAppropriate = await isContentPG13Appropriate(content);
 
@@ -65,7 +68,10 @@ export const posts = {
       projectId: z.number()
     }),
     // Handler function
-    handler: async ({ id, title, slug, content, userId, projectId }) => {
+    handler: async ({ id, title, slug, content, projectId }, { locals }) => {
+      const userId = requireUser(locals);
+      await requirePostOwner(id, userId);
+      await requireProjectOwner(projectId, userId);
       try {
         const isContentAppropriate = await isContentPG13Appropriate(content);
 
@@ -118,7 +124,9 @@ export const posts = {
       userId: z.string()
     }),
     // Handler function
-    handler: async ({ id, userId }) => {
+    handler: async ({ id }, { locals }) => {
+      const userId = requireUser(locals);
+      await requirePostOwner(id, userId);
       try {
         // Delete the post from the database
         const deletedPost = await db
