@@ -1,5 +1,5 @@
 import { ActionError } from "astro:actions";
-import { db, eq, and, Projects, Posts, Leads } from "astro:db";
+import { getDb, eq, and, Projects, Posts, Leads } from "@/libs/db";
 
 export function requireUser(locals: App.Locals) {
   const userId = locals.auth().userId;
@@ -10,7 +10,7 @@ export function requireUser(locals: App.Locals) {
 }
 
 export async function requireProjectOwner(id: number, userId: string) {
-  const project = await db.select().from(Projects)
+  const project = await getDb().select().from(Projects)
     .where(and(eq(Projects.id, id), eq(Projects.userId, userId))).get();
   if (!project) {
     throw new ActionError({ code: "NOT_FOUND", message: "Project not found" });
@@ -19,7 +19,7 @@ export async function requireProjectOwner(id: number, userId: string) {
 }
 
 export async function requirePostOwner(id: number, userId: string) {
-  const post = await db.select().from(Posts)
+  const post = await getDb().select().from(Posts)
     .where(and(eq(Posts.id, id), eq(Posts.userId, userId))).get();
   if (!post) {
     throw new ActionError({ code: "NOT_FOUND", message: "Post not found" });
@@ -29,7 +29,7 @@ export async function requirePostOwner(id: number, userId: string) {
 }
 
 export async function requireLeadOwner(id: number, userId: string) {
-  const lead = await db.select().from(Leads).where(eq(Leads.id, id)).get();
+  const lead = await getDb().select().from(Leads).where(eq(Leads.id, id)).get();
   if (!lead) {
     throw new ActionError({ code: "NOT_FOUND", message: "Contact not found" });
   }

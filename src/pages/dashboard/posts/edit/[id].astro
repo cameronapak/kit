@@ -2,7 +2,7 @@
 import "trix/dist/trix.css";
 import { Icon } from "astro-iconify";
 import { actions } from "astro:actions";
-import { db, Posts, Projects, Leads, eq, and } from "astro:db";
+import { getDb, Posts, Projects, Leads, eq, and } from "@/libs/db";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
@@ -19,7 +19,7 @@ if (!postId) {
   return Astro.redirect("/dashboard/posts");
 }
 
-const projects = await db
+const projects = await getDb()
   .select()
   .from(Projects)
   .where(eq(Projects.userId, user?.id || ""))
@@ -28,7 +28,7 @@ const projects = await db
 let project = projects[0];
 let allEmails: any[] = [];
 if (project?.id) {
-  allEmails = await db.select().from(Leads).where(eq(Leads.projectId, project.id)).orderBy(Leads.email);
+  allEmails = await getDb().select().from(Leads).where(eq(Leads.projectId, project.id)).orderBy(Leads.email);
 }
 
 const commaSeparatedEmails = allEmails.map((email) => email.email).join(",");
@@ -43,7 +43,7 @@ if (result?.data?.success) {
 }
 
 // Get post from database
-const posts = await db
+const posts = await getDb()
   .select()
   .from(Posts)
   .where(and(eq(Posts.id, Number(postId)), eq(Posts.userId, user?.id || "")))

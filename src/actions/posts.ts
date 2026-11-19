@@ -1,7 +1,7 @@
 import { defineAction } from "astro:actions";
-import { z } from "astro:schema";
-import { db, eq, Posts, and } from "astro:db";
-import { purgeCache } from "@netlify/functions";
+import { z } from "astro/zod";
+import { getDb, eq, Posts, and } from "@/libs/db";
+import { purgeCache } from "@netlify/cache";
 import { isContentPG13Appropriate } from "@/libs/ai";
 import { requireUser, requireProjectOwner, requirePostOwner } from "./ownership";
 
@@ -32,7 +32,7 @@ export const posts = {
         }
 
         // Create the post in the database
-        const newPost = await db
+        const newPost = await getDb()
           .insert(Posts)
           .values({
             title,
@@ -82,7 +82,7 @@ export const posts = {
         }
 
         // Update the post in the database
-        const updatedPost = await db
+        const updatedPost = await getDb()
           .update(Posts)
           .set({
             title,
@@ -129,7 +129,7 @@ export const posts = {
       await requirePostOwner(id, userId);
       try {
         // Delete the post from the database
-        const deletedPost = await db
+        const deletedPost = await getDb()
           .delete(Posts)
           .where(and(eq(Posts.id, id), eq(Posts.userId, userId)))
           .returning()

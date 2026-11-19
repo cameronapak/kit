@@ -1,0 +1,39 @@
+---
+interface Props {
+  id: string;
+  uploadPreset: string;
+  options: Record<string, unknown>;
+}
+
+const { id, uploadPreset, options } = Astro.props;
+const uploadOptions = { cloudName: import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME, uploadPreset, ...options };
+---
+
+<span id={id} data-cloudinary-upload={JSON.stringify(uploadOptions)}>
+  <slot />
+</span>
+
+<script>
+  type UploadInfo = { public_id: string; secure_url: string };
+  type Cloudinary = {
+    createUploadWidget(
+      options: object,
+      callback: (error: unknown, result?: { event: string; info: UploadInfo }) => void
+    ): { open(): void };
+  };
+
+  for (const container of document.querySelectorAll<HTMLElement>("[data-cloudinary-upload]")) {
+    let widget: ReturnType<Cloudinary["createUploadWidget"]> | undefined;
+    container.querySelector("button")?.addEventListener("click", () => {
+      const { cloudinary } = window as Window & { cloudinary?: Cloudinary };
+      if (!cloudinary || !container.dataset.cloudinaryUpload) return;
+
+      widget ??= cloudinary.createUploadWidget(JSON.parse(container.dataset.cloudinaryUpload), (error, result) => {
+        if (!error && result?.event === "success") {
+          container.dispatchEvent(new CustomEvent("clduploadwidget:success", { detail: { info: result.info } }));
+        }
+      });
+      widget.open();
+    });
+  }
+</script>

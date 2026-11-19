@@ -1,6 +1,6 @@
 ---
 // Adapted from https://www.thomasledoux.be/blog/using-server-islands-actions-view-counter
-import { PageView, count, db, eq } from "astro:db";
+import { PageView, count, getDb, eq } from "@/libs/db";
 import { Icon } from "astro-iconify";
 
 interface Props {
@@ -13,7 +13,7 @@ const { url, className = "" } = Astro.props as Props;
 // Remove trailing slash if it exists...
 const urlWithoutTrailingSlash = url.endsWith("/") ? url.slice(0, -1) : url;
 
-const viewCount = await db.select({ value: count() }).from(PageView).where(eq(PageView.url, urlWithoutTrailingSlash));
+const viewCount = await getDb().select({ value: count() }).from(PageView).where(eq(PageView.url, urlWithoutTrailingSlash));
 ---
 
 <div

@@ -1,41 +1,20 @@
-// Run with: bun test tests/ownership.test.mjs
+import { readFileSync } from "node:fs";
 import { beforeEach, expect, mock, test } from "bun:test";
 import { Database } from "bun:sqlite";
 import { drizzle } from "drizzle-orm/bun-sqlite";
-import { sqliteTable, integer, text } from "drizzle-orm/sqlite-core";
 import { and, eq } from "drizzle-orm";
-import { z } from "zod";
+import { Projects, Posts, Leads } from "../db/schema.ts";
 
 const sql = new Database(":memory:");
+sql.exec("PRAGMA foreign_keys=ON");
+sql.exec(readFileSync(new URL("../db/local.sql", import.meta.url), "utf8"));
 const db = drizzle(sql);
-const Projects = sqliteTable("Projects", {
-  id: integer().primaryKey(), userId: text(), title: text(), content: text(),
-  authors: text(), slug: text(), webhookUrl: text(), bannerImageId: text(),
-  logoImageId: text(), youtubeVideoUrl: text(), callToActionUrl: text(),
-  callToActionText: text(), isPublished: integer({ mode: "boolean" }),
-  createdAt: integer({ mode: "timestamp" }), updatedAt: integer({ mode: "timestamp" })
-});
-const Posts = sqliteTable("Posts", {
-  id: integer().primaryKey(), userId: text(), projectId: integer(),
-  title: text(), slug: text(), content: text(), createdAt: integer({ mode: "timestamp" })
-});
-const Leads = sqliteTable("Leads", {
-  id: integer().primaryKey(), projectId: integer(), name: text(), email: text(),
-  message: text(), createdAt: integer({ mode: "timestamp" })
-});
-for (const table of [Projects, Posts, Leads]) {
-  const { getTableConfig } = await import("drizzle-orm/sqlite-core");
-  const config = getTableConfig(table);
-  sql.exec(`CREATE TABLE ${config.name} (${config.columns.map(c =>
-    `${c.name} ${c.getSQLType()}${c.primary ? " PRIMARY KEY" : ""}`).join(", ")})`);
-}
 class ActionError extends Error {
   constructor({ code, message }) { super(message); this.code = code; }
 }
 mock.module("astro:actions", () => ({ ActionError, defineAction: config => config.handler }));
-mock.module("astro:schema", () => ({ z }));
-mock.module("astro:db", () => ({ db, Projects, Posts, Leads, and, eq }));
-mock.module("@netlify/functions", () => ({ purgeCache: mock() }));
+mock.module("../src/libs/db", () => ({ getDb: () => db, Projects, Posts, Leads, and, eq }));
+mock.module("@netlify/cache", () => ({ purgeCache: mock() }));
 const moderate = mock(async () => true);
 mock.module("../src/libs/ai", () => ({ isContentPG13Appropriate: moderate }));
 const { projects } = await import("../src/actions/projects");
@@ -45,13 +24,17 @@ const context = userId => ({ locals: { auth: () => ({ userId }) } });
 const snapshot = () => ["Projects", "Posts", "Leads"].map(t => sql.query(`SELECT * FROM ${t} ORDER BY id`).all());
 beforeEach(() => {
   for (const table of ["Posts", "Leads", "Projects"]) sql.exec(`DELETE FROM ${table}`);
+  const createdAt = new Date("2025-01-01T00:00:00Z");
+  const project = { title: "Project", authors: "Author", content: "Original", createdAt, updatedAt: createdAt };
   db.insert(Projects).values([
-    { id: 1, userId: "owner", slug: "owned" },
-    { id: 2, userId: "other", slug: "other" },
-    { id: 3, userId: "owner", slug: "also-owned" }
+    { ...project, id: 1, userId: "owner", slug: "owned", isPublished: true },
+    { ...project, id: 2, userId: "other", slug: "other" },
+    { ...project, id: 3, userId: "owner", slug: "also-owned" }
   ]).run();
-  db.insert(Posts).values({ id: 1, userId: "owner", projectId: 1 }).run();
-  db.insert(Leads).values({ id: 1, projectId: 1 }).run();
+  db.insert(Posts).values({
+    id: 1, userId: "owner", projectId: 1, title: "First post", slug: "first-post", content: "Original", createdAt
+  }).run();
+  db.insert(Leads).values({ id: 1, projectId: 1, name: "Contact", email: "contact@example.com", message: "", createdAt }).run();
   moderate.mockClear();
 });
 const input = {

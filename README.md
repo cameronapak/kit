@@ -11,14 +11,14 @@ With kit (Keep in Touch), staying engaged with your users and promoting your pro
 - Simple no-code landing page for your project
 - Integration with faith.tools
 - HTMX + Alpine.js for interactivity
-- Astro DB (Turso) for data storage
+- Drizzle ORM and Turso for data storage
 - Clerk authentication
 - Cloudinary image management
 
 ## Prerequisites
 
-- Node.js v20.3.0 or higher
-- NPM v10.0.0 or higher
+- Node.js 24 (see `.nvmrc`)
+- Bun for installing from the committed lockfile
 - Clerk account
 - Turso account
 - Cloudinary account
@@ -35,7 +35,7 @@ git clone https://github.com/cameronapak/kit.git
 2. Install dependencies
 
 ```bash
-npm install
+bun install --frozen-lockfile
 ```
 
 3. Set up environment variables
@@ -44,22 +44,24 @@ npm install
 cp .env.example .env
 ```
 
-4. Start development server
+4. Seed the local SQLite database and start the development server
 
 ```bash
-npm run dev
+bun run db:seed
+bun run dev
 ```
 
 ## Available Scripts
 
-- `npm run dev` - Start development server
-- `npm run dev:remote` - Start with remote database
-- `npm run dev:host` - Start with network access
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run db:update` - Update database schema
-- `npm run format` - Format code with Prettier
-- `npm run update-packages` - Update all packages
+- `bun run dev` - Start development server with local SQLite
+- `bun run dev:remote` - Start with the configured Turso database
+- `bun run dev:host` - Start with network access
+- `bun run build` - Check types and build for production
+- `bun run preview` - Preview production build
+- `bun run db:seed` - Create and seed local SQLite if it does not already exist
+- `bun run test` - Check SQLite schema compatibility
+- `bun run format` - Format code with Prettier
+- `bun run update-packages` - Update all packages
 
 ## Tech Stack
 
@@ -77,6 +79,8 @@ For a deeper dive into this tech stack, see the [Freedom Stack](https://github.c
 ## Deployment
 
 This project is optimized for deployment on Netlify.
+
+Keep `ASTRO_DB_REMOTE_URL` and `ASTRO_DB_APP_TOKEN` configured for Turso. The URL must be available to the build or the Netlify Functions runtime; the token must be available to Functions. No production schema change or re-seeding is needed when upgrading from Astro DB.
 
 ## Contributing
 

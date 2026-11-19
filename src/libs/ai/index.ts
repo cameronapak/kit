@@ -1,14 +1,16 @@
 import { Groq } from "groq-sdk";
 
-const groq = new Groq({
-  apiKey: import.meta.env.GROQ_API_KEY
-});
+let groq: Groq | undefined;
+
+function getGroq() {
+  return (groq ??= new Groq({ apiKey: process.env.GROQ_API_KEY || import.meta.env.GROQ_API_KEY }));
+}
 
 const GROQ_GUARD_MODEL = "openai/gpt-oss-safeguard-20b";
 
 // https://console.groq.com/docs/content-moderation
 export async function isContentAppropriate(content: string): Promise<boolean> {
-  const response = await groq.chat.completions.create({
+  const response = await getGroq().chat.completions.create({
     messages: [{ role: "user", content }],
     model: GROQ_GUARD_MODEL
   });
@@ -23,7 +25,7 @@ export async function isContentAppropriate(content: string): Promise<boolean> {
 }
 
 export async function isContentPG13Appropriate(content: string): Promise<boolean> {
-  const response = await groq.chat.completions.create({
+  const response = await getGroq().chat.completions.create({
     messages: [
       {
         role: "system",

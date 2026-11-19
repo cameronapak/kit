@@ -1,4 +1,7 @@
-import { db, Posts, Leads, Projects, PageView } from "astro:db";
+import { existsSync, linkSync, mkdirSync, readFileSync, rmSync } from "node:fs";
+import { createClient } from "@libsql/client";
+import { drizzle } from "drizzle-orm/libsql";
+import { Posts, Leads, Projects, PageView } from "./schema.ts";
 
 const content = `
 Never gonna give you up, never gonna let you down.
@@ -16,8 +19,7 @@ const SEED_PROJECT_CONTENT = `
 <div>What if it were easier to live a holy life digitally?<br><br>We're building a healthy smartphone for the modern age, with no browser, no social media, no porn, and no games. It has all the essential tools, like a camera, texting, phone calls, calendar, etc. And, our curated app store only has safe apps to be used as tools to get a job done.</div>
 `.trim();
 
-// https://astro.build/db/seed
-export default async function seed() {
+async function seed(db: ReturnType<typeof drizzle>) {
   await db.insert(Projects).values([
     {
       id: 1,
@@ -88,6 +90,28 @@ export default async function seed() {
 
   await db.insert(PageView).values([
     { date: new Date(), url: "/" },
-    { date: new Date(), url: "/app/wpii" },
+    { date: new Date(), url: "/app/wpii" }
   ]);
+}
+
+const path = ".astro/kit.sqlite";
+if (!existsSync(path)) {
+  mkdirSync(".astro", { recursive: true });
+  const temporaryPath = `${path}.${process.pid}.tmp`;
+  const client = createClient({ url: `file:${temporaryPath}` });
+  try {
+    try {
+      await client.executeMultiple(readFileSync(new URL("./local.sql", import.meta.url), "utf8"));
+      await seed(drizzle(client));
+    } finally {
+      client.close();
+    }
+    try {
+      linkSync(temporaryPath, path);
+    } catch (error) {
+      if (!existsSync(path)) throw error;
+    }
+  } finally {
+    rmSync(temporaryPath, { force: true });
+  }
 }

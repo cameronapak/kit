@@ -1,13 +1,10 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/astro/server";
-
-const isProtectedRoute = createRouteMatcher(["/dashboard(.*)"]);
+import { clerkMiddleware } from "@clerk/astro/server";
 
 export const onRequest = clerkMiddleware((auth, context) => {
   const { redirectToSignIn, userId } = auth();
 
-  if (!userId && isProtectedRoute(context.request)) {
-    // Add custom logic to run before redirecting
-
+  const { pathname } = context.url;
+  if (!userId && (pathname === "/dashboard" || pathname.startsWith("/dashboard/"))) {
     return redirectToSignIn();
   }
 });

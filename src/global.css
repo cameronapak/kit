@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Add CSS styles below. */
 .example-class {
   /* You can even apply Tailwind classes here. */

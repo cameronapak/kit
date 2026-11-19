@@ -1,6 +1,6 @@
 import { ActionError, defineAction } from "astro:actions";
-import { z } from "astro:schema";
-import { PageView, db } from "astro:db";
+import { z } from "astro/zod";
+import { PageView, getDb } from "@/libs/db";
 import { isbot } from "isbot";
 
 export const pageView = {
@@ -26,7 +26,7 @@ export const pageView = {
       try {
         // Remove trailing slash if it exists...
         const urlWithoutTrailingSlash = url.endsWith("/") ? url.slice(0, -1) : url;
-        await db.insert(PageView).values({
+        await getDb().insert(PageView).values({
           url: urlWithoutTrailingSlash,
           date: new Date()
         });
